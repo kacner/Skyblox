@@ -1,0 +1,12 @@
+fileFormatVersion: 2
+guid: b7a36d4235d52e04ab1c70f6e437fec2
+MonoImporter:
+  externalObjects: {}
+  serializedVersion: 2
+  defaultReferences:
+  - SpriteTrailMaterial: {fileID: 2100000, guid: 6f1f733e295b9d74b94374881a107799, type: 2}
+  executionOrder: 0
+  icon: {instanceID: 0}
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
