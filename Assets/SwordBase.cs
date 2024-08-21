@@ -19,7 +19,7 @@ public class SwordBase : MonoBehaviour
 
     private bool sworddrawn;
     public bool facingToTheSide = false;
-
+    public bool facingToTheSideAndUp = true;
     public SpriteRenderer SwordSpriteRenderer;
     public SpriteRenderer LHandSpriteRenderer;
     public SpriteRenderer RHandSpriteRenderer;
@@ -149,6 +149,16 @@ public class SwordBase : MonoBehaviour
             LHandSpriteRenderer.sortingOrder = 1 - 3;
             HolsterSpriteRenderer.enabled = false;
             HolsterFromSideSpriteRenderer.enabled = true;
+        }
+        else if (playermovement.lookDir == "UpLeft")
+        {
+            facingToTheSide = false;
+            SwordSpriteRenderer.sortingOrder = 2 - 3;
+            HolsterSpriteRenderer.sortingOrder = -1 - 3;
+            RHandSpriteRenderer.sortingOrder = 3 - 2;
+            LHandSpriteRenderer.sortingOrder = 1 - 3;
+            HolsterSpriteRenderer.enabled = false;
+            HolsterFromSideSpriteRenderer.enabled = false;
         }
     }
 }
