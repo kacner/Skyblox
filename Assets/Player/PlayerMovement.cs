@@ -35,6 +35,8 @@ public class PlayerMovement : MonoBehaviour
     public bool useMousePos = false;
     public bool IsUsingBow = false;
 
+    private HotbarScript hotbarscript;
+
     Vector2 mouseScreenPosition;
     void Start()
     {
@@ -51,6 +53,9 @@ public class PlayerMovement : MonoBehaviour
         {
             CancelInvoke("UpdateHorVer");
         }
+        DetermineLookDirection();
+
+        hotbarscript = GetComponent<HotbarScript>();
     }
 
 
@@ -122,6 +127,8 @@ public class PlayerMovement : MonoBehaviour
 
         if (useMousePos && !isDead)
         {
+            cursorsprite.active = true;
+
             mouseScreenPosition = Input.mousePosition;
             Vector2 mouseWorldPosition = Camera.main.ScreenToWorldPoint(mouseScreenPosition);
 
@@ -139,6 +146,10 @@ public class PlayerMovement : MonoBehaviour
             animator.SetFloat("Horizontal", mouseWorldPosition.x);
             animator.SetFloat("Vertical", mouseWorldPosition.y);
 
+        }
+        else if (!useMousePos)
+        {
+            cursorsprite.active = false;
         }
 
         if (Input.GetKey(KeyCode.M))
@@ -182,6 +193,7 @@ public class PlayerMovement : MonoBehaviour
 
     private void Die()
     {
+        hotbarscript.destroyCurrentWeapond();
         isDead = true;
         CanMove = false;
         animator.SetBool("isDead", true);

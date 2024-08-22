@@ -19,13 +19,15 @@ public class SwordBase : MonoBehaviour
 
     private bool sworddrawn;
     public bool facingToTheSide = false;
-    public bool facingToTheSideAndUp = true;
 
     public SpriteRenderer SwordSpriteRenderer;
     public SpriteRenderer LHandSpriteRenderer;
     public SpriteRenderer RHandSpriteRenderer;
     public SpriteRenderer HolsterSpriteRenderer;
     public SpriteRenderer HolsterFromSideSpriteRenderer;
+    public SpriteRenderer HolsterFromBackSpriteRenderer;
+    public SpriteRenderer HolsterUpRightSpriteRenderer;
+    public SpriteRenderer HolsterUpLeftSpriteRenderer;
 
     //public bool shouldRotate = false;
     void Start()
@@ -54,16 +56,24 @@ public class SwordBase : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        if (playermovement.lookDir == "Left" || playermovement.lookDir == "UpLeft" || playermovement.lookDir == "Up")
+        if (playermovement.lookDir == "Left"|| playermovement.lookDir == "UpLeft"|| playermovement.lookDir == "Up"|| playermovement.lookDir == "DownLeft")
         {
-           Sword__Weapond.transform.localScale = new Vector3(-1, 1, 1);
+            Sword__Weapond.transform.localScale = new Vector3(-1, 1, 1);
         }
-        else if (playermovement.lookDir == "Right" || playermovement.lookDir == "UpRight" || playermovement.lookDir == "Down")
+        else if (playermovement.lookDir == "Right"|| playermovement.lookDir == "UpRight"|| playermovement.lookDir == "Down"|| playermovement.lookDir == "UpLeft")
         {
             Sword__Weapond.transform.localScale = new Vector3(1, 1, 1);
-           //transform.position = new Vector2(0.077f, 0);
+            
         }
 
+        if(playermovement.lookDir == "Up")
+        {
+            transform.localPosition = new Vector2(0.015f, transform.localPosition.y);
+        }
+        else if (playermovement.lookDir == "Down")
+        {
+            transform.localPosition = new Vector2(0.0666f, transform.localPosition.y);
+        }
 
         updateAnimations();
 
@@ -73,7 +83,7 @@ public class SwordBase : MonoBehaviour
 
         if (Input.GetKeyDown(KeyCode.Mouse0) && sworddrawn == false)
         {
-            sworddrawn = true;
+            DrawSword();
         }
         else if (Input.GetKeyDown(KeyCode.Mouse0) && sworddrawn == true )
         {
@@ -98,18 +108,25 @@ public class SwordBase : MonoBehaviour
 
     }
 
+    private void DrawSword()
+    {
+        sworddrawn = true;
+    }
+
     private void updateAnimations()
     {
-
         if (playermovement.lookDir == "Up")
         {
             facingToTheSide = false;
             HolsterSpriteRenderer.enabled = true;
-            SwordSpriteRenderer.sortingOrder = 2 - 3;
+            SwordSpriteRenderer.sortingOrder = 2 - 6;
             HolsterSpriteRenderer.sortingOrder = -1 - 3;
             RHandSpriteRenderer.sortingOrder = 3 - 4;
             LHandSpriteRenderer.sortingOrder = 1 - 3;
             HolsterFromSideSpriteRenderer.enabled = false;
+            HolsterFromBackSpriteRenderer.enabled = true;
+            HolsterUpRightSpriteRenderer.enabled = false;
+            HolsterUpLeftSpriteRenderer.enabled = false;
         }
         else if (playermovement.lookDir == "Down")
         {
@@ -120,6 +137,9 @@ public class SwordBase : MonoBehaviour
             RHandSpriteRenderer.sortingOrder = 3;
             LHandSpriteRenderer.sortingOrder = 1;
             HolsterFromSideSpriteRenderer.enabled = false;
+            HolsterFromBackSpriteRenderer.enabled = false;
+            HolsterUpRightSpriteRenderer.enabled = false;
+            HolsterUpLeftSpriteRenderer.enabled = false;
         }
         else if (playermovement.lookDir == "UpRight")
         {
@@ -130,46 +150,51 @@ public class SwordBase : MonoBehaviour
             LHandSpriteRenderer.sortingOrder = 1 - 3;
             HolsterSpriteRenderer.enabled = false;
             HolsterFromSideSpriteRenderer.enabled = false;
+            HolsterFromBackSpriteRenderer.enabled = false;
+            HolsterUpRightSpriteRenderer.enabled = true;
+            HolsterUpLeftSpriteRenderer.enabled = false;
         }
-        else if (playermovement.lookDir == "Left")
+        else if (playermovement.lookDir == "Left" || playermovement.lookDir == "DownLeft")
         {
             facingToTheSide = true;
             SwordSpriteRenderer.sortingOrder = 2 - 3;
             HolsterSpriteRenderer.sortingOrder = -1 - 3;
-            RHandSpriteRenderer.sortingOrder = 3 - 2;
+            RHandSpriteRenderer.sortingOrder = 3 - 0;
             LHandSpriteRenderer.sortingOrder = 1 - 3;
             HolsterSpriteRenderer.enabled = false;
             HolsterFromSideSpriteRenderer.enabled = true;
+            HolsterFromBackSpriteRenderer.enabled = false;
+            HolsterUpRightSpriteRenderer.enabled = false;
+            HolsterUpLeftSpriteRenderer.enabled = false;
+            HolsterFromSideSpriteRenderer.sortingOrder = -1 + 2;
         }
-        else if (playermovement.lookDir == "Right")
+        else if (playermovement.lookDir == "Right" || playermovement.lookDir == "DownRight")
         {
             facingToTheSide = true;
             SwordSpriteRenderer.sortingOrder = 2 - 3;
             HolsterSpriteRenderer.sortingOrder = -1 - 3;
-            RHandSpriteRenderer.sortingOrder = 3 - 2;
+            RHandSpriteRenderer.sortingOrder = 3 - 1;
             LHandSpriteRenderer.sortingOrder = 1 - 3;
             HolsterSpriteRenderer.enabled = false;
             HolsterFromSideSpriteRenderer.enabled = true;
+            HolsterFromBackSpriteRenderer.enabled = false;
+            HolsterUpRightSpriteRenderer.enabled = false;
+            HolsterUpLeftSpriteRenderer.enabled = false;
+            HolsterFromSideSpriteRenderer.sortingOrder = -1;
         }
+    
         else if (playermovement.lookDir == "UpLeft")
         {
             facingToTheSide = false;
             SwordSpriteRenderer.sortingOrder = 2 - 3;
             HolsterSpriteRenderer.sortingOrder = -1 - 3;
-            RHandSpriteRenderer.sortingOrder = 3 - 2;
+            RHandSpriteRenderer.sortingOrder = 3 - 4;
             LHandSpriteRenderer.sortingOrder = 1 - 3;
             HolsterSpriteRenderer.enabled = false;
             HolsterFromSideSpriteRenderer.enabled = false;
-        }
-        else if (playermovement.lookDir == "UpRight")
-        {
-            facingToTheSide = false;
-            SwordSpriteRenderer.sortingOrder = 2 - 3;
-            HolsterSpriteRenderer.sortingOrder = -1 - 3;
-            RHandSpriteRenderer.sortingOrder = 3 - 2;
-            LHandSpriteRenderer.sortingOrder = 1 - 3;
-            HolsterSpriteRenderer.enabled = false;
-            HolsterFromSideSpriteRenderer.enabled = false;
+            HolsterFromBackSpriteRenderer.enabled = false;
+            HolsterUpRightSpriteRenderer.enabled = false;
+            HolsterUpLeftSpriteRenderer.enabled = true;
         }
     }
 }

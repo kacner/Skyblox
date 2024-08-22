@@ -36,7 +36,7 @@ public class HotbarScript : MonoBehaviour
         }
     }
 
-    private void destroyCurrentWeapond()
+    public void destroyCurrentWeapond()
     {
         GameObject[] allObjects = FindObjectsOfType<GameObject>();
         foreach (GameObject obj in allObjects)
