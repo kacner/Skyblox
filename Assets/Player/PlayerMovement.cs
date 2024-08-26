@@ -18,13 +18,18 @@ public class PlayerMovement : MonoBehaviour
     public bool isDead = false;
     public float RollCooldown = 0.75f;
     private bool createtrailsprite = false;
-    private Vector2 moveDirection;
+    public Vector2 moveDirection;
     public float moveX;
     public float moveY;
     public float Velocity;
     public string newLookDir = "ntr";
     public string lookDir = "skibidiOhioRizz";
     public string lastLookDir = "toiletAnanasNasDas";
+    private Vector2 facingDirection = Vector2.down; //vector2 storing lookdir
+    private bool SlowMotion = false;
+    public Vector2 lookDirVector;
+    public float emitParticleAfterInitialRoll = 0.3f;
+
 
     //particles
     public ParticleSystem runningParticleSystem;
@@ -43,7 +48,7 @@ public class PlayerMovement : MonoBehaviour
         rb = GetComponent<Rigidbody2D>();
         animator = GetComponent<Animator>();
 
-        InvokeRepeating("CreateTrailSprite", 0.1f, 0.1f);
+        InvokeRepeating("CreateTrailSprite", 0.05f, 0.05f);
 
         if (useMousePos = false && !isDead)
         {
@@ -56,11 +61,15 @@ public class PlayerMovement : MonoBehaviour
         DetermineLookDirection();
 
         hotbarscript = GetComponent<HotbarScript>();
+
+        lookDirVector = DetermineLookDirectionVector2();
     }
 
 
     void Update()
     {
+        lookDirVector = DetermineLookDirectionVector2();
+
         if (CanMove)
         {
             moveX = Input.GetAxisRaw("Horizontal"); //value -1 or 1. left or right
@@ -87,7 +96,7 @@ public class PlayerMovement : MonoBehaviour
             CancelInvoke("UpdateHorVer");
         }
 
-        if (Input.GetKeyDown(KeyCode.Space) && moveDirection != Vector2.zero && !IsRolling)
+        if (Input.GetKeyDown(KeyCode.Space) && !IsRolling)
         {
             StartCoroutine(Roll());
         }
@@ -135,7 +144,7 @@ public class PlayerMovement : MonoBehaviour
             Vector2 playerPos = transform.position;
 
             Vector2 relativeMousePos = mouseWorldPosition - playerPos;
-           
+            
             cursorsprite.transform.position = new Vector2(mouseWorldPosition.x, mouseWorldPosition.y);
 
             mouseWorldPosition.x = Mathf.Round(relativeMousePos.x);
@@ -145,15 +154,23 @@ public class PlayerMovement : MonoBehaviour
 
             animator.SetFloat("Horizontal", mouseWorldPosition.x);
             animator.SetFloat("Vertical", mouseWorldPosition.y);
-
         }
         else if (!useMousePos)
         {
             cursorsprite.active = false;
         }
 
-        if (Input.GetKey(KeyCode.M))
+        if (Input.GetKeyDown(KeyCode.M))
+        {
+            SlowMotion = !SlowMotion;
+        }
+        if (SlowMotion == true)
             Time.timeScale = 0.1f;
+        else
+            Time.timeScale = 1f;
+
+        if (Input.GetKey(KeyCode.N))
+            Debug.Break();
 
     }
     private void FixedUpdate()
@@ -182,12 +199,28 @@ public class PlayerMovement : MonoBehaviour
         CanMove = false;
         IsRolling = true;
 
-        rb.AddForce(moveDirection * RollForce * 2, ForceMode2D.Impulse);
-        yield return new WaitForSeconds(RollDuration);
+        float elapsedTime = 0f;
+
+        while (elapsedTime < RollDuration)
+        {
+            //Apply Roll Velocity
+            rb.AddForce(lookDirVector.normalized * RollForce * Time.fixedDeltaTime, ForceMode2D.Impulse);
+            //Apply default walking velocity
+            if (moveDirection == Vector2.zero)
+            rb.AddForce(lookDirVector.normalized * 5500 * Time.fixedDeltaTime, ForceMode2D.Force);
+
+            elapsedTime += Time.deltaTime;
+            yield return null;
+        }
+
+        /*
+        rb.AddForce(lookDirVector.normalized * RollForce * 2, ForceMode2D.Impulse);
+        yield return new WaitForSeconds(RollDuration);*/
 
         CanMove = true;
+        yield return new WaitForSeconds(emitParticleAfterInitialRoll);
         createtrailsprite = false;
-        yield return new WaitForSeconds(RollCooldown);
+        yield return new WaitForSeconds(RollCooldown - emitParticleAfterInitialRoll);
         IsRolling = false;
     }
 
@@ -199,7 +232,7 @@ public class PlayerMovement : MonoBehaviour
         animator.SetBool("isDead", true);
         rb.velocity = new Vector2(0, 0);
     }
-        
+
     private void UpdateHorVer()
     {
         if (moveDirection != Vector2.zero)
@@ -251,5 +284,25 @@ public class PlayerMovement : MonoBehaviour
         else
             return lookDir;
     }
+    private Vector2 DetermineLookDirectionVector2()
+    {
+        if (moveX == -1 && moveY == 1)
+            facingDirection = new Vector2(-1, 1); // UpLeft
+        else if (moveX == 1 && moveY == 1)
+            facingDirection = new Vector2(1, 1); // UpRight
+        else if (moveX == -1 && moveY == -1)
+            facingDirection = new Vector2(-1, -1); // DownLeft
+        else if (moveX == 1 && moveY == -1)
+            facingDirection = new Vector2(1, -1); // DownRight
+        else if (moveX == 0 && moveY == -1)
+            facingDirection = Vector2.down; // Down
+        else if (moveX == 0 && moveY == 1)
+            facingDirection = Vector2.up; // Up
+        else if (moveX == 1 && moveY == 0)
+            facingDirection = Vector2.right; // Right
+        else if (moveX == -1 && moveY == 0)
+            facingDirection = Vector2.left; // Left
 
+        return facingDirection;
+    }
 }

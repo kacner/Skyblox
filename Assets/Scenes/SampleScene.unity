@@ -740,14 +740,14 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 826657449}
-  m_LocalRotation: {x: 0.25379574, y: -0.6127167, z: -0.28641698, w: 0.6914704}
-  m_LocalPosition: {x: 0.259, y: -0.347, z: 0}
+  m_LocalRotation: {x: 0.61271745, y: 0.253794, z: 0.69146955, w: 0.28641894}
+  m_LocalPosition: {x: 0.25899968, y: -0.347, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 980768886}
   m_RootOrder: -1
-  m_LocalEulerAnglesHint: {x: 0, y: -83.089, z: -45}
+  m_LocalEulerAnglesHint: {x: 0, y: 83.089, z: 135}
 --- !u!212 &826657451
 SpriteRenderer:
   m_ObjectHideFlags: 0
@@ -1080,10 +1080,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d2c95687e3f48f24da6bef9ba0e68a62, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  Sword: {fileID: 826657450}
   rotationThreshold: 8
   Sword__Weapond: {fileID: 2107699950}
-  facingToTheSide: 1
+  facingToTheRight: 0
+  facingToTheLeft: 0
   SwordSpriteRenderer: {fileID: 826657451}
   LHandSpriteRenderer: {fileID: 1015113375}
   RHandSpriteRenderer: {fileID: 1533376589}
@@ -1092,6 +1092,8 @@ MonoBehaviour:
   HolsterFromBackSpriteRenderer: {fileID: 1141464753}
   HolsterUpRightSpriteRenderer: {fileID: 1152845523}
   HolsterUpLeftSpriteRenderer: {fileID: 1956670494}
+  HolsterFromSide: {fileID: 1474880648}
+  Sword: {fileID: 826657450}
 --- !u!95 &980768888
 Animator:
   serializedVersion: 5
@@ -1546,7 +1548,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1474880647}
   m_LocalRotation: {x: -0, y: -0, z: -0.995139, w: 0.09848086}
-  m_LocalPosition: {x: -0.415, y: -0.351, z: 0}
+  m_LocalPosition: {x: -0.302, y: -0.343, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -1728,16 +1730,19 @@ MonoBehaviour:
   orignialMaxSpeed: 4
   CanMove: 1
   IsRolling: 0
-  RollForce: 10
-  RollDuration: 0.5
+  RollForce: 200
+  RollDuration: 0.14
   isDead: 0
   RollCooldown: 0.75
+  moveDirection: {x: 0, y: 0}
   moveX: 0
   moveY: 0
   Velocity: 0
-  newLookDir: ntr
+  newLookDir: MousePay
   lookDir: skibidiOhioRizz
   lastLookDir: toiletAnanasNasDas
+  lookDirVector: {x: 0, y: 0}
+  emitParticleAfterInitialRoll: 0.2
   runningParticleSystem: {fileID: 4888690677223258302}
   arrowcount: 5
   cursorsprite: {fileID: 1907196636}
@@ -1921,7 +1926,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   Bow: {fileID: 2852326083952460722, guid: ef1a330991f44b34b920670b5a647966, type: 3}
   Sword: {fileID: 1770412918349673621, guid: 38ce33ff75a7ea94887081f983983d2d, type: 3}
-  selectedSlot: 1
+  selectedSlot: 2
 --- !u!1 &1907196636
 GameObject:
   m_ObjectHideFlags: 0
