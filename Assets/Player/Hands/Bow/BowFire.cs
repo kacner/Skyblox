@@ -70,6 +70,10 @@ public class BowFire : MonoBehaviour
                 holdtimer = Mathf.Clamp(holdtimer, 0, bowHoldTime);
                 holdtimer += Time.deltaTime;
 
+                playermovement.CanMove = false;
+                playermovement.moveDirection = Vector2.zero;
+                playermovement.canRoll = false;
+
                 animator.SetBool("DrawingBow", true);
                 ArrowSprite.SetActive(true);
 
@@ -78,6 +82,8 @@ public class BowFire : MonoBehaviour
 
                 if (!Input.GetKey(KeyCode.Mouse1))
                 {
+                    playermovement.CanMove = true;
+                    playermovement.canRoll = true;
                     holdtimer = 0;
                     Instantiate(arrow, bulletTransform.position, quaternion.identity);
                     playermovement.arrowcount--;

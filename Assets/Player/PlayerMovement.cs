@@ -6,36 +6,52 @@ using UnityEngine;
 [RequireComponent(typeof(Rigidbody2D))]
 public class PlayerMovement : MonoBehaviour
 {
+    [Header("Main Movement Variables")]
     public float acceleration = 300f;
-    private Rigidbody2D rb;
     public float maxSpeed = 6.5f;
     public float orignialMaxSpeed = 4f;
     public bool CanMove = true;
-    public bool IsRolling = false;
-    public float RollForce = 10f;
-    public float RollDuration = 0.5f;
-    private Animator animator;
     public bool isDead = false;
-    public float RollCooldown = 0.75f;
-    private bool createtrailsprite = false;
+    [HideInInspector]
     public Vector2 moveDirection;
     public float moveX;
     public float moveY;
     public float Velocity;
-    public string newLookDir = "ntr";
+    public string newLookDir = "MousePay";
     public string lookDir = "skibidiOhioRizz";
     public string lastLookDir = "toiletAnanasNasDas";
+    public Vector2 lookDirVector;
+    private Animator animator;
     private Vector2 facingDirection = Vector2.down; //vector2 storing lookdir
     private bool SlowMotion = false;
-    public Vector2 lookDirVector;
-    public float emitParticleAfterInitialRoll = 0.3f;
+    private Rigidbody2D rb;
+    private SpriteRenderer spriterenderer;
 
+    [Space(10)]
 
-    //particles
+    [Header("DodgeRolling Settings")]
+    public bool canRoll = true;
+    public float RollCooldown = 0.75f;
+    public bool IsRolling = false;
+    public float RollForce = 200f;
+    public float RollDuration = 0.14f;
+    public float StillBoostFactor = 5500;
+    private bool createtrailsprite = false;
+    private float emitParticleAfterInitialRoll = 0.3f;
+    
+    [Space(10)]
+
+    [Header("Particle Systems")]
     public ParticleSystem runningParticleSystem;
+    public ParticleSystem RollingPFX;
+    public Color DashColor = Color.white;
+    public Material SolidColorMat;
+    public Material SpriteDefaultLit;
 
-    //placeholder quiver & arrow settings
-    public int arrowcount = 5;
+    [Space(10)]
+
+    [Header("Quiver & Arrow Settings")]
+    public int arrowcount = 10;
     public GameObject cursorsprite;
     public bool useMousePos = false;
     public bool IsUsingBow = false;
@@ -45,6 +61,7 @@ public class PlayerMovement : MonoBehaviour
     Vector2 mouseScreenPosition;
     void Start()
     {
+        spriterenderer = GetComponent<SpriteRenderer>();
         rb = GetComponent<Rigidbody2D>();
         animator = GetComponent<Animator>();
 
@@ -96,7 +113,7 @@ public class PlayerMovement : MonoBehaviour
             CancelInvoke("UpdateHorVer");
         }
 
-        if (Input.GetKeyDown(KeyCode.Space) && !IsRolling)
+        if (Input.GetKeyDown(KeyCode.Space) && !IsRolling && canRoll)
         {
             StartCoroutine(Roll());
         }
@@ -137,6 +154,7 @@ public class PlayerMovement : MonoBehaviour
         if (useMousePos && !isDead)
         {
             cursorsprite.active = true;
+            Cursor.visible = false;
 
             mouseScreenPosition = Input.mousePosition;
             Vector2 mouseWorldPosition = Camera.main.ScreenToWorldPoint(mouseScreenPosition);
@@ -158,6 +176,7 @@ public class PlayerMovement : MonoBehaviour
         else if (!useMousePos)
         {
             cursorsprite.active = false;
+            Cursor.visible = true;
         }
 
         if (Input.GetKeyDown(KeyCode.M))
@@ -175,6 +194,11 @@ public class PlayerMovement : MonoBehaviour
     }
     private void FixedUpdate()
     {
+        if (rb.velocity.magnitude < 0.01f)
+        {
+            rb.velocity = Vector2.zero;
+        }
+
         Velocity = rb.velocity.magnitude;
 
         animator.SetFloat("Speed", rb.velocity.magnitude);
@@ -195,6 +219,21 @@ public class PlayerMovement : MonoBehaviour
     }
     private IEnumerator Roll()
     {
+        spriterenderer.material = SolidColorMat;
+
+        Color initialColor = spriterenderer.color;
+        spriterenderer.color = DashColor;
+
+        GameObject[] allGameObjects = GameObject.FindObjectsOfType<GameObject>();
+        foreach (GameObject child in allGameObjects)
+        {
+            if (child != null && child.name.Contains("__Weapond__"))
+            {
+                child.SetActive(false);
+            }
+        }
+
+        RollingPFX.enableEmission = true;
         createtrailsprite = true;
         CanMove = false;
         IsRolling = true;
@@ -204,23 +243,32 @@ public class PlayerMovement : MonoBehaviour
         while (elapsedTime < RollDuration)
         {
             //Apply Roll Velocity
-            rb.AddForce(lookDirVector.normalized * RollForce * Time.fixedDeltaTime, ForceMode2D.Impulse);
             //Apply default walking velocity
             if (moveDirection == Vector2.zero)
-            rb.AddForce(lookDirVector.normalized * 5500 * Time.fixedDeltaTime, ForceMode2D.Force);
+                rb.AddForce(lookDirVector.normalized * StillBoostFactor * Time.fixedDeltaTime, ForceMode2D.Force);
+            else
+            rb.AddForce(lookDirVector.normalized * RollForce * Time.fixedDeltaTime, ForceMode2D.Impulse);
 
-            elapsedTime += Time.deltaTime;
+            elapsedTime += Time.fixedDeltaTime;
             yield return null;
         }
-
-        /*
-        rb.AddForce(lookDirVector.normalized * RollForce * 2, ForceMode2D.Impulse);
-        yield return new WaitForSeconds(RollDuration);*/
 
         CanMove = true;
         yield return new WaitForSeconds(emitParticleAfterInitialRoll);
         createtrailsprite = false;
-        yield return new WaitForSeconds(RollCooldown - emitParticleAfterInitialRoll);
+        RollingPFX.enableEmission = false;
+        spriterenderer.color = initialColor;
+        spriterenderer.material = SpriteDefaultLit;
+
+        foreach (GameObject child in allGameObjects)
+        {
+            if (child != null && child.name.Contains("__Weapond__"))
+            {
+                child.SetActive(true);
+            }
+        }
+
+        yield return new WaitForSeconds(RollCooldown - emitParticleAfterInitialRoll); //fucks with the cooldown
         IsRolling = false;
     }
 
@@ -245,6 +293,7 @@ public class PlayerMovement : MonoBehaviour
     {
         if (createtrailsprite)
         {
+
             GameObject clonedObject = Instantiate(gameObject);
 
             Component[] components = clonedObject.GetComponents<Component>();
