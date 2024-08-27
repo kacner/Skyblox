@@ -1,24 +1,12 @@
-using JetBrains.Annotations;
 using System.Collections;
-using System.Collections.Generic;
-using System.Runtime.CompilerServices;
-using Unity.Collections.LowLevel.Unsafe;
-using Unity.VisualScripting;
-using UnityEditor.Tilemaps;
 using UnityEngine;
-using UnityEngine.EventSystems;
 
 public class SwordBase : MonoBehaviour
 {
-    //private Camera mainCam;
-    //private Vector3 mousePos;
-    //private float previousRotz;
-    public float rotationThreshold;
     private PlayerMovement playermovement;
     public Transform Sword__Weapond;
     private Animator animator;
 
-    private bool sworddrawn;
     public bool facingToTheRight = false;
     public bool facingToTheLeft = false;
 
@@ -31,12 +19,21 @@ public class SwordBase : MonoBehaviour
     public SpriteRenderer HolsterUpRightSpriteRenderer;
     public SpriteRenderer HolsterUpLeftSpriteRenderer;
 
+    public ParticleSystem RotationPFX;
+
     public Transform HolsterFromSide;
     public Transform Sword;
 
-    //public bool shouldRotate = false;
+    [Space(10)]
+
+    [Header("RotatingSettings")]
+    public Transform RotatingSword;
+    public float rotationSpeed = 100f;
+
     void Start()
     {
+        RotationPFX.Stop();
+
         HolsterFromSide = transform.Find("HolsterFromSide").transform; //finds object
         Sword = transform.Find("Sword").transform; //finds object
 
@@ -46,23 +43,11 @@ public class SwordBase : MonoBehaviour
 
         updateAnimations();
 
-        /* if(shouldRotate)
-         {
-             mainCam = GameObject.FindGameObjectWithTag("MainCamera").GetComponent<Camera>();
-
-             //setts the right rotation of the bow when instantiated
-             mousePos = mainCam.ScreenToWorldPoint(Input.mousePosition);
-
-             Vector3 rotation = mousePos - transform.position;
-
-             float rotz = Mathf.Atan2(rotation.y, rotation.x) * Mathf.Rad2Deg;
-
-             transform.rotation = Quaternion.Euler(0, 0, rotz + 90);
-         }*/
+        RotatingSword.GetComponent<SpriteRenderer>().enabled = false;
     }
-
     void Update()
     {
+
         if (playermovement.lookDir == "Left"|| playermovement.lookDir == "UpLeft"|| playermovement.lookDir == "Up"|| playermovement.lookDir == "DownLeft")
         {
             Sword__Weapond.transform.localScale = new Vector3(-1, 1, 1); //flipps parent so everything getts flipped
@@ -88,39 +73,76 @@ public class SwordBase : MonoBehaviour
             animator.SetFloat("Horizontal", playermovement.moveX);
             animator.SetFloat("Vertical", playermovement.moveY);
         }
-        animator.SetBool("SwordDrawn", sworddrawn);
 
-        if (Input.GetKeyDown(KeyCode.Mouse0) && sworddrawn == false)
+        if (Input.GetKeyDown(KeyCode.Mouse0) && playermovement.IsSpinAttacking == false)
         {
-            DrawSword();
+           StartCoroutine(SpinAttack());
         }
-        else if (Input.GetKeyDown(KeyCode.Mouse0) && sworddrawn == true )
-        {
-            sworddrawn = false;
-        }
-
-
-        /* if (shouldRotate)
-         {
-             mousePos = mainCam.ScreenToWorldPoint(Input.mousePosition);
-
-             Vector3 rotation = mousePos - transform.position;
-
-             float rotz = Mathf.Atan2(rotation.y, rotation.x) * Mathf.Rad2Deg;
-
-             if (Mathf.Abs(rotz - previousRotz) > rotationThreshold)
-             {
-                 transform.rotation = Quaternion.Euler(0, 0, rotz + 90);
-                 previousRotz = rotz;
-             }
-         }*/
-
     }
 
-    private void DrawSword()
+    private IEnumerator SpinAttack()
     {
-        sworddrawn = true;
+        playermovement.IsSpinAttacking = true;
+
+        RotatingSword.GetComponent<SpriteRenderer>().enabled = true;
+
+        playermovement.CanMove = false;
+        playermovement.canRoll = false;
+        playermovement.moveDirection = Vector2.zero;
+
+        RotationPFX.Play();
+
+        HolsterFromBackSpriteRenderer.enabled = false;
+        HolsterFromSideSpriteRenderer.enabled = false;
+        HolsterSpriteRenderer.enabled = false;
+        HolsterUpLeftSpriteRenderer.enabled = false;
+        HolsterUpRightSpriteRenderer.enabled = false;
+
+        LHandSpriteRenderer.enabled = false;
+        RHandSpriteRenderer.enabled = false;
+        SwordSpriteRenderer.enabled = false;
+
+        float currentRotation = 0f;
+
+        float neededRotation = 120f;
+
+        while(currentRotation < neededRotation) //waits for x seconds
+        {
+            float rotationThisFrame = rotationSpeed * Time.fixedDeltaTime;
+
+            // Apply the rotation
+            RotatingSword.RotateAround(transform.position, Vector3.forward, rotationThisFrame);
+
+            // Update the current rotation
+            currentRotation += rotationThisFrame;
+
+            // Check if we've completed a full rotation
+            if (currentRotation >= neededRotation)
+            {
+                RotatingSword.RotateAround(transform.position, Vector3.forward, neededRotation - (currentRotation - rotationThisFrame));
+                break;
+            }
+            yield return null;
+        }
+
+        RotatingSword.transform.localPosition = new Vector2(-0.023f, -1.128f);
+        RotatingSword.transform.localEulerAngles = new Vector3(0, 0, -135f);
+
+        RotationPFX.Stop();
+
+        playermovement.CanMove = true;
+        playermovement.canRoll = true;
+
+        LHandSpriteRenderer.enabled = true;
+        RHandSpriteRenderer.enabled = true;
+        SwordSpriteRenderer.enabled = true;
+
+
+        RotatingSword.GetComponent<SpriteRenderer>().enabled = false;
+
+        playermovement.IsSpinAttacking = false;
     }
+
 
     private void updateAnimations()
     {

@@ -24,7 +24,8 @@ public class PlayerMovement : MonoBehaviour
     private Animator animator;
     private Vector2 facingDirection = Vector2.down; //vector2 storing lookdir
     private bool SlowMotion = false;
-    private Rigidbody2D rb;
+    [HideInInspector]
+    public Rigidbody2D rb;
     private SpriteRenderer spriterenderer;
 
     [Space(10)]
@@ -56,6 +57,11 @@ public class PlayerMovement : MonoBehaviour
     public bool useMousePos = false;
     public bool IsUsingBow = false;
 
+    [Space(10)]
+
+    [Header("Attack")]
+    public bool IsSpinAttacking = false;
+
     private HotbarScript hotbarscript;
 
     Vector2 mouseScreenPosition;
@@ -85,6 +91,7 @@ public class PlayerMovement : MonoBehaviour
 
     void Update()
     {
+        animator.SetBool("IsSpinAttacking", IsSpinAttacking);
         lookDirVector = DetermineLookDirectionVector2();
 
         if (CanMove) 
