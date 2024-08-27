@@ -64,18 +64,18 @@ public class PlayerMovement : MonoBehaviour
         spriterenderer = GetComponent<SpriteRenderer>();
         rb = GetComponent<Rigidbody2D>();
         animator = GetComponent<Animator>();
-
-        InvokeRepeating("CreateTrailSprite", 0.05f, 0.05f);
+        
+        InvokeRepeating("CreateTrailSprite", 0.05f, 0.05f); //makes the function spawn a trailsprite every 0.05f seconds.
 
         if (useMousePos = false && !isDead)
         {
-            InvokeRepeating("UpdateHorVer", 0.01f, 0.01f);
+            InvokeRepeating("UpdateHorVer", 0.01f, 0.01f); //repeats the updating of lookdirection
         }
         else
         {
-            CancelInvoke("UpdateHorVer");
+            CancelInvoke("UpdateHorVer"); //cancels the updating of lookdirection
         }
-        DetermineLookDirection();
+        DetermineLookDirection(); 
 
         hotbarscript = GetComponent<HotbarScript>();
 
@@ -87,7 +87,7 @@ public class PlayerMovement : MonoBehaviour
     {
         lookDirVector = DetermineLookDirectionVector2();
 
-        if (CanMove)
+        if (CanMove) 
         {
             moveX = Input.GetAxisRaw("Horizontal"); //value -1 or 1. left or right
             moveY = Input.GetAxisRaw("Vertical"); //value -1 or 1. down and up
@@ -208,53 +208,52 @@ public class PlayerMovement : MonoBehaviour
             Vector2 targetVelocity = moveDirection * maxSpeed; // desired velocity based on input
             Vector2 velocityReq = targetVelocity - rb.velocity; // how much we need to change the velocity
 
-            Vector2 moveforce = velocityReq * acceleration; // Calculate the force needed to reach the target velocity considering acceleration
+            Vector2 moveforce = velocityReq * acceleration; //calculate the force needed to reach the target velocity considering acceleration
 
-            rb.AddForce(moveforce * Time.fixedDeltaTime, ForceMode2D.Force);
+            rb.AddForce(moveforce * Time.fixedDeltaTime, ForceMode2D.Force); //applyes the movement to the rb
 
-            acceleration = maxSpeed + 325 / 0.9f;
+            acceleration = maxSpeed + 325 / 0.9f; //bases the acceleration of
             
-            animator.speed = Mathf.Max(1, rb.velocity.magnitude / 5);
+            animator.speed = Mathf.Max(1, rb.velocity.magnitude / 5); //bases the animator speed of velocity so the feet match the ground distance
         }
     }
     private IEnumerator Roll()
     {
-        spriterenderer.material = SolidColorMat;
+        spriterenderer.material = SolidColorMat; //changes the playermat to solidcolor
 
-        Color initialColor = spriterenderer.color;
-        spriterenderer.color = DashColor;
+        Color initialColor = spriterenderer.color; //stores the innitial color of player
+        spriterenderer.color = DashColor; //makes the spriterenderers color to new color
 
-        GameObject[] allGameObjects = GameObject.FindObjectsOfType<GameObject>();
+        GameObject[] allGameObjects = GameObject.FindObjectsOfType<GameObject>(); //putts all gameobjects in an array
         foreach (GameObject child in allGameObjects)
         {
             if (child != null && child.name.Contains("__Weapond__"))
             {
-                child.SetActive(false);
+                child.SetActive(false); 
             }
         }
 
-        RollingPFX.enableEmission = true;
+        RollingPFX.enableEmission = true; //enables emition 
         createtrailsprite = true;
         CanMove = false;
         IsRolling = true;
 
-        float elapsedTime = 0f;
+        float elapsedTime = 0f; 
 
-        while (elapsedTime < RollDuration)
+        while (elapsedTime < RollDuration) 
         {
-            //Apply Roll Velocity
             //Apply default walking velocity
             if (moveDirection == Vector2.zero)
-                rb.AddForce(lookDirVector.normalized * StillBoostFactor * Time.fixedDeltaTime, ForceMode2D.Force);
+                rb.AddForce(lookDirVector.normalized * StillBoostFactor * Time.fixedDeltaTime, ForceMode2D.Force); //applys velocity in the facing direction when player is standing still
             else
-            rb.AddForce(lookDirVector.normalized * RollForce * Time.fixedDeltaTime, ForceMode2D.Impulse);
+            rb.AddForce(lookDirVector.normalized * RollForce * Time.fixedDeltaTime, ForceMode2D.Impulse); //when player moving apply dash velocity
 
-            elapsedTime += Time.fixedDeltaTime;
-            yield return null;
+            elapsedTime += Time.fixedDeltaTime; //counts up the timer
+            yield return null; //wait for next frame
         }
 
         CanMove = true;
-        yield return new WaitForSeconds(emitParticleAfterInitialRoll);
+        yield return new WaitForSeconds(emitParticleAfterInitialRoll); //splitts up cooldown into 2 parts   1/2
         createtrailsprite = false;
         RollingPFX.enableEmission = false;
         spriterenderer.color = initialColor;
@@ -268,22 +267,22 @@ public class PlayerMovement : MonoBehaviour
             }
         }
 
-        yield return new WaitForSeconds(RollCooldown - emitParticleAfterInitialRoll); //fucks with the cooldown
+        yield return new WaitForSeconds(RollCooldown - emitParticleAfterInitialRoll);  //splitts up cooldown into 2 parts   2/2
         IsRolling = false;
     }
 
     private void Die()
     {
-        hotbarscript.destroyCurrentWeapond();
-        isDead = true;
-        CanMove = false;
-        animator.SetBool("isDead", true);
-        rb.velocity = new Vector2(0, 0);
+        hotbarscript.destroyCurrentWeapond(); 
+        isDead = true; 
+        CanMove = false; 
+        animator.SetBool("isDead", true); //updates animator
+        rb.velocity = new Vector2(0, 0); //setts velocity to 0 
     }
 
     private void UpdateHorVer()
     {
-        if (moveDirection != Vector2.zero)
+        if (moveDirection != Vector2.zero) //if player isnt moving
         {
             animator.SetFloat("Horizontal", moveX);
             animator.SetFloat("Vertical", moveY);
@@ -294,44 +293,44 @@ public class PlayerMovement : MonoBehaviour
         if (createtrailsprite)
         {
 
-            GameObject clonedObject = Instantiate(gameObject);
+            GameObject clonedObject = Instantiate(gameObject); //instantiates a duplicate of the player
 
-            Component[] components = clonedObject.GetComponents<Component>();
+            Component[] components = clonedObject.GetComponents<Component>(); //stores all components in a array
 
             foreach (Component component in components)
             {
                 if (component is SpriteRenderer || component is Transform)
                 {
-                    continue;
+                    continue; // om komponent är spriterenderer eller transform
                 }
                 else
                 {
-                    Destroy(component);
+                    Destroy(component); //annars destroyas allt
                 }
             }
-            clonedObject.AddComponent<TrailSpriteScript>();
+            clonedObject.AddComponent<TrailSpriteScript>(); //lägger på ett script på player dupen
         }
     }
     private string DetermineLookDirection()
     {
-        if (moveX == -1 && moveY == 1)
+        if (moveX == -1 && moveY == 1) //UpLeft
             return "UpLeft";
-        else if (moveX == 1 && moveY == 1)
+        else if (moveX == 1 && moveY == 1) //UpRight
             return "UpRight";
-        else if (moveX == -1 && moveY == -1)
+        else if (moveX == -1 && moveY == -1) //DownLeft
             return "DownLeft";
-        else if (moveX == 1 && moveY == -1)
+        else if (moveX == 1 && moveY == -1) //DownRight
             return "DownRight";
-        else if (moveX == 0 && moveY == -1)
+        else if (moveX == 0 && moveY == -1) //Down
             return "Down";
-        else if (moveX == 0 && moveY == 1)
+        else if (moveX == 0 && moveY == 1) //Up
             return "Up";
-        else if (moveX == 1 && moveY == 0)
+        else if (moveX == 1 && moveY == 0) //Right
             return "Right";
-        else if (moveX == -1 && moveY == 0)
+        else if (moveX == -1 && moveY == 0) //Left
             return "Left";
         else
-            return lookDir;
+            return lookDir; //return the last known value
     }
     private Vector2 DetermineLookDirectionVector2()
     {
@@ -352,6 +351,6 @@ public class PlayerMovement : MonoBehaviour
         else if (moveX == -1 && moveY == 0)
             facingDirection = Vector2.left; // Left
 
-        return facingDirection;
+        return facingDirection; //return the last known value
     }
 }

@@ -32,13 +32,13 @@ public class SwordBase : MonoBehaviour
     public SpriteRenderer HolsterUpLeftSpriteRenderer;
 
     public Transform HolsterFromSide;
-        public Transform Sword;
+    public Transform Sword;
 
     //public bool shouldRotate = false;
     void Start()
     {
-        HolsterFromSide = transform.Find("HolsterFromSide").transform;
-        Sword = transform.Find("Sword").transform;
+        HolsterFromSide = transform.Find("HolsterFromSide").transform; //finds object
+        Sword = transform.Find("Sword").transform; //finds object
 
         animator = GetComponent<Animator>();
 
@@ -65,26 +65,25 @@ public class SwordBase : MonoBehaviour
     {
         if (playermovement.lookDir == "Left"|| playermovement.lookDir == "UpLeft"|| playermovement.lookDir == "Up"|| playermovement.lookDir == "DownLeft")
         {
-            Sword__Weapond.transform.localScale = new Vector3(-1, 1, 1);
+            Sword__Weapond.transform.localScale = new Vector3(-1, 1, 1); //flipps parent so everything getts flipped
         }
         else if (playermovement.lookDir == "Right"|| playermovement.lookDir == "UpRight"|| playermovement.lookDir == "Down"|| playermovement.lookDir == "UpLeft")
         {
-            Sword__Weapond.transform.localScale = new Vector3(1, 1, 1);
-            
+            Sword__Weapond.transform.localScale = new Vector3(1, 1, 1); //restores parent so everything getts restored
         }
 
         if (playermovement.lookDir == "Up" || playermovement.lookDir == "Left" || playermovement.lookDir == "DownLeft")
         {
-            transform.localPosition = new Vector2(0.015f, transform.localPosition.y);
+            transform.localPosition = new Vector2(0.015f, transform.localPosition.y); //applyes offset
         }
         else if (playermovement.lookDir != "Up" && playermovement.lookDir != "Left" && playermovement.lookDir != "DownLeft")
         {
-            transform.localPosition = new Vector2(0.0666f, transform.localPosition.y);
+            transform.localPosition = new Vector2(0.0666f, transform.localPosition.y); //restores offset
         }
 
         updateAnimations();
 
-        if (playermovement.moveDirection != Vector2.zero)
+        if (playermovement.moveDirection != Vector2.zero) //updates animations if not standing still
         {
             animator.SetFloat("Horizontal", playermovement.moveX);
             animator.SetFloat("Vertical", playermovement.moveY);
