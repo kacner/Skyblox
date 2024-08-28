@@ -12,7 +12,7 @@ public class RotateAround : MonoBehaviour
         mainCam = GameObject.FindGameObjectWithTag("MainCamera").GetComponent<Camera>();
     }
 
-    void Update()
+    public void matchRotation()
     {
         mousePos = mainCam.ScreenToWorldPoint(Input.mousePosition);
 
@@ -21,6 +21,5 @@ public class RotateAround : MonoBehaviour
         float rotZ = Mathf.Atan2(rotation.y, rotation.x) * Mathf.Rad2Deg;
 
         transform.rotation = Quaternion.Euler(0, 0, rotZ + 35);
-
     }
 }

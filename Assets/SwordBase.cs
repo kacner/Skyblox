@@ -3,6 +3,7 @@ using UnityEngine;
 
 public class SwordBase : MonoBehaviour
 {
+    private RotateAround rotateAroundScript;
     private PlayerMovement playermovement;
     public Transform Sword__Weapond;
     private Animator animator;
@@ -18,6 +19,8 @@ public class SwordBase : MonoBehaviour
     public SpriteRenderer HolsterFromBackSpriteRenderer;
     public SpriteRenderer HolsterUpRightSpriteRenderer;
     public SpriteRenderer HolsterUpLeftSpriteRenderer;
+
+    public SpriteRenderer[] SwordHands;
 
     public ParticleSystem RotationPFX;
 
@@ -40,6 +43,7 @@ public class SwordBase : MonoBehaviour
         animator = GetComponent<Animator>();
 
         playermovement = GetComponentInParent<PlayerMovement>();
+        rotateAroundScript = GetComponentInChildren<RotateAround>();
 
         updateAnimations();
 
@@ -82,13 +86,22 @@ public class SwordBase : MonoBehaviour
 
     private IEnumerator SpinAttack()
     {
+        rotateAroundScript.matchRotation();
+
+        foreach (SpriteRenderer SwordHands in SwordHands)
+        {
+            SwordHands.GetComponent<SpriteRenderer>().enabled = true;
+        }
+
+        playermovement.moreMouseBites();
+
         playermovement.IsSpinAttacking = true;
 
         RotatingSword.GetComponent<SpriteRenderer>().enabled = true;
 
         playermovement.CanMove = false;
         playermovement.canRoll = false;
-        playermovement.moveDirection = Vector2.zero;
+        playermovement.moveDirection = new Vector2(playermovement.moveDirection.x / 4, playermovement.moveDirection.y / 4);
 
         RotationPFX.Play();
 
@@ -125,6 +138,31 @@ public class SwordBase : MonoBehaviour
             yield return null;
         }
 
+        yield return new WaitForSeconds(0.2f);
+
+        while (currentRotation > 0f)
+        {
+            float rotationThisFrame = rotationSpeed * Time.fixedDeltaTime;
+
+            // Apply the reverse rotation
+            RotatingSword.RotateAround(transform.position, Vector3.forward, -rotationThisFrame);
+
+            // Update the current rotation
+            currentRotation -= rotationThisFrame;
+
+            // Check if we've completed the reverse rotation
+            if (currentRotation <= 0f)
+            {
+                // Make sure we stop at the exact starting point (0 degrees)
+                RotatingSword.RotateAround(transform.position, Vector3.forward, -currentRotation);
+                currentRotation = 0f;  // Ensure currentRotation is exactly 0
+                break;
+            }
+            yield return null;
+
+
+        }
+
         RotatingSword.transform.localPosition = new Vector2(-0.023f, -1.128f);
         RotatingSword.transform.localEulerAngles = new Vector3(0, 0, -135f);
 
@@ -141,6 +179,13 @@ public class SwordBase : MonoBehaviour
         RotatingSword.GetComponent<SpriteRenderer>().enabled = false;
 
         playermovement.IsSpinAttacking = false;
+
+        foreach (SpriteRenderer SwordHands in SwordHands)
+        {
+            SwordHands.GetComponent<SpriteRenderer>().enabled = false;
+        }
+        playermovement.newLookDir = playermovement.DetermineLookDirection(); //makes the playermovement script updates its 
+        updateAnimations();
     }
 
 

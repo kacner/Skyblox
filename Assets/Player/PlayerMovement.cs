@@ -318,7 +318,7 @@ public class PlayerMovement : MonoBehaviour
             clonedObject.AddComponent<TrailSpriteScript>(); //lägger på ett script på player dupen
         }
     }
-    private string DetermineLookDirection()
+    public string DetermineLookDirection()
     {
         if (moveX == -1 && moveY == 1) //UpLeft
             return "UpLeft";
@@ -359,5 +359,25 @@ public class PlayerMovement : MonoBehaviour
             facingDirection = Vector2.left; // Left
 
         return facingDirection; //return the last known value
+    }
+
+    public void moreMouseBites()
+    {
+        mouseScreenPosition = Input.mousePosition;
+        Vector2 mouseWorldPosition = Camera.main.ScreenToWorldPoint(mouseScreenPosition);
+
+        Vector2 playerPos = transform.position;
+
+        Vector2 relativeMousePos = mouseWorldPosition - playerPos;
+
+        cursorsprite.transform.position = new Vector2(mouseWorldPosition.x, mouseWorldPosition.y);
+
+        mouseWorldPosition.x = Mathf.Round(relativeMousePos.x);
+        mouseWorldPosition.y = Mathf.Round(relativeMousePos.y);
+
+        Vector2 mousePosition2D = new Vector2(relativeMousePos.x, relativeMousePos.y);
+
+        animator.SetFloat("Horizontal", mouseWorldPosition.x);
+        animator.SetFloat("Vertical", mouseWorldPosition.y);
     }
 }
