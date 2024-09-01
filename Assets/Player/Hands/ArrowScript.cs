@@ -20,7 +20,6 @@ public class ArrowScript : MonoBehaviour
     void Start()
     {
         WindFxSpriterenderer = WindFx.GetComponent<SpriteRenderer>();
-        InvokeRepeating("UpdateCondition", 5, 5);
 
         mainCam = GameObject.FindGameObjectWithTag("MainCamera").GetComponent<Camera>();
         rb = GetComponent<Rigidbody2D>();
@@ -39,12 +38,16 @@ public class ArrowScript : MonoBehaviour
         WindFxSpriterenderer.color = new Color(1, 1, 1, WindFxAlpha);
 
         WindFx.transform.localScale = new Vector3(0.025f * velocity + 1, 0.025f * velocity + 1, 0.025f * velocity + 1);
+
+        if (rb.velocity.magnitude < .1f)
+            UpdateCondition();
     }
 
     private void UpdateCondition()
     {
         if (velocity < 0.1f)
         {
+            Destroy(WindFxSpriterenderer);
             Destroy(rb);
             Destroy(this);
         }

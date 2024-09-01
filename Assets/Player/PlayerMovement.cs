@@ -2,7 +2,10 @@ using System.Collections;
 using System.Collections.Generic;
 using Unity.VisualScripting;
 using UnityEditor;
+using UnityEditor.Experimental.GraphView;
 using UnityEngine;
+using UnityEngine.Scripting.APIUpdating;
+
 [RequireComponent(typeof(Rigidbody2D))]
 public class PlayerMovement : MonoBehaviour
 {
@@ -53,20 +56,26 @@ public class PlayerMovement : MonoBehaviour
 
     [Header("Quiver & Arrow Settings")]
     public int arrowcount = 10;
-    public GameObject cursorsprite;
+    public RectTransform cursorspriteRectTransform;
     public bool useMousePos = false;
+    [HideInInspector]
+    public Vector2 mouseWorldPosition;
     public bool IsUsingBow = false;
 
     [Space(10)]
 
     [Header("Attack")]
-    public bool IsSpinAttacking = false;
+    public bool IsAttacking = false;
 
     private HotbarScript hotbarscript;
+
+    private SwordBase Swordbase;
 
     Vector2 mouseScreenPosition;
     void Start()
     {
+        Swordbase = GetComponentInChildren<SwordBase>();
+
         spriterenderer = GetComponent<SpriteRenderer>();
         rb = GetComponent<Rigidbody2D>();
         animator = GetComponent<Animator>();
@@ -81,18 +90,25 @@ public class PlayerMovement : MonoBehaviour
         {
             CancelInvoke("UpdateHorVer"); //cancels the updating of lookdirection
         }
-        DetermineLookDirection(); 
+        mouseWorldPosition = Camera.main.ScreenToWorldPoint(mouseScreenPosition);
 
         hotbarscript = GetComponent<HotbarScript>();
-
-        lookDirVector = DetermineLookDirectionVector2();
+        if (useMousePos)
+        {
+            lookDirVector = DetermineLookDirectionVector2(mouseWorldPosition);
+            DetermineLookDirection(mouseWorldPosition);
+        }
+        else
+        {
+            lookDirVector = DetermineLookDirectionVector2(moveDirection);
+            DetermineLookDirection(moveDirection);
+        }
     }
 
 
     void Update()
     {
-        animator.SetBool("IsSpinAttacking", IsSpinAttacking);
-        lookDirVector = DetermineLookDirectionVector2();
+        animator.SetBool("IsAttacking", IsAttacking);
 
         if (CanMove) 
         {
@@ -101,7 +117,19 @@ public class PlayerMovement : MonoBehaviour
 
             moveDirection = new Vector2(moveX, moveY).normalized;
 
-            newLookDir = DetermineLookDirection();
+
+            if (useMousePos)
+            {
+                newLookDir = DetermineLookDirection(mouseWorldPosition);
+                lookDirVector = DetermineLookDirectionVector2(mouseWorldPosition);
+                DetermineLookDirection(mouseWorldPosition);
+            }
+            else
+            {
+                newLookDir = DetermineLookDirection(moveDirection);
+                lookDirVector = DetermineLookDirectionVector2(moveDirection);
+                DetermineLookDirection(moveDirection);
+            }
 
             // Update lastlookdir only when lookdir changes and newLookDir is not "None"
             if (newLookDir != lookDir)
@@ -160,17 +188,19 @@ public class PlayerMovement : MonoBehaviour
 
         if (useMousePos && !isDead)
         {
-            cursorsprite.active = true;
-            Cursor.visible = false;
+            cursorspriteRectTransform.gameObject.SetActive(true);
+            Cursor.visible = false; //disables the windows cursor
 
             mouseScreenPosition = Input.mousePosition;
-            Vector2 mouseWorldPosition = Camera.main.ScreenToWorldPoint(mouseScreenPosition);
+            mouseWorldPosition = Camera.main.ScreenToWorldPoint(mouseScreenPosition);
 
             Vector2 playerPos = transform.position;
 
             Vector2 relativeMousePos = mouseWorldPosition - playerPos;
-            
-            cursorsprite.transform.position = new Vector2(mouseWorldPosition.x, mouseWorldPosition.y);
+
+            cursorspriteRectTransform.anchoredPosition = new Vector2(mouseWorldPosition.x, mouseWorldPosition.y); //moves the cursor to the mousecursors location
+            RectTransformUtility.ScreenPointToLocalPointInRectangle(cursorspriteRectTransform.parent as RectTransform, mouseScreenPosition, null, out Vector2 localPoint);
+            cursorspriteRectTransform.anchoredPosition = localPoint;
 
             mouseWorldPosition.x = Mathf.Round(relativeMousePos.x);
             mouseWorldPosition.y = Mathf.Round(relativeMousePos.y);
@@ -179,11 +209,12 @@ public class PlayerMovement : MonoBehaviour
 
             animator.SetFloat("Horizontal", mouseWorldPosition.x);
             animator.SetFloat("Vertical", mouseWorldPosition.y);
+
         }
         else if (!useMousePos)
         {
-            cursorsprite.active = false;
             Cursor.visible = true;
+            cursorspriteRectTransform.gameObject.SetActive(false);
         }
 
         if (Input.GetKeyDown(KeyCode.M))
@@ -277,7 +308,6 @@ public class PlayerMovement : MonoBehaviour
         yield return new WaitForSeconds(RollCooldown - emitParticleAfterInitialRoll);  //splitts up cooldown into 2 parts   2/2
         IsRolling = false;
     }
-
     private void Die()
     {
         hotbarscript.destroyCurrentWeapond(); 
@@ -286,10 +316,9 @@ public class PlayerMovement : MonoBehaviour
         animator.SetBool("isDead", true); //updates animator
         rb.velocity = new Vector2(0, 0); //setts velocity to 0 
     }
-
     private void UpdateHorVer()
     {
-        if (moveDirection != Vector2.zero) //if player isnt moving
+        if (moveDirection != Vector2.zero && Swordbase.IsAttacking == false) //if player isnt moving
         {
             animator.SetFloat("Horizontal", moveX);
             animator.SetFloat("Vertical", moveY);
@@ -299,7 +328,6 @@ public class PlayerMovement : MonoBehaviour
     {
         if (createtrailsprite)
         {
-
             GameObject clonedObject = Instantiate(gameObject); //instantiates a duplicate of the player
 
             Component[] components = clonedObject.GetComponents<Component>(); //stores all components in a array
@@ -318,44 +346,50 @@ public class PlayerMovement : MonoBehaviour
             clonedObject.AddComponent<TrailSpriteScript>(); //lägger på ett script på player dupen
         }
     }
-    public string DetermineLookDirection()
+    public string DetermineLookDirection(Vector2 Direction)
     {
-        if (moveX == -1 && moveY == 1) //UpLeft
+        int x = Mathf.RoundToInt(Direction.x);
+        int y = Mathf.RoundToInt(Direction.y);
+
+        if (x <= -1 && y >= 1) //UpLeft
             return "UpLeft";
-        else if (moveX == 1 && moveY == 1) //UpRight
+        else if (x >= 1 && y >= 1) //UpRight
             return "UpRight";
-        else if (moveX == -1 && moveY == -1) //DownLeft
+        else if (x <= -1 && y <= -1) //DownLeft
             return "DownLeft";
-        else if (moveX == 1 && moveY == -1) //DownRight
+        else if (x >= 1 && y <= -1) //DownRight
             return "DownRight";
-        else if (moveX == 0 && moveY == -1) //Down
+        else if (x == 0 && y <= -1) //Down
             return "Down";
-        else if (moveX == 0 && moveY == 1) //Up
+        else if (x == 0 && y >= 1) //Up
             return "Up";
-        else if (moveX == 1 && moveY == 0) //Right
+        else if (x >= 1 && y == 0) //Right
             return "Right";
-        else if (moveX == -1 && moveY == 0) //Left
+        else if (x <= -1 && y == 0) //Left
             return "Left";
         else
-            return lookDir; //return the last known value
+            return newLookDir; //return the last known value
     }
-    private Vector2 DetermineLookDirectionVector2()
+    public Vector2 DetermineLookDirectionVector2(Vector2 Direction)
     {
-        if (moveX == -1 && moveY == 1)
+        int x = Mathf.RoundToInt(Direction.x);
+        int y = Mathf.RoundToInt(Direction.y);
+
+        if (x <= -1 && y >= 1)
             facingDirection = new Vector2(-1, 1); // UpLeft
-        else if (moveX == 1 && moveY == 1)
+        else if (x >= 1 && y >= 1)
             facingDirection = new Vector2(1, 1); // UpRight
-        else if (moveX == -1 && moveY == -1)
+        else if (x <= -1 && y <= -1)
             facingDirection = new Vector2(-1, -1); // DownLeft
-        else if (moveX == 1 && moveY == -1)
+        else if (x >= 1 && y <= -1)
             facingDirection = new Vector2(1, -1); // DownRight
-        else if (moveX == 0 && moveY == -1)
+        else if (x == 0 && y <= -1)
             facingDirection = Vector2.down; // Down
-        else if (moveX == 0 && moveY == 1)
+        else if (x == 0 && y >= 1)
             facingDirection = Vector2.up; // Up
-        else if (moveX == 1 && moveY == 0)
+        else if (x >= 1 && y == 0)
             facingDirection = Vector2.right; // Right
-        else if (moveX == -1 && moveY == 0)
+        else if (x <= -1 && y == 0)
             facingDirection = Vector2.left; // Left
 
         return facingDirection; //return the last known value
@@ -370,7 +404,9 @@ public class PlayerMovement : MonoBehaviour
 
         Vector2 relativeMousePos = mouseWorldPosition - playerPos;
 
-        cursorsprite.transform.position = new Vector2(mouseWorldPosition.x, mouseWorldPosition.y);
+        cursorspriteRectTransform.anchoredPosition = new Vector2(mouseWorldPosition.x, mouseWorldPosition.y); //moves the cursor to the mousecursors location
+        RectTransformUtility.ScreenPointToLocalPointInRectangle(cursorspriteRectTransform.parent as RectTransform, mouseScreenPosition, null, out Vector2 localPoint);
+        cursorspriteRectTransform.anchoredPosition = localPoint;
 
         mouseWorldPosition.x = Mathf.Round(relativeMousePos.x);
         mouseWorldPosition.y = Mathf.Round(relativeMousePos.y);
@@ -379,5 +415,8 @@ public class PlayerMovement : MonoBehaviour
 
         animator.SetFloat("Horizontal", mouseWorldPosition.x);
         animator.SetFloat("Vertical", mouseWorldPosition.y);
+
+        newLookDir = DetermineLookDirection(mouseWorldPosition);
+        lookDirVector = DetermineLookDirectionVector2(mouseWorldPosition);
     }
 }
