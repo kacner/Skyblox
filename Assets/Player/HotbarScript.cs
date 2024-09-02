@@ -1,6 +1,4 @@
-using System.Collections;
-using System.Collections.Generic;
-using Unity.VisualScripting;
+using UnityEditor.Tilemaps;
 using UnityEngine;
 
 public class HotbarScript : MonoBehaviour
@@ -12,24 +10,27 @@ public class HotbarScript : MonoBehaviour
     private PlayerMovement playermovement;
     public bool canChangeSlot = true;
 
+    public GameObject EmptyWHands;
+
     public GameObject[] Weaponds = new GameObject[9];
 
     private void Start()
     {
         playermovement = GetComponent<PlayerMovement>();
+        AddWeapon();
+        UpdateHotbarSelection();
     }
 
     void Update()
     {
         canChangeSlot = playermovement.CanMove; //baseing the bool on if the player is allowed to move
-
         //slot 1 or 1key is Bow
         if (Input.GetKey(KeyCode.Alpha1) && selectedSlot != 1 && canChangeSlot) //Bow
         {
             selectedSlot = 1;
             destroyCurrentWeapond();
 
-            if (Weaponds[selectedSlot] != null)
+            if (Weaponds[selectedSlot - 1] != null)
                 InstantiateNewWeapond(Weaponds[selectedSlot - 1]);
             playermovement.useMousePos = true;
         }
@@ -38,7 +39,7 @@ public class HotbarScript : MonoBehaviour
             selectedSlot = 2;
             destroyCurrentWeapond();
 
-            if (Weaponds[selectedSlot] != null)
+            if (Weaponds[selectedSlot - 1] != null)
                 InstantiateNewWeapond(Weaponds[selectedSlot - 1]);
             playermovement.useMousePos = false;
         }
@@ -47,8 +48,8 @@ public class HotbarScript : MonoBehaviour
             selectedSlot = 3;
             destroyCurrentWeapond();
 
-            if (Weaponds[selectedSlot] != null)
-            InstantiateNewWeapond(Weaponds[selectedSlot - 1]);
+            if (Weaponds[selectedSlot - 1] != null)
+                InstantiateNewWeapond(Weaponds[selectedSlot - 1]);
             playermovement.useMousePos = false;
         }
         if (Input.GetKey(KeyCode.Alpha4) && selectedSlot != 4 && canChangeSlot) //Empty
@@ -56,7 +57,7 @@ public class HotbarScript : MonoBehaviour
             selectedSlot = 4;
             destroyCurrentWeapond();
 
-            if (Weaponds[selectedSlot] != null)
+            if (Weaponds[selectedSlot - 1] != null)
                 InstantiateNewWeapond(Weaponds[selectedSlot - 1]);
             playermovement.useMousePos = false;
         }
@@ -65,7 +66,7 @@ public class HotbarScript : MonoBehaviour
             selectedSlot = 5;
             destroyCurrentWeapond();
 
-            if (Weaponds[selectedSlot] != null)
+            if (Weaponds[selectedSlot - 1] != null)
                 InstantiateNewWeapond(Weaponds[selectedSlot - 1]);
             playermovement.useMousePos = false;
         }
@@ -74,7 +75,7 @@ public class HotbarScript : MonoBehaviour
             selectedSlot = 6;
             destroyCurrentWeapond();
 
-            if (Weaponds[selectedSlot] != null)
+            if (Weaponds[selectedSlot - 1] != null)
                 InstantiateNewWeapond(Weaponds[selectedSlot - 1]);
             playermovement.useMousePos = false;
         }
@@ -83,7 +84,7 @@ public class HotbarScript : MonoBehaviour
             selectedSlot = 7;
             destroyCurrentWeapond();
 
-            if (Weaponds[selectedSlot] != null)
+            if (Weaponds[selectedSlot - 1] != null)
                 InstantiateNewWeapond(Weaponds[selectedSlot - 1]);
             playermovement.useMousePos = false;
         }
@@ -92,7 +93,7 @@ public class HotbarScript : MonoBehaviour
             selectedSlot = 8;
             destroyCurrentWeapond();
 
-            if (Weaponds[selectedSlot] != null)
+            if (Weaponds[selectedSlot - 1] != null)
                 InstantiateNewWeapond(Weaponds[selectedSlot - 1]);
             playermovement.useMousePos = false;
         }
@@ -101,12 +102,17 @@ public class HotbarScript : MonoBehaviour
             selectedSlot = 9;
             destroyCurrentWeapond();
 
-            if (Weaponds[selectedSlot] != null)
+            if (Weaponds[selectedSlot - 1] != null)
                 InstantiateNewWeapond(Weaponds[selectedSlot - 1]);
             playermovement.useMousePos = false;
         }
     }
 
+    public void UpdateHotbarSelection()
+    {
+        if (Weaponds[selectedSlot - 1] != null)
+            InstantiateNewWeapond(Weaponds[selectedSlot - 1]);
+    }
     public void destroyCurrentWeapond()
     {
         GameObject[] allObjects = FindObjectsOfType<GameObject>();
@@ -119,7 +125,20 @@ public class HotbarScript : MonoBehaviour
             }
         }
     }
-    
+    public void AddWeapon()
+    {
+        for (int i = 0; i < Weaponds.Length; i++)
+        {
+            if (Weaponds[i] == null)
+            {
+                Weaponds[i] = EmptyWHands;
+                Debug.Log("Hands added to slot " + i);       
+            }
+        }
+        Debug.Log("No empty slots available to add the hands.");
+        return; // Exit the method after adding the weapon
+    }
+
     private void InstantiateNewWeapond(GameObject Weapond)
     {
             Instantiate(Weapond, transform);

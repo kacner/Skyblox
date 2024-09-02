@@ -1,8 +1,4 @@
-using System.Collections;
-using System.Collections.Generic;
-using UnityEditor.U2D.Sprites;
 using UnityEngine;
-using UnityEngine.UIElements;
 
 public class ArrowScript : MonoBehaviour
 {

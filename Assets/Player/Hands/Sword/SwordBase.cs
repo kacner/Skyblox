@@ -29,6 +29,8 @@ public class SwordBase : MonoBehaviour
 
     public Transform ControlObj;
 
+    public float swingRecoilForce;
+
     [Space(10)]
 
     [Header("RotatingSettings")]
@@ -130,7 +132,12 @@ public class SwordBase : MonoBehaviour
 
         playermovement.CanMove = false;
         playermovement.canRoll = false;
-        //playermovement.rb.velocity = new Vector2(playermovement.rb.velocity.x / 4, playermovement.rb.velocity.y / 4);
+
+        Vector2 swingDirection = (Vector2)transform.position - playermovement.cursorspriteRectTransform.anchoredPosition;
+        swingDirection.Normalize();
+        playermovement.rb.AddForce(-swingDirection * swingRecoilForce, ForceMode2D.Force);
+
+        //playermovement.rb.velocity = new Vector2(playermovement.rb.velocity.x * 4, playermovement.rb.velocity.y * 4);
         playermovement.moveDirection = new Vector2(0, 0);
 
         foreach (ParticleSystem RotationPFX in RotationPFX)

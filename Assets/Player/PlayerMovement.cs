@@ -1,10 +1,6 @@
 using System.Collections;
-using System.Collections.Generic;
-using Unity.VisualScripting;
-using UnityEditor;
-using UnityEditor.Experimental.GraphView;
 using UnityEngine;
-using UnityEngine.Scripting.APIUpdating;
+using UnityEngine.Rendering;
 
 [RequireComponent(typeof(Rigidbody2D))]
 public class PlayerMovement : MonoBehaviour
@@ -110,18 +106,24 @@ public class PlayerMovement : MonoBehaviour
     {
         animator.SetBool("IsAttacking", IsAttacking);
 
-        if (CanMove) 
+        if (useMousePos)
+        {
+            newLookDir = DetermineLookDirection(mouseWorldPosition);
+            lookDirVector = DetermineLookDirectionVector2(moveDirection);
+            DetermineLookDirection(mouseWorldPosition);
+        }
+
+        if (CanMove)
         {
             moveX = Input.GetAxisRaw("Horizontal"); //value -1 or 1. left or right
             moveY = Input.GetAxisRaw("Vertical"); //value -1 or 1. down and up
 
             moveDirection = new Vector2(moveX, moveY).normalized;
 
-
             if (useMousePos)
             {
                 newLookDir = DetermineLookDirection(mouseWorldPosition);
-                lookDirVector = DetermineLookDirectionVector2(mouseWorldPosition);
+                lookDirVector = DetermineLookDirectionVector2(moveDirection);
                 DetermineLookDirection(mouseWorldPosition);
             }
             else
@@ -318,10 +320,19 @@ public class PlayerMovement : MonoBehaviour
     }
     private void UpdateHorVer()
     {
-        if (moveDirection != Vector2.zero && Swordbase.IsAttacking == false) //if player isnt moving
+        if (Swordbase != null)
+        {
+            if (moveDirection != Vector2.zero && Swordbase.IsAttacking == false) //if player isnt moving
+            {
+                animator.SetFloat("Horizontal", moveX);
+                animator.SetFloat("Vertical", moveY);
+            }
+        }
+        else if (moveDirection != Vector2.zero)
         {
             animator.SetFloat("Horizontal", moveX);
             animator.SetFloat("Vertical", moveY);
+        
         }
     }
     private void CreateTrailSprite()
