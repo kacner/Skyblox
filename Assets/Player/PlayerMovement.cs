@@ -1,6 +1,8 @@
 using System.Collections;
 using UnityEngine;
 using UnityEngine.Rendering;
+using UnityEngine.SceneManagement;
+using UnityEngine.SceneManagement;
 
 [RequireComponent(typeof(Rigidbody2D))]
 public class PlayerMovement : MonoBehaviour
@@ -220,9 +222,8 @@ public class PlayerMovement : MonoBehaviour
         }
 
         if (Input.GetKeyDown(KeyCode.M))
-        {
             SlowMotion = !SlowMotion;
-        }
+
         if (SlowMotion == true)
             Time.timeScale = 0.1f;
         else
@@ -230,6 +231,9 @@ public class PlayerMovement : MonoBehaviour
 
         if (Input.GetKey(KeyCode.N))
             Debug.Break();
+
+        if (Input.GetKey(KeyCode.Backspace))
+            SceneManager.LoadScene("SampleScene");
 
     }
     private void FixedUpdate()

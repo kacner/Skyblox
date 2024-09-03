@@ -60,8 +60,14 @@ public class InventoryUI : MonoBehaviour
 
     public void Remove(int slotID)
     {
-        Debug.Log(slotID + "--");
-        player.inventory.Remove(slotID - 1);
-        Refresh();
+        GameObject itemToDropObject = GameManager.instance.itemManager.GetItemByType(player.inventory.slots[slotID - 1].type);
+
+        if (itemToDropObject != null)
+        {
+            // Pass the GameObject directly to the dropItem method
+            player.dropItem(itemToDropObject);
+            player.inventory.Remove(slotID - 1);
+            Refresh();
+        }
     }
 }

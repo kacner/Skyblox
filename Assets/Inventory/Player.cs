@@ -10,4 +10,18 @@ public class Player : MonoBehaviour
     {
         inventory = new Inventory(15);
     }
+
+    public void dropItem(GameObject item)
+    {
+        print("dropped");
+        Vector3 spawnlocation = transform.position;
+
+        float randX = Random.RandomRange(-5f, 5f);
+        float randY = Random.RandomRange(-5f, 5f);
+
+        Vector3 spawnOffset = new Vector3(randX, randY, 0).normalized;
+
+        GameObject droppedItem = Instantiate(item, spawnlocation + spawnOffset, Quaternion.identity);
+        droppedItem.transform.localScale = new Vector3(1, 1, 1);
+    }
 }
