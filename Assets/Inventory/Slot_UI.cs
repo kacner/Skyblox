@@ -10,6 +10,7 @@ public class Slot_UI : MonoBehaviour
 {
     public Image itemIcon;
     public TextMeshProUGUI quantityText;
+    public Button DropButton;
 
     public void SetItem(Inventory.Slot slot)
     {
@@ -18,6 +19,7 @@ public class Slot_UI : MonoBehaviour
             itemIcon.sprite = slot.icon;
             itemIcon.color = new Color(1, 1, 1, 1);
             quantityText.text = slot.count.ToString();
+            DropButton.gameObject.SetActive(true);
         }
     }
 
@@ -26,5 +28,6 @@ public class Slot_UI : MonoBehaviour
         itemIcon.sprite = null;
         itemIcon.color = new Color(1, 1, 1, 0);
         quantityText.text = "";
+        DropButton.gameObject.SetActive(false);
     }
 }
