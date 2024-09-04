@@ -16,8 +16,8 @@ public class Player : MonoBehaviour
         print("dropped");
         Vector3 spawnlocation = transform.position;
 
-        float randX = Random.RandomRange(-5f, 5f);
-        float randY = Random.RandomRange(-5f, 5f);
+        float randX = Random.RandomRange(Random.RandomRange(-5, -2), Random.RandomRange(5, 2));
+        float randY = Random.RandomRange(Random.RandomRange(-5,-2), Random.RandomRange(5, 2));
 
         Vector3 spawnOffset = new Vector3(randX, randY, 0).normalized;
 

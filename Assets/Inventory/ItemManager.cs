@@ -7,7 +7,7 @@ public class ItemManager : MonoBehaviour
 {
     public GameObject[] collectableItems;
 
-    private Dictionary<Collectabletype, GameObject> collectableItemsDict = new Dictionary<Collectabletype, GameObject>();
+    public Dictionary<Collectabletype, GameObject> collectableItemsDict = new Dictionary<Collectabletype, GameObject>();
 
     private void Awake()
     {

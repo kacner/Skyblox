@@ -62,8 +62,8 @@ public class Collectibal : MonoBehaviour
         player.inventory.Add(this);
         inventoryUI.Refresh();
         
-        //var emission = transform.parent.GetComponent<ParticleSystem>().emission;
-        //emission.enabled = false;
+        var emission = transform.parent.GetComponent<ParticleSystem>().emission;
+        emission.enabled = false;
 
         yield return new WaitForSeconds(0.5f);
 
