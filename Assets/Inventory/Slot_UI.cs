@@ -11,6 +11,8 @@ public class Slot_UI : MonoBehaviour
     public Image itemIcon;
     public TextMeshProUGUI quantityText;
     public Button DropButton;
+    public Image RarityBackLight;
+    public RarityLevel slotItemsRarity; // could cause glitches
 
     public void SetItem(Inventory.Slot slot)
     {
@@ -20,14 +22,42 @@ public class Slot_UI : MonoBehaviour
             itemIcon.color = new Color(1, 1, 1, 1);
             quantityText.text = slot.count.ToString();
             DropButton.gameObject.SetActive(true);
+            
+            slotItemsRarity = slot.itemRarity;
+            checkRarityLevel();
         }
     }
 
     public void setEmpty()
     {
+        RarityBackLight.color = new Color(0, 0, 0, 0);
         itemIcon.sprite = null;
         itemIcon.color = new Color(1, 1, 1, 0);
         quantityText.text = "";
         DropButton.gameObject.SetActive(false);
+    }
+
+    public void checkRarityLevel()
+    {
+        if (slotItemsRarity == RarityLevel.Ledgendairy)
+        {
+            RarityBackLight.color = new Color(255, 190, 0, 0.5f);
+        }
+        else if (slotItemsRarity == RarityLevel.Epic)
+        {
+            RarityBackLight.color = new Color(252, 0, 255, 0.5f);
+        }
+        else if (slotItemsRarity == RarityLevel.Rare)
+        {
+            RarityBackLight.color = new Color(0, 137, 255, 0.5f);
+        }
+        else if (slotItemsRarity == RarityLevel.Uncommon)
+        {
+            RarityBackLight.color = new Color(0, 1, 0, 0.5f);
+        }
+        else
+        {
+            RarityBackLight.color = new Color(70, 70, 70, 0.5f);
+        }
     }
 }

@@ -23,4 +23,5 @@ public class GameManager : MonoBehaviour
 
         itemManager = GetComponent<ItemManager>();
     }
+
 }

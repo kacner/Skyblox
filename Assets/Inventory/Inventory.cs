@@ -1,39 +1,54 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.Rendering;
 
 [System.Serializable]
 public class Inventory
 {
+
     [System.Serializable]
     public class Slot
     {
         public Collectabletype type;
         public int count;
-        public int maxAllowed;
-
         public Sprite icon;
+
+        public RarityLevel itemRarity;
+
 
         public Slot()
         {
             type = Collectabletype.NONE;
             count = 0;
-            maxAllowed = 99;
         }
 
         public bool CanAddItem()
         {
-            if (count < maxAllowed)
+            if (type == Collectabletype.Standard_Bow)
             {
-                return true;
+                if (count < 1)
+                {
+                    return true;
+                }
+                return false;
             }
-            return false;
+            else
+            {
+                if (count < 64)
+                {
+                    return true;
+                }
+                return false;
+            }
         }
 
         public void AddItem(Collectibal item)
         {
             this.type = item.type;
             this.icon = item.icon;
+            itemRarity = item.Rarity;
             count++;
         }
 
@@ -85,5 +100,10 @@ public class Inventory
     public void Remove(int index)
     {
         slots[index].RemoveItem();
+    }
+
+    public RarityLevel GetRarityFromSlot(int index)
+    {
+        return slots[index].itemRarity;
     }
 }

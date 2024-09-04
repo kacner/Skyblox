@@ -2,21 +2,35 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Xml.Serialization;
 using UnityEngine;
+using UnityEngine.AddressableAssets;
+using UnityEngine.ResourceManagement.AsyncOperations;
 
 public class ItemManager : MonoBehaviour
 {
-    public GameObject[] collectableItems;
+    public AssetReference[] collectableItems;
 
     public Dictionary<Collectabletype, GameObject> collectableItemsDict = new Dictionary<Collectabletype, GameObject>();
 
     private void Awake()
     {
+        StartCoroutine(LoadItemsAsync());
+    }
 
-        foreach(GameObject item in collectableItems)
+    private IEnumerator LoadItemsAsync()
+    {
+        foreach (var itemReference in collectableItems)
         {
-            AddItem(item);
+            var handle = itemReference.LoadAssetAsync<GameObject>();
+
+            yield return handle;
+
+            if (handle.Status == AsyncOperationStatus.Succeeded)
+            {
+                AddItem(handle.Result);
+            }
         }
     }
+
     private void AddItem(GameObject item)
     {
         Collectibal collectibal = item.GetComponentInChildren<Collectibal>();
@@ -33,5 +47,12 @@ public class ItemManager : MonoBehaviour
             return collectableItemsDict[type];
         }
         return null;
+    }
+    private void OnDestroy()
+    {
+        foreach (var item in collectableItems)
+        {
+            item.ReleaseAsset();
+        }
     }
 }

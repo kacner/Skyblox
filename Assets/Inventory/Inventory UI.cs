@@ -62,7 +62,7 @@ public class InventoryUI : MonoBehaviour
         if (itemToDropObject != null)
         {
             // Pass the GameObject directly to the dropItem method
-            player.dropItem(itemToDropObject);
+            player.dropItem(itemToDropObject, slotID);
             player.inventory.Remove(slotID - 1);
             Refresh();
         }
