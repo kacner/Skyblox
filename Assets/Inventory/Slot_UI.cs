@@ -20,7 +20,16 @@ public class Slot_UI : MonoBehaviour
         {
             itemIcon.sprite = slot.icon;
             itemIcon.color = new Color(1, 1, 1, 1);
-            quantityText.text = slot.count.ToString();
+            
+            if (slot.count > 1)
+            {
+                quantityText.text = slot.count.ToString();
+            }
+            else
+            {
+                quantityText.text = "";
+            }
+
             DropButton.gameObject.SetActive(true);
             
             slotItemsRarity = slot.itemRarity;
@@ -41,23 +50,23 @@ public class Slot_UI : MonoBehaviour
     {
         if (slotItemsRarity == RarityLevel.Ledgendairy)
         {
-            RarityBackLight.color = new Color(255, 190, 0, 0.5f);
+            RarityBackLight.color = new Color(255, 190, 0, 1f);
         }
         else if (slotItemsRarity == RarityLevel.Epic)
         {
-            RarityBackLight.color = new Color(252, 0, 255, 0.5f);
+            RarityBackLight.color = new Color(252, 0, 255, 1f);
         }
         else if (slotItemsRarity == RarityLevel.Rare)
         {
-            RarityBackLight.color = new Color(0, 137, 255, 0.5f);
+            RarityBackLight.color = new Color(0, 137, 255, 1f);
         }
         else if (slotItemsRarity == RarityLevel.Uncommon)
         {
-            RarityBackLight.color = new Color(0, 1, 0, 0.5f);
+            RarityBackLight.color = new Color(0, 1, 0, 1f);
         }
         else
         {
-            RarityBackLight.color = new Color(70, 70, 70, 0.5f);
+            RarityBackLight.color = new Color(70, 70, 70, 1f);
         }
     }
 }

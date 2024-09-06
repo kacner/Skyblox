@@ -53,14 +53,12 @@ public class Collectibal : MonoBehaviour
         Player player = collision.GetComponent<Player>();
         if (player) //pickuplogic
         {
-            print("collitino");
             StartCoroutine(ExitMusicForAFilm(player));
         }
     }
     
     IEnumerator ExitMusicForAFilm(Player player)
     {
-        print("starta");
         GetComponent<SpriteRenderer>().sprite = null;
         player.inventory.Add(this);
         Destroy(GetComponent<BoxCollider2D>());
@@ -188,7 +186,7 @@ public class Collectibal : MonoBehaviour
 }
 public enum Collectabletype
 {
-    NONE, Standard_Sword, Standard_Bow
+    NONE, Standard_Sword, Standard_Bow, Arrow
 }
 
 public enum RarityLevel

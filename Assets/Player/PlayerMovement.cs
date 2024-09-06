@@ -53,7 +53,6 @@ public class PlayerMovement : MonoBehaviour
     [Space(10)]
 
     [Header("Quiver & Arrow Settings")]
-    public int arrowcount = 10;
     public RectTransform cursorspriteRectTransform;
     public bool useMousePos = false;
     [HideInInspector]

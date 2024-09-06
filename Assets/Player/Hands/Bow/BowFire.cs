@@ -1,4 +1,5 @@
 using Unity.Mathematics;
+using Unity.VisualScripting;
 using UnityEngine;
 
 public class BowFire : MonoBehaviour
@@ -21,9 +22,24 @@ public class BowFire : MonoBehaviour
     private float previousRotz;
     public float rotationThreshold;
 
+    private float currentSpeed;
+    private float halfSpeed;
+    private float minHalfSpeed;
+
+    public Player player;
+    public InventoryUI inventoryUI;
+
+    private bool IsNormalSpeed;
+    private bool IsSlowed;
+
+    public int ArrowSlotID;
 
     void Start()
     {
+        GameObject canvasObject = GameObject.Find("Canvas");
+        inventoryUI = canvasObject.GetComponentInChildren<InventoryUI>();
+        player = GetComponentInParent<Player>();
+
         playermovement = GetComponentInParent<PlayerMovement>();
 
         ArrowSprite.SetActive(false);
@@ -58,32 +74,47 @@ public class BowFire : MonoBehaviour
             transform.rotation = Quaternion.Euler(0, 0, rotz + 90);
             previousRotz = rotz; 
         }
-        
+        player.inventory.CheckForEmptySlot();
+
         //handels the shooting of the bow 
-        if (playermovement.arrowcount >= 1)
+        if (player.inventory.GetArrowCount() >= 1)
         {
-            if (Input.GetKey(KeyCode.Mouse1) || staneone)
+
+            if (Input.GetKey(KeyCode.Mouse1) || staneone) //shooting starts
             {
                 holdtimer = Mathf.Clamp(holdtimer, 0, bowHoldTime);
                 holdtimer += Time.deltaTime;
 
-                playermovement.CanMove = false;
-                playermovement.moveDirection = Vector2.zero;
                 playermovement.canRoll = false;
-
                 animator.SetBool("DrawingBow", true);
                 ArrowSprite.SetActive(true);
 
                 if (holdtimer > bowHoldTime)
                     staneone = true;
 
-                if (!Input.GetKey(KeyCode.Mouse1))
+                if (!IsNormalSpeed)
                 {
-                    playermovement.CanMove = true;
+                    playermovement.maxSpeed /= 2;
+                    IsNormalSpeed = true;
+                    IsSlowed = false;
+                }
+
+
+                if (!Input.GetKey(KeyCode.Mouse1)) //shooting is over
+                {
                     playermovement.canRoll = true;
+
+                    if (!IsSlowed)
+                    {
+                        playermovement.maxSpeed *= 2;
+                        IsSlowed = true;
+                        IsNormalSpeed = false;
+                    }
+
                     holdtimer = 0;
                     Instantiate(arrow, bulletTransform.position, quaternion.identity);
-                    playermovement.arrowcount--;
+                    player.inventory.RemoveArrow();
+                    inventoryUI.Refresh();
                     staneone = false;
                 }
                 
@@ -101,6 +132,7 @@ public class BowFire : MonoBehaviour
             animator.SetBool("DrawingBow", false);
             ArrowSprite.SetActive(false);
         }
+
     }
 
     private void UpdateSortingLayers()

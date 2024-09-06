@@ -14,7 +14,6 @@ public class Player : MonoBehaviour
 
     public void dropItem(GameObject item, int slotID)
     {
-        print("dropped");
         Vector2 spawnlocation = transform.position;
 
         Vector2 spawnOffset = Random.insideUnitCircle.normalized * 3.25f;

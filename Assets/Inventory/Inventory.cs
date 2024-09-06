@@ -1,8 +1,8 @@
-using System;
-using System.Collections;
 using System.Collections.Generic;
+using Unity.Loading;
+using Unity.Profiling.Editor;
+using Unity.VisualScripting.FullSerializer;
 using UnityEngine;
-using UnityEngine.Rendering;
 
 [System.Serializable]
 public class Inventory
@@ -29,6 +29,14 @@ public class Inventory
             if (type == Collectabletype.Standard_Bow)
             {
                 if (count < 1)
+                {
+                    return true;
+                }
+                return false;
+            }
+            else if (type == Collectabletype.Arrow)
+            {
+                if (count < 16)
                 {
                     return true;
                 }
@@ -74,6 +82,42 @@ public class Inventory
         {
             Slot slot = new Slot();
             slots.Add(slot);
+        }
+    }
+
+    public int GetArrowCount()
+    {
+        foreach (Slot slot in slots)
+        {
+            if (slot.type == Collectabletype.Arrow)
+            {
+                return slot.count;
+            }
+        }
+        return 0;
+    }
+    public void RemoveArrow()
+    {
+        for (int i = 0; i < slots.Count; i++)
+        {   
+            if (slots[i].type == Collectabletype.Arrow)
+            {
+                Remove(i);
+                break;
+            }
+        }
+    }
+    public void CheckForEmptySlot()
+    {
+        for (int i = 0; i < slots.Count; i++)
+        {
+            if (slots[i].type == Collectabletype.Arrow && slots.Count <= 0)
+            {
+                GameObject canvasObject = GameObject.Find("Canvas");
+                InventoryUI inventoryUI = canvasObject.GetComponentInChildren<InventoryUI>();
+                inventoryUI.ForceRemove(i);
+                Debug.Log(i);
+            }
         }
     }
 

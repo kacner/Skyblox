@@ -9,6 +9,7 @@ public class ItemManager : MonoBehaviour
 {
     public AssetReference[] collectableItems;
 
+    [SerializeField]
     public Dictionary<Collectabletype, GameObject> collectableItemsDict = new Dictionary<Collectabletype, GameObject>();
 
     private void Awake()

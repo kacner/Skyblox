@@ -67,4 +67,16 @@ public class InventoryUI : MonoBehaviour
             Refresh();
         }
     }
+    
+    public void ForceRemove(int slotID)
+    {
+        GameObject itemToDropObject = GameManager.instance.itemManager.GetItemByType(player.inventory.slots[slotID - 1].type);
+
+        if (itemToDropObject != null)
+        {
+            player.inventory.Remove(slotID);
+            Debug.Log(slotID);
+            Refresh();
+        }
+    }
 }
