@@ -8,11 +8,15 @@ using TMPro;
 
 public class Slot_UI : MonoBehaviour
 {
+    public int slotID;
     public Image itemIcon;
     public TextMeshProUGUI quantityText;
     public Button DropButton;
     public Image RarityBackLight;
-    public RarityLevel slotItemsRarity; // could cause glitches
+    public string slotItemsRarity;
+    public Inventory inventory;
+
+    [SerializeField] private GameObject highLight;
 
     public void SetItem(Inventory.Slot slot)
     {
@@ -29,44 +33,63 @@ public class Slot_UI : MonoBehaviour
             {
                 quantityText.text = "";
             }
-
-            DropButton.gameObject.SetActive(true);
             
             slotItemsRarity = slot.itemRarity;
             checkRarityLevel();
+        }
+        else
+        {
+            print("fail1");
         }
     }
 
     public void setEmpty()
     {
-        RarityBackLight.color = new Color(0, 0, 0, 0);
-        itemIcon.sprite = null;
-        itemIcon.color = new Color(1, 1, 1, 0);
-        quantityText.text = "";
-        DropButton.gameObject.SetActive(false);
+        if (RarityBackLight != null)
+            RarityBackLight.color = new Color(0, 0, 0, 0);
+
+        if (itemIcon != null)
+            itemIcon.sprite = null;
+
+        if (itemIcon != null)
+            itemIcon.color = new Color(1, 1, 1, 0);
+
+        if (quantityText != null)
+            quantityText.text = "";
+
+        if (DropButton != null)
+            DropButton.gameObject.SetActive(false);
+    }
+
+    public void SetHighLight(bool isOn)
+    {
+        highLight.SetActive(isOn);
     }
 
     public void checkRarityLevel()
     {
-        if (slotItemsRarity == RarityLevel.Ledgendairy)
+        if (RarityBackLight != null)
         {
-            RarityBackLight.color = new Color(255, 190, 0, 1f);
-        }
-        else if (slotItemsRarity == RarityLevel.Epic)
-        {
-            RarityBackLight.color = new Color(252, 0, 255, 1f);
-        }
-        else if (slotItemsRarity == RarityLevel.Rare)
-        {
-            RarityBackLight.color = new Color(0, 137, 255, 1f);
-        }
-        else if (slotItemsRarity == RarityLevel.Uncommon)
-        {
-            RarityBackLight.color = new Color(0, 1, 0, 1f);
-        }
-        else
-        {
-            RarityBackLight.color = new Color(70, 70, 70, 1f);
+            if (slotItemsRarity == "Ledgendairy")
+            {
+                RarityBackLight.color = new Color(255, 190, 0, 1f);
+            }
+            else if (slotItemsRarity == "Epic")
+            {
+                RarityBackLight.color = new Color(252, 0, 255, 1f);
+            }
+            else if (slotItemsRarity == "Rare")
+            {
+                RarityBackLight.color = new Color(0, 137, 255, 1f);
+            }
+            else if (slotItemsRarity == "Uncommon")
+            {
+                RarityBackLight.color = new Color(0, 1, 0, 1f);
+            }
+            else
+            {
+                RarityBackLight.color = new Color(70, 70, 70, 1f);
+            }
         }
     }
 }

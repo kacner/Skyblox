@@ -18,17 +18,17 @@ MonoBehaviour:
   m_GUID: 919245229a7b2a74ca05b953158ad140
   m_SerializeEntries:
   - m_GUID: f7696a66b1c190b4ba2ea7fabebcc16d
-    m_Address: Assets/Inventory/Prefabs/--Pickup--.prefab
-    m_ReadOnly: 0
-    m_SerializedLabels: []
-    FlaggedDuringContentUpdateRestriction: 0
-  - m_GUID: 5336ba7a6b809874fa49b7bc661b89fc
-    m_Address: Assets/Inventory/Prefabs/Sword--Pickup--.prefab
+    m_Address: Assets/Inventory/Prefabs/Rookie_Bow--Pickup--.prefab
     m_ReadOnly: 0
     m_SerializedLabels: []
     FlaggedDuringContentUpdateRestriction: 0
   - m_GUID: d07fc48996a56f74996ba2deaaac6173
     m_Address: Assets/Inventory/Prefabs/Arrow--Pickup-- 1.prefab
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: 5336ba7a6b809874fa49b7bc661b89fc
+    m_Address: Assets/Inventory/Prefabs/Sword--Pickup--.prefab
     m_ReadOnly: 0
     m_SerializedLabels: []
     FlaggedDuringContentUpdateRestriction: 0

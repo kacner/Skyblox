@@ -3,6 +3,7 @@ using Unity.Loading;
 using Unity.Profiling.Editor;
 using Unity.VisualScripting.FullSerializer;
 using UnityEngine;
+using static UnityEditor.Progress;
 
 [System.Serializable]
 public class Inventory
@@ -11,53 +12,57 @@ public class Inventory
     [System.Serializable]
     public class Slot
     {
-        public Collectabletype type;
+        public string itemName;
         public int count;
         public Sprite icon;
-
-        public RarityLevel itemRarity;
+        public int maxAllowed = 64;
+        public string itemRarity;
 
 
         public Slot()
         {
-            type = Collectabletype.NONE;
+            itemName = "";
             count = 0;
         }
 
-        public bool CanAddItem()
+        public bool IsEmpty
         {
-            if (type == Collectabletype.Standard_Bow)
+            get
             {
-                if (count < 1)
+                if (itemName == "" && count == 0)
                 {
                     return true;
                 }
-                return false;
-            }
-            else if (type == Collectabletype.Arrow)
-            {
-                if (count < 16)
-                {
-                    return true;
-                }
-                return false;
-            }
-            else
-            {
-                if (count < 64)
-                {
-                    return true;
-                }
+
                 return false;
             }
         }
 
-        public void AddItem(Collectibal item)
+        public bool CanAddItem(string itemName)
         {
-            this.type = item.type;
-            this.icon = item.icon;
-            itemRarity = item.Rarity;
+                if (this.itemName == itemName && count < maxAllowed)
+                {
+                    return true;
+                }
+                return false;
+            
+        }
+
+        public void AddItem(Item item)
+        {
+            this.itemName = item.data.itemName;
+            this.icon = item.data.icon;
+            itemRarity = item.data.Rarity;
             count++;
+        }
+
+        public void AddItem(string itemName, Sprite icon, int maxAllowed, string Rarity)
+        {
+            this.itemName = itemName;
+            this.icon = icon;
+            this.itemRarity = Rarity;
+            count++;
+            this.maxAllowed = maxAllowed;
         }
 
         public void RemoveItem()
@@ -69,7 +74,7 @@ public class Inventory
                 if (count == 0)
                 {
                     icon = null;
-                    type = Collectabletype.NONE;
+                    itemName = "";
                 }
             }
         }
@@ -84,12 +89,11 @@ public class Inventory
             slots.Add(slot);
         }
     }
-
     public int GetArrowCount()
     {
         foreach (Slot slot in slots)
         {
-            if (slot.type == Collectabletype.Arrow)
+            if (slot.itemName == "Arrow")
             {
                 return slot.count;
             }
@@ -100,32 +104,19 @@ public class Inventory
     {
         for (int i = 0; i < slots.Count; i++)
         {   
-            if (slots[i].type == Collectabletype.Arrow)
+            if (slots[i].itemName == "Arrow")
             {
                 Remove(i);
                 break;
             }
         }
     }
-    public void CheckForEmptySlot()
-    {
-        for (int i = 0; i < slots.Count; i++)
-        {
-            if (slots[i].type == Collectabletype.Arrow && slots.Count <= 0)
-            {
-                GameObject canvasObject = GameObject.Find("Canvas");
-                InventoryUI inventoryUI = canvasObject.GetComponentInChildren<InventoryUI>();
-                inventoryUI.ForceRemove(i);
-                Debug.Log(i);
-            }
-        }
-    }
 
-    public void Add(Collectibal item)
+    public void Add(Item item)
     {
         foreach (Slot slot in slots)
         {
-            if(slot.type == item.type && slot.CanAddItem())
+            if(slot.itemName == item.data.itemName && slot.CanAddItem(item.data.itemName))
             {
                 slot.AddItem(item);
                 return;
@@ -133,7 +124,7 @@ public class Inventory
         }
         foreach (Slot slot in slots)
         {
-            if (slot.type == Collectabletype.NONE)
+            if (slot.itemName == "")
             {
                 slot.AddItem(item);
                 return;
@@ -145,9 +136,34 @@ public class Inventory
     {
         slots[index].RemoveItem();
     }
+    public void Remove(int index, int numToRemove)
+    {
+        if (slots[index].count >= numToRemove)
+        {
+            for (int i = 0; i < numToRemove; i++)
+            {
+                Remove(index);
+            }
+        }
+    }
 
-    public RarityLevel GetRarityFromSlot(int index)
+    public string GetRarityFromSlot(int index)
     {
         return slots[index].itemRarity;
+    }
+
+    public void MoveSlot(int fromIndex, int ToIndex, Inventory toInventory, int numToMove = 1)
+    {
+        Slot fromslot = slots[fromIndex];
+        Slot Toslot = toInventory.slots[ToIndex];
+
+        if (Toslot.IsEmpty || Toslot.CanAddItem(fromslot.itemName))
+        {
+            for (int i = 0; i < numToMove; i++)
+            {
+                Toslot.AddItem(fromslot.itemName, fromslot.icon, fromslot.maxAllowed, fromslot.itemRarity);
+                fromslot.RemoveItem();
+            }
+        }
     }
 }

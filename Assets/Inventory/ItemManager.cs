@@ -1,59 +1,72 @@
 using System.Collections;
 using System.Collections.Generic;
-using System.Xml.Serialization;
 using UnityEngine;
 using UnityEngine.AddressableAssets;
 using UnityEngine.ResourceManagement.AsyncOperations;
 
 public class ItemManager : MonoBehaviour
 {
-    public AssetReference[] collectableItems;
+    public List<AssetReference> items;
 
     [SerializeField]
-    public Dictionary<Collectabletype, GameObject> collectableItemsDict = new Dictionary<Collectabletype, GameObject>();
+    public Dictionary<string, Item> nameToItemDict = 
+       new Dictionary<string, Item>();
 
     private void Awake()
     {
-        StartCoroutine(LoadItemsAsync());
+        foreach (AssetReference itemRef in items)
+        {
+            LoadItem(itemRef);
+        }
     }
 
-    private IEnumerator LoadItemsAsync()
+    private void LoadItem(AssetReference itemRef)
     {
-        foreach (var itemReference in collectableItems)
+        itemRef.LoadAssetAsync<GameObject>().Completed += handle =>
         {
-            var handle = itemReference.LoadAssetAsync<GameObject>();
-
-            yield return handle;
-
             if (handle.Status == AsyncOperationStatus.Succeeded)
             {
-                AddItem(handle.Result);
+                GameObject itemObj = handle.Result;
+                Item loadedItem = itemObj.GetComponentInChildren<Item>(); // Get the Item component from the loaded GameObject
+
+                if (loadedItem != null && !nameToItemDict.ContainsKey(loadedItem.data.itemName))
+                {
+                    nameToItemDict.Add(loadedItem.data.itemName, loadedItem);
+                }
+                else
+                    print("LoadFailed");
             }
+            else
+            {
+                Debug.LogError("Failed to load item from addressables.");
+            }
+        };
+    }
+
+    private void AddItem(Item item)
+    {
+        if (nameToItemDict.ContainsKey(item.data.itemName))
+        {
+            nameToItemDict.Add(item.data.itemName, item);
         }
     }
 
-    private void AddItem(GameObject item)
+    public Item GetItemByName(string key)
     {
-        Collectibal collectibal = item.GetComponentInChildren<Collectibal>();
-        if (collectibal != null && !collectableItemsDict.ContainsKey(collectibal.type))
+        if (nameToItemDict.ContainsKey(key))
         {
-            collectableItemsDict.Add(collectibal.type, item);
+            return nameToItemDict[key];
         }
-    }
-
-    public GameObject GetItemByType(Collectabletype type)
-    {
-        if (collectableItemsDict.ContainsKey(type))
-        {
-            return collectableItemsDict[type];
-        }
+        print(nameToItemDict.ContainsKey(key));
+        Debug.Log("Items loaded: " + nameToItemDict.Count);
         return null;
     }
-    private void OnDestroy()
+    private void OnDestroy() //some shit needed for referencing
     {
-        foreach (var item in collectableItems)
+        // Release loaded assets
+        foreach (var itemRef in items)
         {
-            item.ReleaseAsset();
+            itemRef.ReleaseAsset();
         }
     }
 }

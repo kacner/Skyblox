@@ -1,29 +1,34 @@
 using JetBrains.Annotations;
 using System.Collections;
 using System.Collections.Generic;
+using System.Data;
 using UnityEngine;
 
 public class Player : MonoBehaviour
 {
-    public Inventory inventory;
+    public InventoryManager inventory;
 
     private void Awake()
     {
-        inventory = new Inventory(15);
+        inventory = GetComponent<InventoryManager>();
     }
 
-    public void dropItem(GameObject item, int slotID)
+    public void dropItem(Item item)
     {
         Vector2 spawnlocation = transform.position;
 
-        Vector2 spawnOffset = Random.insideUnitCircle.normalized * 3.25f;
+        Vector2 spawnOffset = Random.insideUnitCircle.normalized * 3f;
 
-        GameObject droppedItem = Instantiate(item, spawnlocation + spawnOffset, Quaternion.identity);
+        Item droppedItem = Instantiate(item, spawnlocation + spawnOffset, Quaternion.identity);
+        //droppedItem.transform.parent = item.transform;
         droppedItem.transform.localScale = new Vector3(1, 1, 1);
 
-        RarityLevel InvRariry = inventory.GetRarityFromSlot(slotID - 1);
-
-        droppedItem.GetComponentInChildren<Collectibal>().Rarity = InvRariry;
-
+    }
+    public void dropItem(Item item, int numToDrop)
+    {
+        for (int i = 0; i < numToDrop; i++)
+        {
+            dropItem(item);
+        }
     }
 }

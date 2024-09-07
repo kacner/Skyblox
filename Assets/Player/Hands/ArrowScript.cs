@@ -41,11 +41,8 @@ public class ArrowScript : MonoBehaviour
 
     private void UpdateCondition()
     {
-        if (velocity < 0.1f)
-        {
             Destroy(WindFxSpriterenderer);
             Destroy(rb);
             Destroy(this);
-        }
     }
 }

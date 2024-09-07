@@ -1,13 +1,13 @@
 using System.Collections;
 using System.ComponentModel;
+using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.Rendering.Universal;
 
+[RequireComponent(typeof(Item))]
 public class Collectibal : MonoBehaviour
 {
     [Header("Main PickupSettings")]
-    public Collectabletype type;
-    public Sprite icon;
     private InventoryUI inventoryUI;
 
     [Space(10)]
@@ -35,13 +35,14 @@ public class Collectibal : MonoBehaviour
 
     void Start()
     {
+        CreateParent(this.transform.gameObject);
+
         GameObject canvasObject = GameObject.Find("Canvas");
         inventoryUI = canvasObject.GetComponentInChildren<InventoryUI>();
 
         startPos = transform.position;
 
         SpriteRenderer collectibalSpriterenderer = GetComponent<SpriteRenderer>();
-        collectibalSpriterenderer.sprite = icon;
 
         FixRarityKit();
 
@@ -49,7 +50,6 @@ public class Collectibal : MonoBehaviour
     }
     private void OnTriggerEnter2D(Collider2D collision)
     {
-        
         Player player = collision.GetComponent<Player>();
         if (player) //pickuplogic
         {
@@ -60,9 +60,18 @@ public class Collectibal : MonoBehaviour
     IEnumerator ExitMusicForAFilm(Player player)
     {
         GetComponent<SpriteRenderer>().sprite = null;
-        player.inventory.Add(this);
-        Destroy(GetComponent<BoxCollider2D>());
-        inventoryUI.Refresh();
+
+        Item item = GetComponent<Item>();
+        if (item != null)
+        {
+            player.inventory.Add("Backpack", item);
+            Destroy(GetComponent<BoxCollider2D>()); //removes collition detec
+            inventoryUI.Refresh();
+        }
+        else
+        {
+            print("failed");
+        }
 
         var emission = transform.parent.GetComponentInChildren<ParticleSystem>().emission;
         emission.enabled = false;
@@ -183,10 +192,15 @@ public class Collectibal : MonoBehaviour
             }
         }
     }
-}
-public enum Collectabletype
-{
-    NONE, Standard_Sword, Standard_Bow, Arrow
+    private void CreateParent(GameObject child)
+    {
+        GameObject parent = new GameObject("--Pickup--");
+
+        parent.transform.position = child.transform.position;
+        parent.transform.rotation = child.transform.rotation;
+
+        child.transform.SetParent(parent.transform);
+    }
 }
 
 public enum RarityLevel

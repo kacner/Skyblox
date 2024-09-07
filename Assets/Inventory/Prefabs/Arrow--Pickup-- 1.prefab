@@ -12,6 +12,7 @@ GameObject:
   - component: {fileID: 139322177263692000}
   - component: {fileID: 4368502941020016}
   - component: {fileID: 3502391020239852138}
+  - component: {fileID: 9034053639955669793}
   m_Layer: 0
   m_Name: The Pickup
   m_TagString: Untagged
@@ -143,8 +144,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 374817feacc3ac947a6ebffb133b49b9, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  type: 3
-  icon: {fileID: 988290006, guid: 1ce750b9edbcd3548873929a38a114db, type: 3}
   shouldbob: 1
   amplitude: 0.1
   frequency: 2
@@ -163,6 +162,19 @@ MonoBehaviour:
   - {fileID: 8829899037119831974, guid: fd62a834735a75f4297c4bb55068815c, type: 3}
   - {fileID: 8060864998880843485, guid: 4dc127eaa7d89e8458df72e727584ffd, type: 3}
   - {fileID: 4233454984571036237, guid: 3a3529207168ab54399b749a8a240651, type: 3}
+--- !u!114 &9034053639955669793
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3682426240129289516}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: b267f1385afcbf04ab68334ac094590f, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  data: {fileID: 11400000, guid: 2a774daac83118b4089199f3d97b24e0, type: 2}
 --- !u!1 &6238762354827476351
 GameObject:
   m_ObjectHideFlags: 0

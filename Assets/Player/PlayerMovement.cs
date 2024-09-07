@@ -1,3 +1,4 @@
+using Cinemachine;
 using System.Collections;
 using UnityEngine;
 using UnityEngine.Rendering;
@@ -68,9 +69,21 @@ public class PlayerMovement : MonoBehaviour
 
     private SwordBase Swordbase;
 
+    private InventoryUI inventoryUI;
+
     Vector2 mouseScreenPosition;
+
+    [Space(10)]
+
+    [Header("InventoryCameraMovement")]
+    public CinemachineVirtualCamera virtualCamera;  // The Cinemachine virtual camera
+    public float xOffset = 5f;
+
     void Start()
     {
+        GameObject canvasObject = GameObject.Find("Canvas");
+        inventoryUI = canvasObject.GetComponentInChildren<InventoryUI>();
+
         Swordbase = GetComponentInChildren<SwordBase>();
 
         spriterenderer = GetComponent<SpriteRenderer>();
@@ -105,6 +118,8 @@ public class PlayerMovement : MonoBehaviour
 
     void Update()
     {
+        handleCamera();
+
         animator.SetBool("IsAttacking", IsAttacking);
 
         if (useMousePos)
@@ -192,7 +207,7 @@ public class PlayerMovement : MonoBehaviour
         if (useMousePos && !isDead)
         {
             cursorspriteRectTransform.gameObject.SetActive(true);
-            Cursor.visible = false; //disables the windows cursor
+            //Cursor.visible = false; //disables the windows cursor
 
             mouseScreenPosition = Input.mousePosition;
             mouseWorldPosition = Camera.main.ScreenToWorldPoint(mouseScreenPosition);
@@ -216,7 +231,7 @@ public class PlayerMovement : MonoBehaviour
         }
         else if (!useMousePos)
         {
-            Cursor.visible = true;
+            //Cursor.visible = true;
             cursorspriteRectTransform.gameObject.SetActive(false);
         }
 
@@ -432,5 +447,24 @@ public class PlayerMovement : MonoBehaviour
 
         newLookDir = DetermineLookDirection(mouseWorldPosition);
         lookDirVector = DetermineLookDirectionVector2(mouseWorldPosition);
+    }
+
+    private void handleCamera()
+    {
+        CinemachineFramingTransposer transposer = virtualCamera.GetCinemachineComponent<CinemachineFramingTransposer>();
+
+        if (UI_Manager.isInventoryToggeld)
+        {
+            Vector3 currentOffset = transposer.m_TrackedObjectOffset;
+            currentOffset.x = xOffset;  // Adjust X offset
+            transposer.m_TrackedObjectOffset = currentOffset;
+        }
+        else
+        {
+            Vector3 currentOffset = transposer.m_TrackedObjectOffset;
+            currentOffset.x = 0;  // Adjust X offset
+            transposer.m_TrackedObjectOffset = currentOffset;
+        }
+
     }
 }

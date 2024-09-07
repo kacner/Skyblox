@@ -22,10 +22,6 @@ public class BowFire : MonoBehaviour
     private float previousRotz;
     public float rotationThreshold;
 
-    private float currentSpeed;
-    private float halfSpeed;
-    private float minHalfSpeed;
-
     public Player player;
     public InventoryUI inventoryUI;
 
@@ -34,8 +30,13 @@ public class BowFire : MonoBehaviour
 
     public int ArrowSlotID;
 
+    public string inventoryName;
+    private Inventory inventory;
+
     void Start()
     {
+        inventory = GameManager.instance.player.inventory.GetInventoryByName(inventoryName);
+
         GameObject canvasObject = GameObject.Find("Canvas");
         inventoryUI = canvasObject.GetComponentInChildren<InventoryUI>();
         player = GetComponentInParent<Player>();
@@ -74,65 +75,65 @@ public class BowFire : MonoBehaviour
             transform.rotation = Quaternion.Euler(0, 0, rotz + 90);
             previousRotz = rotz; 
         }
-        player.inventory.CheckForEmptySlot();
 
         //handels the shooting of the bow 
-        if (player.inventory.GetArrowCount() >= 1)
+        if (inventory.GetArrowCount() >= 1)
         {
-
-            if (Input.GetKey(KeyCode.Mouse1) || staneone) //shooting starts
+            print(inventory.GetArrowCount());
+            if (Input.GetKey(KeyCode.Mouse1)) // Shooting starts
             {
-                holdtimer = Mathf.Clamp(holdtimer, 0, bowHoldTime);
                 holdtimer += Time.deltaTime;
+                holdtimer = Mathf.Clamp(holdtimer, 0, bowHoldTime);
 
                 playermovement.canRoll = false;
                 animator.SetBool("DrawingBow", true);
-                ArrowSprite.SetActive(true);
-
-                if (holdtimer > bowHoldTime)
-                    staneone = true;
+                ArrowSprite.gameObject.SetActive(true);
 
                 if (!IsNormalSpeed)
                 {
-                    playermovement.maxSpeed /= 2;
+                    playermovement.maxSpeed /= 2; // Restore original speed
                     IsNormalSpeed = true;
                     IsSlowed = false;
                 }
 
-
-                if (!Input.GetKey(KeyCode.Mouse1)) //shooting is over
+            }
+            else // Mouse1 button is not held
+            {
+                if (holdtimer > 0) // Ensure we only shoot if the bow was drawn
                 {
                     playermovement.canRoll = true;
 
                     if (!IsSlowed)
                     {
-                        playermovement.maxSpeed *= 2;
+                        playermovement.maxSpeed *= 2; // Slow down the player
                         IsSlowed = true;
                         IsNormalSpeed = false;
                     }
 
-                    holdtimer = 0;
-                    Instantiate(arrow, bulletTransform.position, quaternion.identity);
-                    player.inventory.RemoveArrow();
-                    inventoryUI.Refresh();
-                    staneone = false;
-                }
-                
-            }
-            else
-            {
-                holdtimer = 0;
-                animator.SetBool("DrawingBow", false);
-                ArrowSprite.SetActive(false);
-            }
+                    GameObject Arrow = Instantiate(arrow, bulletTransform.position, Quaternion.identity);
+                    print("Arrow Shot");
+                    Arrow.GetComponent<ArrowScript>().force = Mathf.Clamp(holdtimer * 80, 20, 80);
 
+                    inventory.RemoveArrow();
+                    inventoryUI.Refresh();
+
+                    holdtimer = 0;
+                    animator.SetBool("DrawingBow", false);
+                    ArrowSprite.gameObject.SetActive(false);
+                }
+                else
+                {
+                    holdtimer = 0;
+                    animator.SetBool("DrawingBow", false);
+                    ArrowSprite.gameObject.SetActive(false);
+                }
+            }
         }
         else
         {
             animator.SetBool("DrawingBow", false);
             ArrowSprite.SetActive(false);
         }
-
     }
 
     private void UpdateSortingLayers()
