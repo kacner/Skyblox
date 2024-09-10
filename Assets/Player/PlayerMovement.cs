@@ -1,8 +1,5 @@
-using Cinemachine;
 using System.Collections;
 using UnityEngine;
-using UnityEngine.Rendering;
-using UnityEngine.SceneManagement;
 using UnityEngine.SceneManagement;
 
 [RequireComponent(typeof(Rigidbody2D))]
@@ -127,7 +124,7 @@ public class PlayerMovement : MonoBehaviour
             DetermineLookDirection(mouseWorldPosition);
         }
 
-        if (CanMove)
+        if (CanMove && !GameManager.instance.ui_Manager.isInventoryToggeld)
         {
             moveX = Input.GetAxisRaw("Horizontal"); //value -1 or 1. left or right
             moveY = Input.GetAxisRaw("Vertical"); //value -1 or 1. down and up
@@ -154,6 +151,10 @@ public class PlayerMovement : MonoBehaviour
                 lookDir = newLookDir;
             }
         }
+        else
+        {
+            moveDirection = Vector2.zero;
+        }
 
         if (!useMousePos && !isDead && !IsInvoking("UpdateHorVer"))
         {
@@ -164,7 +165,7 @@ public class PlayerMovement : MonoBehaviour
             CancelInvoke("UpdateHorVer");
         }
 
-        if (Input.GetKeyDown(KeyCode.Space) && !IsRolling && canRoll)
+        if (Input.GetKeyDown(KeyCode.Space) && !IsRolling && canRoll && !GameManager.instance.ui_Manager.isInventoryToggeld)
         {
             StartCoroutine(Roll());
         }

@@ -1,5 +1,8 @@
 using UnityEngine;
 using TMPro;
+using Unity.VisualScripting;
+using System.Drawing;
+
 public class FPScounter : MonoBehaviour
 {
     public TextMeshProUGUI fpsText;
@@ -16,7 +19,10 @@ public class FPScounter : MonoBehaviour
         deltaTime += (Time.unscaledDeltaTime - deltaTime) * 0.1f;
 
         float fps = 1.0f / deltaTime;
-        
-        fpsText.text = string.Format("FPS: {0:0.}", fps);
+        int fpsInt = Mathf.RoundToInt(fps);
+
+        fpsText.text = $"${fpsInt.ToString("D7")}";
+            //string.Format("$FPS< {0:0.}", fps);
+
     }
 }

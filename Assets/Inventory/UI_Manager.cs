@@ -17,7 +17,7 @@ public class UI_Manager : MonoBehaviour
     public static Image draggedIcon;
     public static bool dragSingle;
 
-    public static bool isInventoryToggeld = false;
+    public bool isInventoryToggeld = false;
 
     private void Awake()
     {

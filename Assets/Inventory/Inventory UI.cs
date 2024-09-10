@@ -41,6 +41,11 @@ public class InventoryUI : MonoBehaviour
                 }
             }
         }
+        else
+        {
+        print(slots.Count + "      " + inventory.slots.Count);
+
+        }
     }
 
     public void Remove()
