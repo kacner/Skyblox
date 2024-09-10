@@ -10,7 +10,7 @@ GameObject:
   m_Component:
   - component: {fileID: 4468665279281522779}
   - component: {fileID: 7382272850606012848}
-  m_Layer: 0
+  m_Layer: 3
   m_Name: LeftHand
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -93,7 +93,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 2362887098101127460}
-  m_Layer: 0
+  m_Layer: 3
   m_Name: EmptyHands__Weapond__
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -126,7 +126,7 @@ GameObject:
   m_Component:
   - component: {fileID: 8603717500442078372}
   - component: {fileID: 6892023270474492615}
-  m_Layer: 0
+  m_Layer: 3
   m_Name: RightHand
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -209,7 +209,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 2059113452931155942}
-  m_Layer: 0
+  m_Layer: 3
   m_Name: HandsController
   m_TagString: Untagged
   m_Icon: {fileID: 0}

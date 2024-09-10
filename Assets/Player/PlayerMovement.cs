@@ -75,11 +75,7 @@ public class PlayerMovement : MonoBehaviour
 
     Vector2 mouseScreenPosition;
 
-    [Space(10)]
-
-    [Header("InventoryCameraMovement")]
-    public CinemachineVirtualCamera virtualCamera;  // The Cinemachine virtual camera
-    public float xOffset = 5f;
+    public bool AllCanAttack = true;
 
     void Start()
     {
@@ -122,8 +118,6 @@ public class PlayerMovement : MonoBehaviour
 
     void Update()
     {
-        handleCamera();
-
         animator.SetBool("IsAttacking", IsAttacking);
 
         if (useMousePos)
@@ -349,6 +343,7 @@ public class PlayerMovement : MonoBehaviour
         CanMove = false; 
         animator.SetBool("isDead", true); //updates animator
         rb.velocity = new Vector2(0, 0); //setts velocity to 0 
+        AllCanAttack = false;
     }
     private void UpdateHorVer()
     {
@@ -461,24 +456,5 @@ public class PlayerMovement : MonoBehaviour
 
         newLookDir = DetermineLookDirection(mouseWorldPosition);
         lookDirVector = DetermineLookDirectionVector2(mouseWorldPosition);
-    }
-
-    private void handleCamera()
-    {
-        CinemachineFramingTransposer transposer = virtualCamera.GetCinemachineComponent<CinemachineFramingTransposer>();
-
-        if (UI_Manager.isInventoryToggeld)
-        {
-            Vector3 currentOffset = transposer.m_TrackedObjectOffset;
-            currentOffset.x = xOffset;  // Adjust X offset
-            transposer.m_TrackedObjectOffset = currentOffset;
-        }
-        else
-        {
-            Vector3 currentOffset = transposer.m_TrackedObjectOffset;
-            currentOffset.x = 0;  // Adjust X offset
-            transposer.m_TrackedObjectOffset = currentOffset;
-        }
-
     }
 }

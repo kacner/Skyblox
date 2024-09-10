@@ -11,6 +11,8 @@ public class UI_Manager : MonoBehaviour
 
     public List<InventoryUI> inventoryUIs;
 
+    [SerializeField] public PlayerMovement playerMovement;
+
     public static Slot_UI draggedSlot;
     public static Image draggedIcon;
     public static bool dragSingle;
@@ -42,8 +44,7 @@ public class UI_Manager : MonoBehaviour
 
         if (Input.GetKeyDown(KeyCode.Escape))
         {
-            if (inventorypanel != null)
-                inventorypanel.SetActive(false);
+            closeInventory();
         }
     }
     public void ToggleInventoryUI()
@@ -57,13 +58,26 @@ public class UI_Manager : MonoBehaviour
                 RefreshInventoryUI("Backpack");
                 isInventoryToggeld = true;
                 Cursor.visible = true;
+                playerMovement.AllCanAttack = false;
             }
             else
             {
                 inventorypanel.SetActive(false);
                 isInventoryToggeld = false;
                 Cursor.visible = false;
+                playerMovement.AllCanAttack = true;
             }
+        }
+    }
+
+    public void closeInventory()
+    {
+        if (inventorypanel != null)
+        {
+            inventorypanel.SetActive(false);
+            isInventoryToggeld = false;
+            Cursor.visible = false;
+            playerMovement.AllCanAttack = true;
         }
     }
 

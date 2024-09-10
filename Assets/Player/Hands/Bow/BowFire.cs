@@ -81,7 +81,7 @@ public class BowFire : MonoBehaviour
         }
 
         //handels the shooting of the bow 
-        if (inventory.GetArrowCount() >= 1 || HotbarInventory.GetArrowCount() >= 1)
+        if (inventory.GetArrowCount() >= 1 && playermovement.AllCanAttack || HotbarInventory.GetArrowCount() >= 1 && playermovement.AllCanAttack)
         {
             bool inventoryHadTheArrow;
             if (inventory.GetArrowCount() >= 1)

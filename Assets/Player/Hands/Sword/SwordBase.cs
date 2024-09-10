@@ -107,7 +107,7 @@ public class SwordBase : MonoBehaviour
             animator.SetFloat("Vertical", playermovement.moveY);
         }
 
-        if (Input.GetKeyDown(KeyCode.Mouse0) && IsAttacking == false)
+        if (Input.GetKeyDown(KeyCode.Mouse0) && IsAttacking == false && playermovement.AllCanAttack)
         {
            StartCoroutine(Attack());
         }

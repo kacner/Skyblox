@@ -10,7 +10,7 @@ GameObject:
   m_Component:
   - component: {fileID: 6215881865013760574}
   - component: {fileID: 7425794692107009418}
-  m_Layer: 0
+  m_Layer: 3
   m_Name: Pivot
   m_TagString: Untagged
   m_Icon: {fileID: 5132851093641282708, guid: 0000000000000000d000000000000000, type: 0}
@@ -67,7 +67,7 @@ GameObject:
   m_Component:
   - component: {fileID: 7714363160932935104}
   - component: {fileID: 6063109300005917416}
-  m_Layer: 0
+  m_Layer: 3
   m_Name: DrawingHand
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -150,7 +150,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 5741064892892270637}
-  m_Layer: 0
+  m_Layer: 3
   m_Name: Rookie_Bow __Weapond__
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -183,7 +183,7 @@ GameObject:
   m_Component:
   - component: {fileID: 1778024228808409202}
   - component: {fileID: 7590808331441270360}
-  m_Layer: 0
+  m_Layer: 3
   m_Name: HoldingHand
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -266,7 +266,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 6879405802113821193}
-  m_Layer: 0
+  m_Layer: 3
   m_Name: --BowController--
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -299,7 +299,7 @@ GameObject:
   m_Component:
   - component: {fileID: 6781308993431972512}
   - component: {fileID: 6718183424369078996}
-  m_Layer: 0
+  m_Layer: 3
   m_Name: ArrowSprite
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -384,7 +384,7 @@ GameObject:
   - component: {fileID: 5999188492814058477}
   - component: {fileID: 2338942458703187988}
   - component: {fileID: 1869631847861985493}
-  m_Layer: 6
+  m_Layer: 3
   m_Name: Bow
   m_TagString: Untagged
   m_Icon: {fileID: 0}
