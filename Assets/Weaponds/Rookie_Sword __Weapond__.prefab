@@ -24829,7 +24829,7 @@ GameObject:
   m_Component:
   - component: {fileID: 280785538922505641}
   m_Layer: 0
-  m_Name: Sword __Weapond__
+  m_Name: Rookie_Sword __Weapond__
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0

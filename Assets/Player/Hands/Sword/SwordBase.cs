@@ -138,7 +138,8 @@ public class SwordBase : MonoBehaviour
         playermovement.rb.AddForce(-swingDirection * swingRecoilForce, ForceMode2D.Force);
 
         //playermovement.rb.velocity = new Vector2(playermovement.rb.velocity.x * 4, playermovement.rb.velocity.y * 4);
-        playermovement.moveDirection = new Vector2(0, 0);
+        //playermovement.moveDirection = new Vector2(0, 0);
+        playermovement.moveDirection = new Vector2(playermovement.moveDirection.x / 2, playermovement.moveDirection.y / 2);
 
         foreach (ParticleSystem RotationPFX in RotationPFX)
         {
@@ -268,7 +269,6 @@ public class SwordBase : MonoBehaviour
             HolsterFromBackSpriteRenderer.enabled = true;
             HolsterUpRightSpriteRenderer.enabled = false;
             HolsterUpLeftSpriteRenderer.enabled = false;
-            //Debug.Log("Up");
         }
         else if (playermovement.newLookDir == "Down")
         {
@@ -283,7 +283,6 @@ public class SwordBase : MonoBehaviour
             HolsterFromBackSpriteRenderer.enabled = false;
             HolsterUpRightSpriteRenderer.enabled = false;
             HolsterUpLeftSpriteRenderer.enabled = false;
-            //Debug.Log("Down");
         }
         else if (playermovement.newLookDir == "UpRight")
         {
@@ -298,7 +297,6 @@ public class SwordBase : MonoBehaviour
             HolsterFromBackSpriteRenderer.enabled = false;
             HolsterUpRightSpriteRenderer.enabled = true;
             HolsterUpLeftSpriteRenderer.enabled = false;
-            //Debug.Log("UpRight");
         }
         else if (playermovement.newLookDir == "Left" || playermovement.newLookDir == "DownLeft")
         {
@@ -319,7 +317,6 @@ public class SwordBase : MonoBehaviour
             //Sword.transform.localPosition = new Vector2(-0.108f, -0.242f);
 
             HolsterFromSide.transform.localEulerAngles = new Vector3(HolsterFromSide.transform.localEulerAngles.x, 45f, HolsterFromSide.transform.localEulerAngles.z);
-            //Debug.Log("Left || DownLeft");
         }
         else if (playermovement.newLookDir == "Right" || playermovement.newLookDir == "DownRight")
         {
@@ -340,7 +337,6 @@ public class SwordBase : MonoBehaviour
             //Sword.transform.localPosition = new Vector2(0.262f, -0.285f);
 
             HolsterFromSide.transform.localEulerAngles = new Vector3(HolsterFromSide.transform.localEulerAngles.x, 0, HolsterFromSide.transform.localEulerAngles.z);
-            //Debug.Log("Right || DownRight");
         }
 
         else if (playermovement.newLookDir == "UpLeft")
@@ -356,7 +352,6 @@ public class SwordBase : MonoBehaviour
             HolsterFromBackSpriteRenderer.enabled = false;
             HolsterUpRightSpriteRenderer.enabled = false;
             HolsterUpLeftSpriteRenderer.enabled = true;
-            //Debug.Log("UpLeft");
         }
     }
 }

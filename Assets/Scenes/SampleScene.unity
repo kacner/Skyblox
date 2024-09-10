@@ -2027,7 +2027,7 @@ MonoBehaviour:
   m_Follow: {fileID: 1652480537}
   m_Lens:
     FieldOfView: 34
-    OrthographicSize: 5.411078
+    OrthographicSize: 17.22
     NearClipPlane: 0.3
     FarClipPlane: 1000
     Dutch: 0
@@ -2058,7 +2058,7 @@ Transform:
   m_Children:
   - {fileID: 1221113325}
   m_Father: {fileID: 0}
-  m_RootOrder: 4
+  m_RootOrder: 1
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!114 &146237642
 MonoBehaviour:
@@ -4993,9 +4993,9 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 241505526}
-        m_TargetAssemblyTypeName: InventoryUI, Assembly-CSharp
-        m_MethodName: ToggleInventory
+      - m_Target: {fileID: 2091599573}
+        m_TargetAssemblyTypeName: UI_Manager, Assembly-CSharp
+        m_MethodName: ToggleInventoryUI
         m_Mode: 1
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
@@ -16837,7 +16837,7 @@ Transform:
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 0}
-  m_RootOrder: 1
+  m_RootOrder: 2
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &628504281
 GameObject:
@@ -29342,7 +29342,7 @@ RectTransform:
   m_GameObject: {fileID: 1360866383}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_LocalScale: {x: 1.0796, y: 1.0796, z: 1.0796}
   m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 334204671}
@@ -29376,6 +29376,7 @@ MonoBehaviour:
   - {fileID: 848624870}
   - {fileID: 1076733270}
   - {fileID: 1995966134}
+  selectedSlotNumber: 0
 --- !u!114 &1360866386
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -31696,7 +31697,7 @@ Transform:
   - {fileID: 1965196689}
   - {fileID: 1851937478}
   m_Father: {fileID: 0}
-  m_RootOrder: 2
+  m_RootOrder: 3
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!50 &1652480538
 Rigidbody2D:
@@ -31798,24 +31799,17 @@ MonoBehaviour:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1652480534}
-  m_Enabled: 0
+  m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: e397a2169d0f62649a0e05da9c7b84c1, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  selectedSlot: 4
   canChangeSlot: 1
   EmptyWHands: {fileID: 3185727193561065296, guid: ac8afd641712e804cbe284f22e8c44ba, type: 3}
   Weaponds:
-  - {fileID: 2852326083952460722, guid: ef1a330991f44b34b920670b5a647966, type: 3}
+  - {fileID: 3185727193561065296, guid: ac8afd641712e804cbe284f22e8c44ba, type: 3}
   - {fileID: 3578551671381545837, guid: 34bba5187dbbcf6419f022a65a4e592b, type: 3}
-  - {fileID: 0}
-  - {fileID: 0}
-  - {fileID: 0}
-  - {fileID: 0}
-  - {fileID: 0}
-  - {fileID: 0}
-  - {fileID: 0}
+  - {fileID: 2852326083952460722, guid: ef1a330991f44b34b920670b5a647966, type: 3}
 --- !u!114 &1652480542
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -35511,7 +35505,7 @@ Transform:
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 0}
-  m_RootOrder: 3
+  m_RootOrder: 4
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &2060154124
 GameObject:
@@ -35915,7 +35909,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   itemManager: {fileID: 2091599570}
-  ui_Manager: {fileID: 0}
+  ui_Manager: {fileID: 2091599573}
   player: {fileID: 0}
 --- !u!4 &2091599572
 Transform:

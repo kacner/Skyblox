@@ -36,8 +36,10 @@ public class InventoryManager : MonoBehaviour
     {
         if (inventoryByName.ContainsKey(inventoryName))
         {
+            //Debug.Log(inventoryName.ToString() + "was found!!");
             return inventoryByName[inventoryName];
         }
+        //Debug.Log(inventoryName.ToString() + "wasent found");
         return null;
     }
 }

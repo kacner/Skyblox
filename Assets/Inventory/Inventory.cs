@@ -1,9 +1,5 @@
 using System.Collections.Generic;
-using Unity.Loading;
-using Unity.Profiling.Editor;
-using Unity.VisualScripting.FullSerializer;
 using UnityEngine;
-using static UnityEditor.Progress;
 
 [System.Serializable]
 public class Inventory
@@ -165,5 +161,12 @@ public class Inventory
                 fromslot.RemoveItem();
             }
         }
+    }
+
+    public string FindItemInSlot(int index)
+    {
+        Slot slot = slots[index];
+        return slot.itemName.ToString();
+        
     }
 }

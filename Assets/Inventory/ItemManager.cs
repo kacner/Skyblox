@@ -33,12 +33,12 @@ public class ItemManager : MonoBehaviour
                 {
                     nameToItemDict.Add(loadedItem.data.itemName, loadedItem);
                 }
-                else
-                    print("LoadFailed");
+                //else
+                    //print("LoadFailed");
             }
             else
             {
-                Debug.LogError("Failed to load item from addressables.");
+                //Debug.LogError("Failed to load item from addressables.");
             }
         };
     }
@@ -57,8 +57,8 @@ public class ItemManager : MonoBehaviour
         {
             return nameToItemDict[key];
         }
-        print(nameToItemDict.ContainsKey(key));
-        Debug.Log("Items loaded: " + nameToItemDict.Count);
+        //print(nameToItemDict.ContainsKey(key));
+        //Debug.Log("Items loaded: " + nameToItemDict.Count);
         return null;
     }
     private void OnDestroy() //some shit needed for referencing

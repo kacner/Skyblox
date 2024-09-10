@@ -1,3 +1,4 @@
+using System.Collections;
 using UnityEngine;
 
 public class ArrowScript : MonoBehaviour
@@ -11,6 +12,7 @@ public class ArrowScript : MonoBehaviour
     private SpriteRenderer WindFxSpriterenderer;
     private float WindFxAlpha = 1f;
     private float velocity;
+    public GameObject ArrowCollectibalPrefab;
     
 
     void Start()
@@ -29,20 +31,29 @@ public class ArrowScript : MonoBehaviour
 
     private void Update()
     {
-        velocity = rb.velocity.magnitude;
-        WindFxAlpha = Mathf.Clamp((velocity * 0.013f) + 0.016f, 0, 1);
-        WindFxSpriterenderer.color = new Color(1, 1, 1, WindFxAlpha);
+        if (WindFxSpriterenderer != null)
+        {
 
-        WindFx.transform.localScale = new Vector3(0.025f * velocity + 1, 0.025f * velocity + 1, 0.025f * velocity + 1);
+            velocity = rb.velocity.magnitude;
+            WindFxAlpha = Mathf.Clamp((velocity * 0.013f) + 0.016f, 0, 1);
+            WindFxSpriterenderer.color = new Color(1, 1, 1, WindFxAlpha);
+
+            WindFx.transform.localScale = new Vector3(0.025f * velocity + 1, 0.025f * velocity + 1, 0.025f * velocity + 1);
+        }
 
         if (rb.velocity.magnitude < .1f)
-            UpdateCondition();
+            StartCoroutine(SpawnArrow(1f));
     }
 
-    private void UpdateCondition()
+    IEnumerator SpawnArrow(float timer)
     {
-            Destroy(WindFxSpriterenderer);
-            Destroy(rb);
-            Destroy(this);
+        Destroy(WindFxSpriterenderer);
+
+        yield return new WaitForSeconds(timer);
+
+        GameObject droppedItem =  Instantiate(ArrowCollectibalPrefab, transform.position, Quaternion.identity);
+        droppedItem.transform.localScale = new Vector3(1, 1, 1);
+        Destroy(rb);
+        Destroy(this.gameObject);
     }
 }

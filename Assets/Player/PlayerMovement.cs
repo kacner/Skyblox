@@ -33,12 +33,14 @@ public class PlayerMovement : MonoBehaviour
     [Space(10)]
 
     [Header("DodgeRolling Settings")]
-    public bool canRoll = true;
-    public float RollCooldown = 0.75f;
-    public bool IsRolling = false;
-    public float RollForce = 200f;
-    public float RollDuration = 0.14f;
-    public float StillBoostFactor = 5500;
+    public bool dodgeRoll = false;
+    public bool canRoll = true; //true
+    public float RollCooldown = 0.75f; //0.75f
+    public bool IsRolling = false; //false
+    public float RollForce = 500f; //500f //forcemode.impulse
+    public float RollDuration = 0.7f; //0.14f
+    public float StillBoostFactor = 24000; //24000 //stillstanding forcemode.force
+
     private bool createtrailsprite = false;
     private float emitParticleAfterInitialRoll = 0.3f;
     
@@ -81,6 +83,8 @@ public class PlayerMovement : MonoBehaviour
 
     void Start()
     {
+        cursorspriteRectTransform.gameObject.SetActive(true);
+
         GameObject canvasObject = GameObject.Find("Canvas");
         inventoryUI = canvasObject.GetComponentInChildren<InventoryUI>();
 
@@ -206,9 +210,6 @@ public class PlayerMovement : MonoBehaviour
 
         if (useMousePos && !isDead)
         {
-            cursorspriteRectTransform.gameObject.SetActive(true);
-            //Cursor.visible = false; //disables the windows cursor
-
             mouseScreenPosition = Input.mousePosition;
             mouseWorldPosition = Camera.main.ScreenToWorldPoint(mouseScreenPosition);
 
@@ -223,16 +224,17 @@ public class PlayerMovement : MonoBehaviour
             mouseWorldPosition.x = Mathf.Round(relativeMousePos.x);
             mouseWorldPosition.y = Mathf.Round(relativeMousePos.y);
 
-            Vector2 mousePosition2D = new Vector2(relativeMousePos.x, relativeMousePos.y);
-
             animator.SetFloat("Horizontal", mouseWorldPosition.x);
             animator.SetFloat("Vertical", mouseWorldPosition.y);
 
         }
         else if (!useMousePos)
         {
-            //Cursor.visible = true;
-            cursorspriteRectTransform.gameObject.SetActive(false);
+            mouseScreenPosition = Input.mousePosition;
+            mouseWorldPosition = Camera.main.ScreenToWorldPoint(mouseScreenPosition);
+            cursorspriteRectTransform.anchoredPosition = new Vector2(mouseWorldPosition.x, mouseWorldPosition.y); //moves the cursor to the mousecursors location
+            RectTransformUtility.ScreenPointToLocalPointInRectangle(cursorspriteRectTransform.parent as RectTransform, mouseScreenPosition, null, out Vector2 localPoint);
+            cursorspriteRectTransform.anchoredPosition = localPoint;
         }
 
         if (Input.GetKeyDown(KeyCode.M))
@@ -296,18 +298,30 @@ public class PlayerMovement : MonoBehaviour
         CanMove = false;
         IsRolling = true;
 
-        float elapsedTime = 0f; 
-
-        while (elapsedTime < RollDuration) 
+        if (dodgeRoll)
         {
-            //Apply default walking velocity
-            if (moveDirection == Vector2.zero)
-                rb.AddForce(lookDirVector.normalized * StillBoostFactor * Time.fixedDeltaTime, ForceMode2D.Force); //applys velocity in the facing direction when player is standing still
-            else
-            rb.AddForce(lookDirVector.normalized * RollForce * Time.fixedDeltaTime, ForceMode2D.Impulse); //when player moving apply dash velocity
+            float dodgecount = 60f;
 
-            elapsedTime += Time.fixedDeltaTime; //counts up the timer
-            yield return null; //wait for next frame
+            if (dodgecount != 0)
+            {
+                dodgecount -= 1;
+                rb.velocity = lookDirVector.normalized * 50f;
+            }
+        }
+        else
+        {
+            float elapsedTime = 0f;
+
+            while (elapsedTime < RollDuration)
+            {
+                if (moveDirection == Vector2.zero)
+                    rb.AddForce(lookDirVector.normalized * StillBoostFactor * Time.fixedDeltaTime, ForceMode2D.Force);
+                else
+                    rb.AddForce(lookDirVector.normalized * RollForce * Time.fixedDeltaTime, ForceMode2D.Impulse);
+
+                elapsedTime += Time.fixedDeltaTime;
+                yield return null;
+            }
         }
 
         CanMove = true;

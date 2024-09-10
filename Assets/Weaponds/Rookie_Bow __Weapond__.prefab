@@ -53,6 +53,10 @@ MonoBehaviour:
   ArrowSpriteTransform: {fileID: 6781308993431972512}
   ArrowSprite: {fileID: 6397015549383003891}
   rotationThreshold: 8
+  player: {fileID: 0}
+  inventoryUI: {fileID: 0}
+  ArrowSlotID: 0
+  inventoryName: Backpack
 --- !u!1 &1744474015409572517
 GameObject:
   m_ObjectHideFlags: 0
@@ -147,7 +151,7 @@ GameObject:
   m_Component:
   - component: {fileID: 5741064892892270637}
   m_Layer: 0
-  m_Name: Bow __Weapond__
+  m_Name: Rookie_Bow __Weapond__
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0

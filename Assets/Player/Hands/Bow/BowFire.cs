@@ -1,3 +1,4 @@
+using JetBrains.Annotations;
 using Unity.Mathematics;
 using Unity.VisualScripting;
 using UnityEngine;
@@ -30,18 +31,18 @@ public class BowFire : MonoBehaviour
 
     public int ArrowSlotID;
 
-    public string inventoryName;
+    public string inventoryName = "Backpack";
     private Inventory inventory;
+    private Inventory HotbarInventory;
 
     void Start()
     {
-        inventory = GameManager.instance.player.inventory.GetInventoryByName(inventoryName);
-
         GameObject canvasObject = GameObject.Find("Canvas");
         inventoryUI = canvasObject.GetComponentInChildren<InventoryUI>();
         player = GetComponentInParent<Player>();
 
         playermovement = GetComponentInParent<PlayerMovement>();
+        playermovement.useMousePos = true;
 
         ArrowSprite.SetActive(false);
 
@@ -58,6 +59,9 @@ public class BowFire : MonoBehaviour
         transform.rotation = Quaternion.Euler(0, 0, rotz + 90);
 
         UpdateSortingLayers();
+
+        inventory = GameManager.instance.player.inventory.GetInventoryByName("Backpack");
+        HotbarInventory = GameManager.instance.player.inventory.GetInventoryByName("Toolbar");
     }
 
     void Update()
@@ -77,9 +81,14 @@ public class BowFire : MonoBehaviour
         }
 
         //handels the shooting of the bow 
-        if (inventory.GetArrowCount() >= 1)
+        if (inventory.GetArrowCount() >= 1 || HotbarInventory.GetArrowCount() >= 1)
         {
-            print(inventory.GetArrowCount());
+            bool inventoryHadTheArrow;
+            if (inventory.GetArrowCount() >= 1)
+                inventoryHadTheArrow = true;
+            else
+                inventoryHadTheArrow = false;
+
             if (Input.GetKey(KeyCode.Mouse1)) // Shooting starts
             {
                 holdtimer += Time.deltaTime;
@@ -111,11 +120,15 @@ public class BowFire : MonoBehaviour
                     }
 
                     GameObject Arrow = Instantiate(arrow, bulletTransform.position, Quaternion.identity);
-                    print("Arrow Shot");
                     Arrow.GetComponent<ArrowScript>().force = Mathf.Clamp(holdtimer * 80, 20, 80);
 
-                    inventory.RemoveArrow();
-                    inventoryUI.Refresh();
+                    if (inventoryHadTheArrow)
+                        inventory.RemoveArrow();
+                    else
+                        HotbarInventory.RemoveArrow();
+
+                    GameManager.instance.ui_Manager.RefreshInventoryUI("Backpack");
+                    GameManager.instance.ui_Manager.RefreshInventoryUI("Toolbar");
 
                     holdtimer = 0;
                     animator.SetBool("DrawingBow", false);
@@ -152,5 +165,10 @@ public class BowFire : MonoBehaviour
             Hand.GetComponent<SpriteRenderer>().sortingOrder = 2;
             HoldingHand.GetComponent<SpriteRenderer>().sortingOrder = 2;
         }
+    }
+
+    private void OnDestroy()
+    {
+        playermovement.useMousePos = false;
     }
 }

@@ -5014,6 +5014,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   force: 80
   WindFx: {fileID: 5512159564041138078}
+  ArrowCollectibalPrefab: {fileID: 6238762354827476351, guid: d07fc48996a56f74996ba2deaaac6173, type: 3}
 --- !u!50 &7809849357708032937
 Rigidbody2D:
   serializedVersion: 4
