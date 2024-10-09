@@ -5973,15 +5973,15 @@ Camera:
   m_LensShift: {x: 0, y: 0}
   m_NormalizedViewPortRect:
     serializedVersion: 2
-    x: 0.0012578616
-    y: 0.0022371365
-    width: 0.9962264
-    height: 0.9932886
+    x: 0
+    y: 0
+    width: 1
+    height: 1
   near clip plane: 0.3
   far clip plane: 1000
   field of view: 34
   orthographic: 1
-  orthographic size: 6.9375
+  orthographic size: 5.625
   m_Depth: -1
   m_CullingMask:
     serializedVersion: 2
@@ -33010,13 +33010,46 @@ MonoBehaviour:
   lastLookDir: toiletAnanasNasDas
   lookDirVector: {x: 0, y: 0}
   rb: {fileID: 0}
-  dodgeRoll: 0
+  dodgeRoll: 1
   canRoll: 1
   RollCooldown: 0.75
   IsRolling: 0
   RollForce: 500
   RollDuration: 0.14
   StillBoostFactor: 24000
+  rollSpeedCurve:
+    serializedVersion: 2
+    m_Curve:
+    - serializedVersion: 3
+      time: 0.06198883
+      value: 0
+      inSlope: 4.899815
+      outSlope: 4.899815
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0
+      outWeight: 0.027197083
+    - serializedVersion: 3
+      time: 0.5344395
+      value: 0.14875787
+      inSlope: -0.52121663
+      outSlope: -0.52121663
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0.33333334
+      outWeight: 0.8139107
+    - serializedVersion: 3
+      time: 1
+      value: 0.002357483
+      inSlope: 0.04008318
+      outSlope: 0.04008318
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0.20613372
+      outWeight: 0
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 4
   runningParticleSystem: {fileID: 4888690677223258302}
   RollingPFX: {fileID: 527116002}
   DashColor: {r: 1, g: 1, b: 1, a: 0}

@@ -38,6 +38,8 @@ public class PlayerMovement : MonoBehaviour
     public float RollDuration = 0.7f; //0.14f
     public float StillBoostFactor = 24000; //24000 //stillstanding forcemode.force
 
+    public AnimationCurve rollSpeedCurve;
+
     private bool createtrailsprite = false;
     private float emitParticleAfterInitialRoll = 0.3f;
     
@@ -191,18 +193,6 @@ public class PlayerMovement : MonoBehaviour
         else
             runningParticleSystem.enableEmission = false;
 
-        //Sprinting
-
-        /*if (Input.GetKey(KeyCode.LeftControl))
-        {
-            maxSpeed = 6.5f;
-        }
-        else
-        {
-            maxSpeed = orignialMaxSpeed;
-        }*/
-
-
         if (useMousePos && !isDead)
         {
             mouseScreenPosition = Input.mousePosition;
@@ -274,7 +264,7 @@ public class PlayerMovement : MonoBehaviour
     }
     private IEnumerator Roll()
     {
-        spriterenderer.material = SolidColorMat; //changes the playermat to solidcolor
+        /*spriterenderer.material = SolidColorMat; //changes the playermat to solidcolor
 
         Color initialColor = spriterenderer.color; //stores the innitial color of player
         spriterenderer.color = DashColor; //makes the spriterenderers color to new color
@@ -335,6 +325,63 @@ public class PlayerMovement : MonoBehaviour
         }
 
         yield return new WaitForSeconds(RollCooldown - emitParticleAfterInitialRoll);  //splitts up cooldown into 2 parts   2/2
+        IsRolling = false;*/
+
+
+
+        
+        spriterenderer.material = SolidColorMat; // Change player material to solid color
+        Color initialColor = spriterenderer.color; // Store initial color
+        spriterenderer.color = DashColor; // Change color to dash color
+
+        GameObject[] allGameObjects = GameObject.FindObjectsOfType<GameObject>(); // Get all game objects
+        foreach (GameObject child in allGameObjects)
+        {
+            if (child != null && child.name.Contains("__Weapond__"))
+            {
+                child.SetActive(false);
+            }
+        }
+
+        RollingPFX.enableEmission = true; // Enable particle effects
+        createtrailsprite = true;
+        CanMove = false;
+        IsRolling = true;
+
+        float elapsedTime = 0f;
+
+        while (elapsedTime < RollDuration)
+        {
+            float rollSpeedMultiplier = rollSpeedCurve.Evaluate(elapsedTime / RollDuration);
+            rollSpeedMultiplier *= 5f;
+            if (moveDirection == Vector2.zero) //initiate roll when still
+            {
+                rb.AddForce(lookDirVector.normalized * StillBoostFactor * rollSpeedMultiplier * Time.fixedDeltaTime, ForceMode2D.Force);
+            }
+            else //ini roll when moving
+            {
+                rb.AddForce(lookDirVector.normalized * RollForce * rollSpeedMultiplier * Time.fixedDeltaTime, ForceMode2D.Force);
+            }
+            elapsedTime += Time.fixedDeltaTime;
+            yield return null;
+        }
+
+        CanMove = true;
+        yield return new WaitForSeconds(emitParticleAfterInitialRoll);
+        createtrailsprite = false;
+        RollingPFX.enableEmission = false;
+        spriterenderer.color = initialColor;
+        spriterenderer.material = SpriteDefaultLit;
+
+        foreach (GameObject child in allGameObjects)
+        {
+            if (child != null && child.name.Contains("__Weapond__"))
+            {
+                child.SetActive(true);
+            }
+        }
+
+        yield return new WaitForSeconds(RollCooldown - emitParticleAfterInitialRoll);
         IsRolling = false;
     }
     private void Die()
