@@ -1,5 +1,6 @@
 using System.Collections;
 using UnityEngine;
+using UnityEngine.Rendering.UI;
 
 public class SwordBase : MonoBehaviour
 {
@@ -39,8 +40,13 @@ public class SwordBase : MonoBehaviour
 
     public bool IsAttacking;
 
+    [Header("Collition")]
+    public PolygonCollider2D hitbox;
+
+
     void Start()
     {
+        hitbox.enabled = false;
         foreach(ParticleSystem RotationPFX in RotationPFX)
         {
             var RotationPFXemition = RotationPFX.emission;
@@ -66,29 +72,6 @@ public class SwordBase : MonoBehaviour
         {
             ControlObj.transform.localScale = new Vector3(1, 1, 1); //restores parent so everything getts restored
         }
-
-        /*if (IsAttacking)
-        {
-            if (playermovement.newLookDir == "Left" || playermovement.newLookDir == "UpLeft" || playermovement.newLookDir == "Up" || playermovement.newLookDir == "DownLeft")
-            {
-                ControlObj.transform.localScale = new Vector3(-1, 1, 1); //flipps parent so everything getts flipped
-            }
-            else if (playermovement.newLookDir == "Right" || playermovement.newLookDir == "UpRight" || playermovement.newLookDir == "Down" || playermovement.newLookDir == "UpLeft")
-            {
-                ControlObj.transform.localScale = new Vector3(1, 1, 1); //restores parent so everything getts restored
-            }
-        }
-        else if (!IsAttacking)
-        {
-            if (playermovement.newLookDir == "Left" || playermovement.newLookDir == "UpLeft" || playermovement.newLookDir == "Up" || playermovement.newLookDir == "DownLeft")
-            {
-                Sword__Weapond.transform.localScale = new Vector3(-1, 1, 1); //flipps parent so everything getts flipped
-            }
-            else if (playermovement.newLookDir == "Right" || playermovement.newLookDir == "UpRight" || playermovement.newLookDir == "Down" || playermovement.newLookDir == "UpLeft")
-            {
-                Sword__Weapond.transform.localScale = new Vector3(1, 1, 1); //restores parent so everything getts restored
-            }
-        }*/
 
         if (playermovement.newLookDir == "Up" || playermovement.newLookDir == "Left" || playermovement.newLookDir == "DownLeft")
         {
@@ -116,6 +99,7 @@ public class SwordBase : MonoBehaviour
     private IEnumerator Attack()
     {
         IsAttacking = true;
+        hitbox.enabled = true;
 
         rotateAroundScript.matchRotation();
 
@@ -136,9 +120,6 @@ public class SwordBase : MonoBehaviour
         Vector2 swingDirection = (Vector2)transform.position - playermovement.cursorspriteRectTransform.anchoredPosition;
         swingDirection.Normalize();
         playermovement.rb.AddForce(-swingDirection * swingRecoilForce, ForceMode2D.Force);
-
-        //playermovement.rb.velocity = new Vector2(playermovement.rb.velocity.x * 4, playermovement.rb.velocity.y * 4);
-        //playermovement.moveDirection = new Vector2(0, 0);
         playermovement.moveDirection = new Vector2(playermovement.moveDirection.x / 2, playermovement.moveDirection.y / 2);
 
         foreach (ParticleSystem RotationPFX in RotationPFX)
@@ -251,6 +232,8 @@ public class SwordBase : MonoBehaviour
 
         playermovement.IsAttacking = false;
 
+        hitbox.enabled = false;
+
         IsAttacking = false;
     }
 
@@ -352,6 +335,17 @@ public class SwordBase : MonoBehaviour
             HolsterFromBackSpriteRenderer.enabled = false;
             HolsterUpRightSpriteRenderer.enabled = false;
             HolsterUpLeftSpriteRenderer.enabled = true;
+        }
+    }
+    private void OnTriggerEnter2D(Collider2D collision)
+    {
+        EnemyHp enemyHP = collision.GetComponent<EnemyHp>();
+
+        if (enemyHP != null)
+        {
+            Debug.Log("Hit detected on enemy!");
+
+            enemyHP.TakeDmg(1, transform);
         }
     }
 }

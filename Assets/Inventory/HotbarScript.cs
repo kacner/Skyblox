@@ -18,14 +18,21 @@ public class HotbarScript : MonoBehaviour
         canChangeSlot = playermovement.CanMove; //baseing the bool on if the player is allowed to move
     }
 
-    public void UpdateWeapond(int selectedSlot, GameObject wepond)
+    public void UpdateWeapond(int selectedSlot, GameObject newWeapond)
     {
         if (canChangeSlot)
         {
+            GameObject currentWeapond = GetCurrentWeapond();
+
+            if (currentWeapond != null && AreWeaponsSame(currentWeapond, newWeapond))
+            {
+                return;
+            }
+
             destroyCurrentWeapond();
 
-            if (wepond != null)
-                InstantiateNewWeapond(wepond);
+            if (newWeapond != null)
+                InstantiateNewWeapond(newWeapond);
             else
                 InstantiateNewWeapond(EmptyWHands);
 
@@ -47,8 +54,35 @@ public class HotbarScript : MonoBehaviour
         }
     }
 
+    private GameObject GetCurrentWeapond()
+    {
+        GameObject[] allObjects = FindObjectsOfType<GameObject>();
+        foreach (GameObject obj in allObjects)
+        {
+            if (obj.name.Contains("__Weapond__"))
+            {
+                return obj;
+            }
+        }
+        return null;
+    }
+
     private void InstantiateNewWeapond(GameObject Weapond)
     {
         Instantiate(Weapond, transform);
+    }
+
+    private bool AreWeaponsSame(GameObject currentWeapond, GameObject newWeapond)
+    {
+        if (newWeapond == null || currentWeapond == null)
+            return false;
+
+        string currentWeapondName = currentWeapond.name;
+        if (currentWeapondName.EndsWith("(Clone)"))
+        {
+            currentWeapondName = currentWeapondName.Substring(0, currentWeapondName.Length - 7); // Remove "(Clone)" which is 7 characters long
+        }
+
+        return currentWeapondName == newWeapond.name;
     }
 }

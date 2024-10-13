@@ -33,6 +33,7 @@ public class Collectibal : MonoBehaviour
     public GameObject[] RarityKit;
     public GameObject[] ResourceRarityKit;
 
+    private GameObject createdParent;
     void Start()
     {
         CreateParent(this.transform.gameObject);
@@ -106,7 +107,7 @@ public class Collectibal : MonoBehaviour
         LightSource.gameObject.SetActive(false);
 
         yield return new WaitForSeconds(4.5f);
-        Destroy(transform.parent.gameObject); //suicide
+        Destroy(createdParent); //suicide
     }
 
     private SpriteRenderer GetRaySpriterenderer(SpriteRenderer CollectableSpriterendere)
@@ -200,6 +201,8 @@ public class Collectibal : MonoBehaviour
         parent.transform.rotation = child.transform.rotation;
 
         child.transform.SetParent(parent.transform);
+
+        createdParent = parent;
     }
 }
 
