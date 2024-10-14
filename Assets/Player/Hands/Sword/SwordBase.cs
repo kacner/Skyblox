@@ -43,6 +43,8 @@ public class SwordBase : MonoBehaviour
     [Header("Collition")]
     public PolygonCollider2D hitbox;
 
+    public bool hasHitTheFirstWay = false;
+
 
     void Start()
     {
@@ -154,54 +156,55 @@ public class SwordBase : MonoBehaviour
         }
 
             LHandSpriteRenderer.enabled = false;
-        RHandSpriteRenderer.enabled = false;
-        SwordSpriteRenderer.enabled = false;
+            RHandSpriteRenderer.enabled = false;
+            SwordSpriteRenderer.enabled = false;
 
-        float currentRotation = 0f;
+            float currentRotation = 0f;
 
-        float neededRotation = 120f;
+            float neededRotation = 120f;
 
-        while(currentRotation < neededRotation) //waits for x seconds
-        {
-            float rotationThisFrame = rotationSpeed * Time.fixedDeltaTime;
-
-            // Apply the rotation
-            RotatingSword.RotateAround(transform.position, Vector3.forward, rotationThisFrame);
-
-            // Update the current rotation
-            currentRotation += rotationThisFrame;
-
-            // Check if we've completed a full rotation
-            if (currentRotation >= neededRotation)
+            while (currentRotation < neededRotation) //waits for x seconds
             {
-                RotatingSword.RotateAround(transform.position, Vector3.forward, neededRotation - (currentRotation - rotationThisFrame));
-                break;
+                float rotationThisFrame = rotationSpeed * Time.fixedDeltaTime;
+
+                // Apply the rotation
+                RotatingSword.RotateAround(transform.position, Vector3.forward, rotationThisFrame);
+
+                // Update the current rotation
+                currentRotation += rotationThisFrame;
+
+                // Check if we've completed a full rotation
+                if (currentRotation >= neededRotation)
+                {
+                    RotatingSword.RotateAround(transform.position, Vector3.forward, neededRotation - (currentRotation - rotationThisFrame));
+                    break;
+                }
+                yield return null;
             }
-            yield return null;
-        }
 
-        yield return new WaitForSeconds(0.1f);
+            yield return new WaitForSeconds(0.1f);
 
-        while (currentRotation > 0f)
-        {
-            float rotationThisFrame = rotationSpeed * Time.fixedDeltaTime;
-
-            // Apply the reverse rotation
-            RotatingSword.RotateAround(transform.position, Vector3.forward, -rotationThisFrame);
-
-            // Update the current rotation
-            currentRotation -= rotationThisFrame;
-
-            // Check if we've completed the reverse rotation
-            if (currentRotation <= 0f)
+            while (currentRotation > 0f)
             {
-                // Make sure we stop at the exact starting point (0 degrees)
-                RotatingSword.RotateAround(transform.position, Vector3.forward, -currentRotation);
-                currentRotation = 0f;  // Ensure currentRotation is exactly 0
-                break;
+                float rotationThisFrame = rotationSpeed * Time.fixedDeltaTime;
+
+                // Apply the reverse rotation
+                RotatingSword.RotateAround(transform.position, Vector3.forward, -rotationThisFrame);
+
+                // Update the current rotation
+                currentRotation -= rotationThisFrame;
+
+                // Check if we've completed the reverse rotation
+                if (currentRotation <= 0f)
+                {
+                    // Make sure we stop at the exact starting point (0 degrees)
+                    RotatingSword.RotateAround(transform.position, Vector3.forward, -currentRotation);
+                    currentRotation = 0f;  // Ensure currentRotation is exactly 0
+                    break;
+                }
+                yield return null;
             }
-            yield return null;
-        }
+
 
 
         foreach (SpriteRenderer SwordHands in SwordHands)
@@ -345,7 +348,7 @@ public class SwordBase : MonoBehaviour
         {
             Debug.Log("Hit detected on enemy!");
 
-            enemyHP.TakeDmg(1, transform);
+            enemyHP.TakeDmg(1, transform, 20f);
         }
     }
 }

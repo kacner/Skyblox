@@ -17072,9 +17072,9 @@ ParticleSystem:
     boxThickness: {x: 0, y: 0, z: 0}
     radiusThickness: 1
     donutRadius: 0.2
-    m_Position: {x: 0, y: 0, z: 0}
+    m_Position: {x: 0.63, y: -2.64, z: 0}
     m_Rotation: {x: 0, y: 0, z: 0}
-    m_Scale: {x: 1.89, y: 4.42, z: 1}
+    m_Scale: {x: 4.59, y: 8.15, z: 1}
     placementMode: 0
     m_MeshMaterialIndex: 0
     m_MeshNormalOffset: 0
@@ -17272,7 +17272,7 @@ ParticleSystem:
     rateOverTime:
       serializedVersion: 2
       minMaxState: 0
-      scalar: 2
+      scalar: 4
       minScalar: 10
       maxCurve:
         serializedVersion: 2
@@ -25267,9 +25267,9 @@ ParticleSystem:
     boxThickness: {x: 0, y: 0, z: 0}
     radiusThickness: 1
     donutRadius: 0.2
-    m_Position: {x: 0, y: 0, z: 0}
+    m_Position: {x: 0.84, y: -3.23, z: 0}
     m_Rotation: {x: 0, y: 0, z: 0}
-    m_Scale: {x: 1.89, y: 4.42, z: 1}
+    m_Scale: {x: 5.12, y: 7.99, z: 1}
     placementMode: 0
     m_MeshMaterialIndex: 0
     m_MeshNormalOffset: 0
@@ -25467,7 +25467,7 @@ ParticleSystem:
     rateOverTime:
       serializedVersion: 2
       minMaxState: 0
-      scalar: 6
+      scalar: 10
       minScalar: 10
       maxCurve:
         serializedVersion: 2
@@ -34527,6 +34527,7 @@ GameObject:
   - component: {fileID: 924654803}
   - component: {fileID: 924654802}
   - component: {fileID: 924654806}
+  - component: {fileID: 924654807}
   m_Layer: 0
   m_Name: Enemy
   m_TagString: Untagged
@@ -34566,18 +34567,18 @@ BoxCollider2D:
   m_IsTrigger: 1
   m_UsedByEffector: 0
   m_UsedByComposite: 0
-  m_Offset: {x: 0, y: 0}
+  m_Offset: {x: 0.12306595, y: -0.021402597}
   m_SpriteTilingProperty:
     border: {x: 0, y: 0, z: 0, w: 0}
     pivot: {x: 0.5, y: 0.5}
-    oldSize: {x: 3, y: 4}
+    oldSize: {x: 4.625, y: 4.6875}
     newSize: {x: 1, y: 1}
     adaptiveTilingThreshold: 0.5
     drawMode: 0
     adaptiveTiling: 0
   m_AutoTiling: 0
   serializedVersion: 2
-  m_Size: {x: 1, y: 1}
+  m_Size: {x: 1.7811966, y: 3.48271}
   m_EdgeRadius: 0
 --- !u!114 &924654803
 MonoBehaviour:
@@ -34592,8 +34593,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   current_HP: 0
-  Max_HP: 1
-  originalMat: {fileID: 2100000, guid: 51d910407de5790488438569bbf19632, type: 2}
+  Max_HP: 5
   speed: 3
   duration: 1
   animationCurve:
@@ -34620,10 +34620,10 @@ MonoBehaviour:
     m_PreInfinity: 2
     m_PostInfinity: 2
     m_RotationOrder: 4
+  originalDeathMat: {fileID: 2100000, guid: e5ae6649223e01e41844ec068c0727df, type: 2}
   ActivatingDeathParticles:
   - {fileID: 583338895}
   - {fileID: 879398942}
-  kill: 0
 --- !u!212 &924654804
 SpriteRenderer:
   m_ObjectHideFlags: 0
@@ -34644,7 +34644,7 @@ SpriteRenderer:
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: 2100000, guid: 51d910407de5790488438569bbf19632, type: 2}
+  - {fileID: 2100000, guid: e5ae6649223e01e41844ec068c0727df, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -34665,7 +34665,7 @@ SpriteRenderer:
   m_SortingLayerID: 0
   m_SortingLayer: 0
   m_SortingOrder: -2
-  m_Sprite: {fileID: -1592065838, guid: 32e67c08ad59d184cb7891a6639f93ec, type: 3}
+  m_Sprite: {fileID: 21300000, guid: c67eb77ea54ec35419dd9cd24374e62c, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_FlipX: 0
   m_FlipY: 0
@@ -34720,6 +34720,27 @@ Rigidbody2D:
   m_SleepingMode: 1
   m_CollisionDetection: 0
   m_Constraints: 4
+--- !u!95 &924654807
+Animator:
+  serializedVersion: 5
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 924654801}
+  m_Enabled: 1
+  m_Avatar: {fileID: 0}
+  m_Controller: {fileID: 9100000, guid: 74720863b49498f468b113f730be25e4, type: 2}
+  m_CullingMode: 0
+  m_UpdateMode: 0
+  m_ApplyRootMotion: 0
+  m_LinearVelocityBlending: 0
+  m_StabilizeFeet: 0
+  m_WarningMessage: 
+  m_HasTransformHierarchy: 1
+  m_AllowConstantClipSamplingOptimization: 1
+  m_KeepAnimatorStateOnDisable: 0
+  m_WriteDefaultValuesOnDisable: 0
 --- !u!1 &929639815
 GameObject:
   m_ObjectHideFlags: 0
