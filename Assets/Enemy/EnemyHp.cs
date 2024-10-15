@@ -1,14 +1,15 @@
 using System.Collections;
 using System.Collections.Generic;
 using System.Runtime.CompilerServices;
+using System.Runtime.Serialization;
 using UnityEditor.Experimental.GraphView;
 using UnityEngine;
 
 public class EnemyHp : MonoBehaviour
 {
     
-    [SerializeField] private int current_HP;
-    public int Max_HP = 10;
+    [SerializeField] private float current_HP;
+    public float Max_HP = 10;
     private Rigidbody2D rb;
 
     [Header("Dmg Color Settings")]
@@ -17,12 +18,17 @@ public class EnemyHp : MonoBehaviour
     public AnimationCurve animationCurve;
     public Material originalDeathMat;
     private Material deathDMGmat;
+    public ParticleSystem dmgSystem;
+    [SerializeField] private float invincibilityTimer = 0.25f;
+    [SerializeField] private float CurrentInvincibilityTimer;
 
     [Header("Death")]
     public ParticleSystem[] ActivatingDeathParticles;
 
     void Start()
     {
+        CurrentInvincibilityTimer = invincibilityTimer;
+
         rb = GetComponent<Rigidbody2D>();
         current_HP = Max_HP;
 
@@ -38,20 +44,30 @@ public class EnemyHp : MonoBehaviour
         {
             StartCoroutine(RollDeathCGI());
         }
+
+        CurrentInvincibilityTimer -= Time.fixedDeltaTime; //subtrakts
     }
 
-    public void TakeDmg(int dmg, Transform AttackerPos, float KnockBackAmount)
+    public void TakeDmg(float dmg, Transform AttackerPos, float KnockBackAmount)
     {
-        applyKnockback(AttackerPos, KnockBackAmount);
-        StartCoroutine(flashDMGcolor());
+        if (CurrentInvincibilityTimer <= 0)
+        {
+            dmgSystem.Play();
 
-        if ((current_HP - dmg) <= 0)
-        {
-            StartCoroutine(RollDeathCGI()); 
-        }
-        else
-        {
-            current_HP -= dmg;
+            applyKnockback(AttackerPos, KnockBackAmount);
+            StartCoroutine(flashDMGcolor());
+
+            if ((current_HP - dmg) <= 0)
+            {
+                StartCoroutine(RollDeathCGI());
+            }
+            else
+            {
+                current_HP -= dmg;
+            }
+
+
+            CurrentInvincibilityTimer = Mathf.Clamp(CurrentInvincibilityTimer, 0, 0.6f);
         }
     }
 

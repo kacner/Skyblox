@@ -7,7 +7,6 @@ public class SwordBase : MonoBehaviour
     private RotateAround rotateAroundScript;
     private PlayerMovement playermovement;
     public Transform Sword__Weapond;
-    private Animator animator;
 
     public bool facingToTheRight = false;
     public bool facingToTheLeft = false;
@@ -43,19 +42,22 @@ public class SwordBase : MonoBehaviour
     [Header("Collition")]
     public PolygonCollider2D hitbox;
 
-    public bool hasHitTheFirstWay = false;
+    private bool hasHitTheFirstWay = false;
+
+    [Header("Statistics")]
+    public ItemData ThisSwordsItemDataSheet;
+
 
 
     void Start()
     {
+
         hitbox.enabled = false;
         foreach(ParticleSystem RotationPFX in RotationPFX)
         {
             var RotationPFXemition = RotationPFX.emission;
             RotationPFXemition.enabled = false;
         }
-
-        animator = GetComponent<Animator>();
 
         playermovement = GetComponentInParent<PlayerMovement>();
         rotateAroundScript = GetComponentInChildren<RotateAround>();
@@ -86,18 +88,11 @@ public class SwordBase : MonoBehaviour
 
         updateAnimationLayers();
 
-        if (playermovement.moveDirection != Vector2.zero) //updates animations if not standing still
-        {
-            animator.SetFloat("Horizontal", playermovement.moveX);
-            animator.SetFloat("Vertical", playermovement.moveY);
-        }
-
         if (Input.GetKeyDown(KeyCode.Mouse0) && IsAttacking == false && playermovement.AllCanAttack)
         {
            StartCoroutine(Attack());
         }
     }
-
     private IEnumerator Attack()
     {
         IsAttacking = true;
@@ -159,11 +154,59 @@ public class SwordBase : MonoBehaviour
             RHandSpriteRenderer.enabled = false;
             SwordSpriteRenderer.enabled = false;
 
-            float currentRotation = 0f;
+        float currentRotation = 0f;
 
-            float neededRotation = 120f;
+        float neededRotation = 120f;
 
-            while (currentRotation < neededRotation) //waits for x seconds
+        while (currentRotation < neededRotation) //waits for x seconds                              ////&/// attack 1
+        {
+            float rotationThisFrame = rotationSpeed * Time.fixedDeltaTime;
+
+            // Apply the rotation
+            RotatingSword.RotateAround(transform.position, Vector3.forward, rotationThisFrame);
+
+            // Update the current rotation
+            currentRotation += rotationThisFrame;
+
+            // Check if we've completed a full rotation
+            if (currentRotation >= neededRotation)
+            {
+                RotatingSword.RotateAround(transform.position, Vector3.forward, neededRotation - (currentRotation - rotationThisFrame));
+                break;
+            }
+            yield return null;
+        }
+
+        yield return new WaitForSeconds(0.1f); //Break here
+
+        while (currentRotation > 0f)                                                                ////&/// attack 2
+        {
+            float rotationThisFrame = rotationSpeed * Time.fixedDeltaTime;
+
+            // Apply the reverse rotation
+            RotatingSword.RotateAround(transform.position, Vector3.forward, -rotationThisFrame);
+
+            // Update the current rotation
+            currentRotation -= rotationThisFrame;
+
+            // Check if we've completed the reverse rotation
+            if (currentRotation <= 0f)
+            {
+                // Make sure we stop at the exact starting point (0 degrees)
+                RotatingSword.RotateAround(transform.position, Vector3.forward, -currentRotation);
+                currentRotation = 0f;  // Ensure currentRotation is exactly 0
+                break;
+            }
+            yield return null;
+        }
+
+        /*float currentRotation = 0f;
+
+        float neededRotation = 120f;
+        if (hasHitTheFirstWay)
+        {
+
+            while (currentRotation < neededRotation) //waits for x seconds                              ////&/// attack 1
             {
                 float rotationThisFrame = rotationSpeed * Time.fixedDeltaTime;
 
@@ -182,29 +225,39 @@ public class SwordBase : MonoBehaviour
                 yield return null;
             }
 
-            yield return new WaitForSeconds(0.1f);
+            hasHitTheFirstWay = false;
+            RotatingSword.transform.eulerAngles = new Vector3(0, 0, RotatingSword.transform.eulerAngles.z - 120);
 
-            while (currentRotation > 0f)
+        }
+        else
+        {
+
+            while (currentRotation < neededRotation)                                                                ////&/// attack 2
             {
-                float rotationThisFrame = rotationSpeed * Time.fixedDeltaTime;
+                    float rotationThisFrame = rotationSpeed * Time.fixedDeltaTime;
 
-                // Apply the reverse rotation
-                RotatingSword.RotateAround(transform.position, Vector3.forward, -rotationThisFrame);
+                // Apply the rotation
 
-                // Update the current rotation
-                currentRotation -= rotationThisFrame;
+                    RotatingSword.RotateAround(transform.position, Vector3.back, rotationThisFrame);
 
-                // Check if we've completed the reverse rotation
-                if (currentRotation <= 0f)
-                {
-                    // Make sure we stop at the exact starting point (0 degrees)
-                    RotatingSword.RotateAround(transform.position, Vector3.forward, -currentRotation);
-                    currentRotation = 0f;  // Ensure currentRotation is exactly 0
-                    break;
-                }
-                yield return null;
+                    // Update the current rotation
+                    currentRotation += rotationThisFrame;
+
+                    // Check if we've completed a full rotation
+                    if (currentRotation >= neededRotation)
+                    {
+                        RotatingSword.RotateAround(transform.position, Vector3.back, neededRotation - (currentRotation - rotationThisFrame));
+                        break;
+                    }
+                    yield return null;
             }
+            hasHitTheFirstWay = true;
+        }*/
 
+
+        yield return new WaitForSeconds(0.1f); //Break here
+
+        yield return new WaitForSeconds(0.1f);
 
 
         foreach (SpriteRenderer SwordHands in SwordHands)
@@ -348,7 +401,7 @@ public class SwordBase : MonoBehaviour
         {
             Debug.Log("Hit detected on enemy!");
 
-            enemyHP.TakeDmg(1, transform, 20f);
+            enemyHP.TakeDmg(ThisSwordsItemDataSheet.Damage, transform, 20f);
         }
     }
 }
