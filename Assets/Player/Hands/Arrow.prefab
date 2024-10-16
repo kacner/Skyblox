@@ -4924,6 +4924,7 @@ GameObject:
   - component: {fileID: 4406737414041825407}
   - component: {fileID: 8339814624826855849}
   - component: {fileID: 7809849357708032937}
+  - component: {fileID: 1823110974462130547}
   m_Layer: 0
   m_Name: Arrow
   m_TagString: Untagged
@@ -5015,6 +5016,9 @@ MonoBehaviour:
   force: 80
   WindFx: {fileID: 5512159564041138078}
   ArrowCollectibalPrefab: {fileID: 6238762354827476351, guid: d07fc48996a56f74996ba2deaaac6173, type: 3}
+  CutArrow: {fileID: 21300000, guid: e454a452db6e9e445b76c47fb5e9acbb, type: 3}
+  latePlayerPos: {x: 0, y: 0, z: 0}
+  TheBowsItemDataSheet: {fileID: 11400000, guid: 2a774daac83118b4089199f3d97b24e0, type: 2}
 --- !u!50 &7809849357708032937
 Rigidbody2D:
   serializedVersion: 4
@@ -5042,3 +5046,48 @@ Rigidbody2D:
   m_SleepingMode: 1
   m_CollisionDetection: 1
   m_Constraints: 0
+--- !u!61 &1823110974462130547
+BoxCollider2D:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8635947496726962093}
+  m_Enabled: 1
+  m_Density: 1
+  m_Material: {fileID: 0}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_LayerOverridePriority: 0
+  m_ForceSendLayers:
+    serializedVersion: 2
+    m_Bits: 4294967295
+  m_ForceReceiveLayers:
+    serializedVersion: 2
+    m_Bits: 4294967295
+  m_ContactCaptureLayers:
+    serializedVersion: 2
+    m_Bits: 4294967295
+  m_CallbackLayers:
+    serializedVersion: 2
+    m_Bits: 4294967295
+  m_IsTrigger: 1
+  m_UsedByEffector: 0
+  m_UsedByComposite: 0
+  m_Offset: {x: -0.0047313273, y: 0.066238225}
+  m_SpriteTilingProperty:
+    border: {x: 0, y: 0, z: 0, w: 0}
+    pivot: {x: 0.5, y: 0.5}
+    oldSize: {x: 0.3125, y: 0.8125}
+    newSize: {x: 1, y: 1}
+    adaptiveTilingThreshold: 0.5
+    drawMode: 0
+    adaptiveTiling: 0
+  m_AutoTiling: 0
+  serializedVersion: 2
+  m_Size: {x: 0.5869158, y: 1.1342291}
+  m_EdgeRadius: 0

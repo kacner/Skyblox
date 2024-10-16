@@ -1,8 +1,4 @@
 using System.Collections;
-using System.Collections.Generic;
-using System.Runtime.CompilerServices;
-using System.Runtime.Serialization;
-using UnityEditor.Experimental.GraphView;
 using UnityEngine;
 
 public class EnemyHp : MonoBehaviour
@@ -25,8 +21,18 @@ public class EnemyHp : MonoBehaviour
     [Header("Death")]
     public ParticleSystem[] ActivatingDeathParticles;
 
+    public Transform[] protectedObjects;
+
     void Start()
     {
+        protectedObjects = new Transform[transform.childCount];
+
+        for (int i = 0; i < transform.childCount; i++)
+        {
+            protectedObjects[i] = transform.GetChild(i);
+        }
+
+
         CurrentInvincibilityTimer = invincibilityTimer;
 
         rb = GetComponent<Rigidbody2D>();
@@ -48,7 +54,7 @@ public class EnemyHp : MonoBehaviour
         CurrentInvincibilityTimer -= Time.fixedDeltaTime; //subtrakts
     }
 
-    public void TakeDmg(float dmg, Transform AttackerPos, float KnockBackAmount)
+    public void TakeDmg(float dmg, Vector3 AttackerPos, float KnockBackAmount)
     {
         if (CurrentInvincibilityTimer <= 0)
         {
@@ -59,6 +65,10 @@ public class EnemyHp : MonoBehaviour
 
             if ((current_HP - dmg) <= 0)
             {
+                changeMaterial();
+
+                DisableCollider();
+
                 StartCoroutine(RollDeathCGI());
             }
             else
@@ -71,17 +81,9 @@ public class EnemyHp : MonoBehaviour
         }
     }
 
-
-    private void PostDeath()
+    private void HandleChildren()
     {
-        Transform[] children = new Transform[transform.childCount];
-
-        for (int i = 0; i < transform.childCount; i++)
-        {
-            children[i] = transform.GetChild(i);
-        }
-
-        foreach (Transform child in children)
+        foreach (Transform child in protectedObjects)
         {
             child.SetParent(null); //make every children an orphan
         }
@@ -93,9 +95,10 @@ public class EnemyHp : MonoBehaviour
     }
 
 
-    private void applyKnockback(Transform attackerPos, float knockbackAmount)
+    private void applyKnockback(Vector3 attackerPos, float knockbackAmount)
     {
-        Vector2 KBdir = (transform.position - attackerPos.position).normalized;
+        Vector3 transformPos = new Vector3(transform.position.x, transform.position.y, transform.position.z);
+        Vector2 KBdir = (transformPos - attackerPos).normalized;
         rb.AddForce(KBdir * knockbackAmount, ForceMode2D.Impulse);
     }
     private IEnumerator flashDMGcolor()
@@ -137,6 +140,33 @@ public class EnemyHp : MonoBehaviour
 
         deathDMGmat.SetFloat("_DisolveAmount", 1f);
         StartCoroutine(suicide());
-        PostDeath();
+        HandleChildren();
+    }
+
+    private void DisableCollider()
+    {
+        PolygonCollider2D polygoncolider = GetComponent<PolygonCollider2D>();
+        if (polygoncolider != null)
+            polygoncolider.enabled = false;
+    }
+
+    private void changeMaterial()
+    {
+        Transform[] allChildren = new Transform[transform.childCount]; 
+
+        for (int i = 0; i < transform.childCount; i++)
+        {
+            allChildren[i] = transform.GetChild(i); 
+        }
+
+        foreach (Transform child in allChildren)
+        {
+            SpriteRenderer childSpriteRenderer;
+
+            if (child.TryGetComponent<SpriteRenderer>(out childSpriteRenderer))
+            {
+                childSpriteRenderer.material = deathDMGmat;
+            }
+        }
     }
 }

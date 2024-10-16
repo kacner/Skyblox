@@ -401,7 +401,7 @@ public class SwordBase : MonoBehaviour
         {
             Debug.Log("Hit detected on enemy!");
 
-            enemyHP.TakeDmg(ThisSwordsItemDataSheet.Damage, transform, 20f);
+            enemyHP.TakeDmg(ThisSwordsItemDataSheet.Damage, transform.position, 20f);
         }
     }
 }

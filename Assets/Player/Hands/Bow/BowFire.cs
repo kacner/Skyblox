@@ -35,6 +35,8 @@ public class BowFire : MonoBehaviour
     private Inventory inventory;
     private Inventory HotbarInventory;
 
+    public ItemData ThisBowsItemDataSheet;
+
     void Start()
     {
         GameObject canvasObject = GameObject.Find("Canvas");
@@ -120,7 +122,10 @@ public class BowFire : MonoBehaviour
                     }
 
                     GameObject Arrow = Instantiate(arrow, bulletTransform.position, Quaternion.identity);
-                    Arrow.GetComponent<ArrowScript>().force = Mathf.Clamp(holdtimer * 80, 20, 80);
+                    ArrowScript arrowScript = Arrow.GetComponent<ArrowScript>();
+                    arrowScript.force = Mathf.Clamp(holdtimer * 80, 20, 80);
+                    arrowScript.TheBowsItemDataSheet = ThisBowsItemDataSheet;
+                    arrowScript.latePlayerPos = transform.position;
 
                     if (inventoryHadTheArrow)
                         inventory.RemoveArrow();

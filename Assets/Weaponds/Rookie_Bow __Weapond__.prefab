@@ -57,6 +57,7 @@ MonoBehaviour:
   inventoryUI: {fileID: 0}
   ArrowSlotID: 0
   inventoryName: Backpack
+  ThisBowsItemDataSheet: {fileID: 11400000, guid: 5fa6bae62a1e8404182dbc7ffb2765ea, type: 2}
 --- !u!1 &1744474015409572517
 GameObject:
   m_ObjectHideFlags: 0
