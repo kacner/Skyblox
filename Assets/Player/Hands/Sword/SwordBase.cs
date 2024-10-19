@@ -48,10 +48,8 @@ public class SwordBase : MonoBehaviour
     public ItemData ThisSwordsItemDataSheet;
 
 
-
     void Start()
     {
-
         hitbox.enabled = false;
         foreach(ParticleSystem RotationPFX in RotationPFX)
         {

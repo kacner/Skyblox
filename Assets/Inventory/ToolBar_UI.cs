@@ -13,6 +13,8 @@ public class ToolBar_UI : MonoBehaviour
 
     public int selectedSlotNumber;
 
+    public UI_Manager UI_manager;
+
     private void Start()
     {
         hotbarScript = GameManager.instance.player.GetComponent<HotbarScript>();
@@ -42,63 +44,67 @@ public class ToolBar_UI : MonoBehaviour
 
     private void checkAlphaNumericKeys()
     {
-        if (Input.GetKeyDown(KeyCode.Alpha1))
+        if (!UI_manager.isInventoryToggeld)
         {
-            selectSlot(0);
-            selectedSlotNumber = 0;
-        }
-        if (Input.GetKeyDown(KeyCode.Alpha2))
-        {
-            selectSlot(1);
-            selectedSlotNumber = 1;
-        }
-        if (Input.GetKeyDown(KeyCode.Alpha3))
-        {
-            selectSlot(2);
-            selectedSlotNumber = 2;
-        }
-        if (Input.GetKeyDown(KeyCode.Alpha4))
-        {
-            selectSlot(3);
-            selectedSlotNumber = 3;
-        }
-        if (Input.GetKeyDown(KeyCode.Alpha5))
-        {
-            selectSlot(4);
-            selectedSlotNumber = 4;
-        }
-        if (Input.GetKeyDown(KeyCode.Alpha6))
-        {
-            selectSlot(5);
-            selectedSlotNumber = 5;
-        }
-        if (Input.GetKeyDown(KeyCode.Alpha7))
-        {
-            selectSlot(6);
-            selectedSlotNumber = 6;
-        }
-        if (Input.GetKeyDown(KeyCode.Alpha8))
-        {
-            selectSlot(7);
-            selectedSlotNumber = 7;
-        }
-        if (Input.GetKeyDown(KeyCode.Alpha9))
-        {
-            selectSlot(8);
-            selectedSlotNumber = 8;
-        }
 
-        float scroll = Input.GetAxis("Mouse ScrollWheel");
-        if (scroll != 0f)
-        {
-            int currentIndex = toolbarSlots.IndexOf(selectedSlot);
-            if (currentIndex == -1)
+            if (Input.GetKeyDown(KeyCode.Alpha1))
             {
-                currentIndex = 0;
+                selectSlot(0);
+                selectedSlotNumber = 0;
             }
-            int newIndex = (currentIndex + (scroll > 0 ? 1 : -1) + toolbarSlots.Count) % toolbarSlots.Count;
-            selectSlot(newIndex);
-            selectedSlotNumber = newIndex;
+            if (Input.GetKeyDown(KeyCode.Alpha2))
+            {
+                selectSlot(1);
+                selectedSlotNumber = 1;
+            }
+            if (Input.GetKeyDown(KeyCode.Alpha3))
+            {
+                selectSlot(2);
+                selectedSlotNumber = 2;
+            }
+            if (Input.GetKeyDown(KeyCode.Alpha4))
+            {
+                selectSlot(3);
+                selectedSlotNumber = 3;
+            }
+            if (Input.GetKeyDown(KeyCode.Alpha5))
+            {
+                selectSlot(4);
+                selectedSlotNumber = 4;
+            }
+            if (Input.GetKeyDown(KeyCode.Alpha6))
+            {
+                selectSlot(5);
+                selectedSlotNumber = 5;
+            }
+            if (Input.GetKeyDown(KeyCode.Alpha7))
+            {
+                selectSlot(6);
+                selectedSlotNumber = 6;
+            }
+            if (Input.GetKeyDown(KeyCode.Alpha8))
+            {
+                selectSlot(7);
+                selectedSlotNumber = 7;
+            }
+            if (Input.GetKeyDown(KeyCode.Alpha9))
+            {
+                selectSlot(8);
+                selectedSlotNumber = 8;
+            }
+
+            float scroll = Input.GetAxis("Mouse ScrollWheel");
+            if (scroll != 0f)
+            {
+                int currentIndex = toolbarSlots.IndexOf(selectedSlot);
+                if (currentIndex == -1)
+                {
+                    currentIndex = 0;
+                }
+                int newIndex = (currentIndex + (scroll > 0 ? 1 : -1) + toolbarSlots.Count) % toolbarSlots.Count;
+                selectSlot(newIndex);
+                selectedSlotNumber = newIndex;
+            }
         }
     }
     public void updateHotbarContent(int index, GameObject[] weapondsArray)

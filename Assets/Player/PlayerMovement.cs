@@ -1,8 +1,9 @@
+using JetBrains.Annotations;
 using System.Collections;
+using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 
-[RequireComponent(typeof(Rigidbody2D))]
 public class PlayerMovement : MonoBehaviour
 {
     [Header("Main Movement Variables")]
@@ -76,8 +77,12 @@ public class PlayerMovement : MonoBehaviour
 
     public bool AllCanAttack = true;
 
+    private PlayerHp playerHp;
+
     void Start()
     {
+        playerHp = GetComponent<PlayerHp>();
+
         cursorspriteRectTransform.gameObject.SetActive(true);
 
         GameObject canvasObject = GameObject.Find("Canvas");
@@ -177,14 +182,24 @@ public class PlayerMovement : MonoBehaviour
             Die();
         }
 
+        if (GameManager.instance.ui_Manager.isInventoryToggeld)
+        {
+            cursorspriteRectTransform.gameObject.SetActive(false);
+        }
+        else
+        {
+            cursorspriteRectTransform.gameObject.SetActive(true);
+            inventoryUI.slotEndDrag();
+        }
+
         
-        if (rb.velocity.magnitude > 6)
+        if (rb != null && rb.velocity.magnitude > 6)
         {
             runningParticleSystem.enableEmission = true;
             var emmitino = runningParticleSystem.emission;
             emmitino.rateOverDistance = 5f;
         }
-        else if (rb.velocity.magnitude > 4)
+        else if (rb != null && rb.velocity.magnitude > 4)
         {
             runningParticleSystem.enableEmission = true;
             var emmitino = runningParticleSystem.emission;
@@ -239,16 +254,16 @@ public class PlayerMovement : MonoBehaviour
     }
     private void FixedUpdate()
     {
-        if (rb.velocity.magnitude < 0.01f)
+        if (rb != null && rb.velocity.magnitude < 0.01f)
         {
             rb.velocity = Vector2.zero;
         }
-
-        Velocity = rb.velocity.magnitude;
-
-        animator.SetFloat("Speed", rb.velocity.magnitude);
-
-        if (!isDead)
+        if (rb != null)
+        {
+            Velocity = rb.velocity.magnitude;
+            animator.SetFloat("Speed", rb.velocity.magnitude);
+        }
+        if (rb != null && !isDead)
         {
             Vector2 targetVelocity = moveDirection * maxSpeed; // desired velocity based on input
             Vector2 velocityReq = targetVelocity - rb.velocity; // how much we need to change the velocity
@@ -329,17 +344,16 @@ public class PlayerMovement : MonoBehaviour
 
 
 
-        
         spriterenderer.material = SolidColorMat; // Change player material to solid color
         Color initialColor = spriterenderer.color; // Store initial color
         spriterenderer.color = DashColor; // Change color to dash color
 
-        GameObject[] allGameObjects = GameObject.FindObjectsOfType<GameObject>(); // Get all game objects
-        foreach (GameObject child in allGameObjects)
+        Transform[] allGameObjects = GetComponentsInChildren<Transform>(); // Get all game objects
+        foreach (Transform child in allGameObjects)
         {
             if (child != null && child.name.Contains("__Weapond__"))
             {
-                child.SetActive(false);
+                child.gameObject.SetActive(false);
             }
         }
 
@@ -371,25 +385,28 @@ public class PlayerMovement : MonoBehaviour
         createtrailsprite = false;
         RollingPFX.enableEmission = false;
         spriterenderer.color = initialColor;
-        spriterenderer.material = SpriteDefaultLit;
 
-        foreach (GameObject child in allGameObjects)
+        playerHp.changeHandMat();
+
+        foreach (Transform child in allGameObjects)
         {
             if (child != null && child.name.Contains("__Weapond__"))
             {
-                child.SetActive(true);
+                child.gameObject.SetActive(true);
             }
         }
 
         yield return new WaitForSeconds(RollCooldown - emitParticleAfterInitialRoll);
         IsRolling = false;
     }
-    private void Die()
+    public void Die()
     {
-        hotbarscript.destroyCurrentWeapond(); 
+        Destroy(GetComponent<BoxCollider2D>());
+        hotbarscript.destroyCurrentWeapond();
         isDead = true; 
         CanMove = false; 
         animator.SetBool("isDead", true); //updates animator
+        if (rb != null)
         rb.velocity = new Vector2(0, 0); //setts velocity to 0 
         AllCanAttack = false;
     }

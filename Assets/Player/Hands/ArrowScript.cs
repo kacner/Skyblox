@@ -6,17 +6,26 @@ public class ArrowScript : MonoBehaviour
     private Vector3 mousePos;
     private Camera mainCam;
     private Rigidbody2D rb;
+    private Vector3 direction;
+
     public float force;
-    Vector3 direction;
+
+    [Header("WindFX")]
     public GameObject WindFx;
     private SpriteRenderer WindFxSpriterenderer;
     private float WindFxAlpha = 1f;
     private float velocity;
+
     public GameObject ArrowCollectibalPrefab;
+    
     public Sprite CutArrow;
     
     [HideInInspector] public Vector3 latePlayerPos;
     [HideInInspector] public ItemData TheBowsItemDataSheet;
+
+    [HideInInspector] public float MaxChargeTime;
+    [HideInInspector] public float ChargedTime;
+
     private bool hasHitEnemy = false;
 
 
@@ -71,7 +80,11 @@ public class ArrowScript : MonoBehaviour
 
             Debug.Log("Hit detected on enemy!");
 
-            enemyHP.TakeDmg(TheBowsItemDataSheet.Damage, latePlayerPos, 20f);
+            print(ChargedTime + "      " + MaxChargeTime);
+
+            float finalDmg = TheBowsItemDataSheet.Damage * (ChargedTime / MaxChargeTime);
+
+            enemyHP.TakeDmg(finalDmg, latePlayerPos, 20f, this.gameObject);
 
             StartCoroutine(attachArrow(collision));
         }
@@ -79,15 +92,15 @@ public class ArrowScript : MonoBehaviour
 
     IEnumerator attachArrow(Collider2D collision)
     {
-        yield return new WaitForSeconds(0.1f);
+        yield return new WaitForSeconds(0f);
 
+        rb.velocity = new Vector2(0, 0);
         transform.SetParent(collision.gameObject.transform);
 
         SpriteRenderer thisSpriteRenderer = GetComponent<SpriteRenderer>();
         thisSpriteRenderer.sortingOrder = 0;
         thisSpriteRenderer.sprite = CutArrow;
 
-        rb.velocity = new Vector2(0, 0);
         
         Destroy(rb);
         Destroy(WindFxSpriterenderer);

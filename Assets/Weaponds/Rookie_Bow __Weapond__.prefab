@@ -47,7 +47,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   arrow: {fileID: 8635947496726962093, guid: 53ba68f99f248c444abb6aa4414ed610, type: 3}
   bulletTransform: {fileID: 5999188492814058477}
-  bowHoldTime: 1
+  holdtimer: 0
+  bowHoldTime: 1.4
   Hand: {fileID: 7714363160932935104}
   HoldingHand: {fileID: 1778024228808409202}
   ArrowSpriteTransform: {fileID: 6781308993431972512}
@@ -58,6 +59,7 @@ MonoBehaviour:
   ArrowSlotID: 0
   inventoryName: Backpack
   ThisBowsItemDataSheet: {fileID: 11400000, guid: 5fa6bae62a1e8404182dbc7ffb2765ea, type: 2}
+  maxArrowVelocity: 80
 --- !u!1 &1744474015409572517
 GameObject:
   m_ObjectHideFlags: 0

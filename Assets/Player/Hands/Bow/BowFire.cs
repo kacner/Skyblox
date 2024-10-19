@@ -9,8 +9,7 @@ public class BowFire : MonoBehaviour
     private Vector3 mousePos;
     public GameObject arrow;
     public Transform bulletTransform;
-    float holdtimer;
-    bool staneone = false;
+    public float holdtimer = 0;
     public float bowHoldTime = 1f;
     public Transform Hand;
     public Transform HoldingHand;
@@ -36,6 +35,8 @@ public class BowFire : MonoBehaviour
     private Inventory HotbarInventory;
 
     public ItemData ThisBowsItemDataSheet;
+
+    public float maxArrowVelocity = 80;
 
     void Start()
     {
@@ -110,7 +111,7 @@ public class BowFire : MonoBehaviour
             }
             else // Mouse1 button is not held
             {
-                if (holdtimer > 0) // Ensure we only shoot if the bow was drawn
+                if (holdtimer > 0.2f) // Ensure we only shoot if the bow was drawn
                 {
                     playermovement.canRoll = true;
 
@@ -123,9 +124,11 @@ public class BowFire : MonoBehaviour
 
                     GameObject Arrow = Instantiate(arrow, bulletTransform.position, Quaternion.identity);
                     ArrowScript arrowScript = Arrow.GetComponent<ArrowScript>();
-                    arrowScript.force = Mathf.Clamp(holdtimer * 80, 20, 80);
+                    arrowScript.force = Mathf.Clamp(holdtimer * maxArrowVelocity, 20, maxArrowVelocity);
                     arrowScript.TheBowsItemDataSheet = ThisBowsItemDataSheet;
                     arrowScript.latePlayerPos = transform.position;
+                    arrowScript.MaxChargeTime = bowHoldTime;
+                    arrowScript.ChargedTime = holdtimer;
 
                     if (inventoryHadTheArrow)
                         inventory.RemoveArrow();

@@ -8,8 +8,11 @@ public class HotbarScript : MonoBehaviour
     public GameObject EmptyWHands;
 
     public GameObject[] Weaponds;
+
+    private PlayerHp playerHp;
     private void Start()
     {
+        playerHp = GetComponent<PlayerHp>();
         playermovement = GetComponent<PlayerMovement>();
     }
 
@@ -34,7 +37,11 @@ public class HotbarScript : MonoBehaviour
             if (newWeapond != null)
                 InstantiateNewWeapond(newWeapond);
             else
+            {
                 InstantiateNewWeapond(EmptyWHands);
+                print("Diddy0");
+                playerHp.changeHandMat();
+            }
 
             GameManager.instance.ui_Manager.RefreshInventoryUI("Backpack");
             GameManager.instance.ui_Manager.RefreshInventoryUI("Toolbar");
@@ -70,6 +77,7 @@ public class HotbarScript : MonoBehaviour
     private void InstantiateNewWeapond(GameObject Weapond)
     {
         Instantiate(Weapond, transform);
+        playerHp.changeHandMat();
     }
 
     private bool AreWeaponsSame(GameObject currentWeapond, GameObject newWeapond)

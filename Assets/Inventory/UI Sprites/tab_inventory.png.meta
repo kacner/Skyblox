@@ -149,7 +149,7 @@ TextureImporter:
         serializedVersion: 2
         x: 11
         y: 80
-        width: 172
+        width: 145
         height: 22
       alignment: 0
       pivot: {x: 0, y: 0}
@@ -227,6 +227,27 @@ TextureImporter:
       indices: 
       edges: []
       weights: []
+    - serializedVersion: 2
+      name: tab_inventory_5
+      rect:
+        serializedVersion: 2
+        x: 59
+        y: 40
+        width: 145
+        height: 6
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 745eee04ea92c764fab49b2298185f7b
+      internalID: 59086351
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
     outline: []
     physicsShape: []
     bones: []
@@ -243,6 +264,7 @@ TextureImporter:
       tab_inventory_2: 1207525295
       tab_inventory_3: -1934688703
       tab_inventory_4: 705654695
+      tab_inventory_5: 59086351
   mipmapLimitGroupName: 
   pSDRemoveMatte: 0
   userData: 

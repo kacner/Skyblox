@@ -12,16 +12,21 @@ public class EnemyHp : MonoBehaviour
     [SerializeField] private int speed = 3;
     [SerializeField] private float duration = 1;
     public AnimationCurve animationCurve;
-    public Material originalDeathMat;
+    [SerializeField] private Material originalDeathMat;
     private Material deathDMGmat;
     public ParticleSystem dmgSystem;
+
     [SerializeField] private float invincibilityTimer = 0.25f;
-    [SerializeField] private float CurrentInvincibilityTimer;
+    private float CurrentInvincibilityTimer;
 
     [Header("Death")]
     public ParticleSystem[] ActivatingDeathParticles;
 
-    public Transform[] protectedObjects;
+    private Transform[] protectedObjects;
+
+    [SerializeField] private GameObject DamagePopUpPrefab;
+
+    [HideInInspector] public bool isDead = false;
 
     void Start()
     {
@@ -41,20 +46,18 @@ public class EnemyHp : MonoBehaviour
 
         deathDMGmat = new Material(originalDeathMat);
 
-        GetComponent<SpriteRenderer>().material = deathDMGmat;
+        deathDMGmat = GetComponent<SpriteRenderer>().material;
     }
 
-    private void Update()
+
+    private void FixedUpdate()
     {
-        if (Input.GetKeyDown(KeyCode.E))
-        {
-            StartCoroutine(RollDeathCGI());
-        }
-
         CurrentInvincibilityTimer -= Time.fixedDeltaTime; //subtrakts
+
+        CurrentInvincibilityTimer = Mathf.Clamp(CurrentInvincibilityTimer, 0, invincibilityTimer);
     }
 
-    public void TakeDmg(float dmg, Vector3 AttackerPos, float KnockBackAmount)
+    public void TakeDmg(float dmg, Vector3 AttackerPos, float KnockBackAmount) //sword
     {
         if (CurrentInvincibilityTimer <= 0)
         {
@@ -62,14 +65,15 @@ public class EnemyHp : MonoBehaviour
 
             applyKnockback(AttackerPos, KnockBackAmount);
             StartCoroutine(flashDMGcolor());
+            SpawnDmgPopUp(dmg);
 
             if ((current_HP - dmg) <= 0)
             {
-                changeMaterial();
-
                 DisableCollider();
 
                 StartCoroutine(RollDeathCGI());
+
+                isDead = true;
             }
             else
             {
@@ -77,7 +81,44 @@ public class EnemyHp : MonoBehaviour
             }
 
 
-            CurrentInvincibilityTimer = Mathf.Clamp(CurrentInvincibilityTimer, 0, 0.6f);
+            CurrentInvincibilityTimer = invincibilityTimer;
+        }
+        else
+        {
+            DisableCollider();
+        }
+    }
+    public void TakeDmg(float dmg, Vector3 AttackerPos, float KnockBackAmount, GameObject Arrow) //bow
+    {
+        if (CurrentInvincibilityTimer <= 0)
+        {
+            Arrow.GetComponent<SpriteRenderer>().material = deathDMGmat;
+
+            dmgSystem.Play();
+
+            applyKnockback(AttackerPos, KnockBackAmount);
+            StartCoroutine(flashDMGcolor());
+            SpawnDmgPopUp(dmg);
+
+            if ((current_HP - dmg) <= 0)
+            {
+                DisableCollider();
+
+                StartCoroutine(RollDeathCGI());
+
+                isDead = true;
+            }
+            else
+            {
+                current_HP -= dmg;
+            }
+
+
+            CurrentInvincibilityTimer = invincibilityTimer;
+        }
+        else
+        {
+            DisableCollider();
         }
     }
 
@@ -91,9 +132,14 @@ public class EnemyHp : MonoBehaviour
     private IEnumerator suicide()
     {
         yield return null;
+
+        for (int i = 0; i < protectedObjects.Length; i++)
+        {
+            Destroy(protectedObjects[i].gameObject);
+        }
+
         Destroy(gameObject); //commit suicide
     }
-
 
     private void applyKnockback(Vector3 attackerPos, float knockbackAmount)
     {
@@ -114,7 +160,6 @@ public class EnemyHp : MonoBehaviour
 
         deathDMGmat.SetFloat("_FlashAmount", 0f);
     }
-
 
     private IEnumerator RollDeathCGI()
     {
@@ -148,25 +193,16 @@ public class EnemyHp : MonoBehaviour
         PolygonCollider2D polygoncolider = GetComponent<PolygonCollider2D>();
         if (polygoncolider != null)
             polygoncolider.enabled = false;
+
+        BoxCollider2D boxCollider = GetComponent<BoxCollider2D>();
+        if (boxCollider != null)
+            boxCollider.enabled = false;
     }
 
-    private void changeMaterial()
+    private void SpawnDmgPopUp(float damage)
     {
-        Transform[] allChildren = new Transform[transform.childCount]; 
-
-        for (int i = 0; i < transform.childCount; i++)
-        {
-            allChildren[i] = transform.GetChild(i); 
-        }
-
-        foreach (Transform child in allChildren)
-        {
-            SpriteRenderer childSpriteRenderer;
-
-            if (child.TryGetComponent<SpriteRenderer>(out childSpriteRenderer))
-            {
-                childSpriteRenderer.material = deathDMGmat;
-            }
-        }
+        GameObject damagepopupObject = Instantiate(DamagePopUpPrefab, transform.position, Quaternion.identity);
+        DamagePopUpScript damagePopUpScript = damagepopupObject.GetComponent<DamagePopUpScript>();
+        damagePopUpScript.Setup(damage);
     }
 }

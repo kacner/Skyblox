@@ -43,7 +43,7 @@ public class InventoryUI : MonoBehaviour
         }
         else
         {
-        print(slots.Count + "      " + inventory.slots.Count);
+            print(slots.Count + "      " + inventory.slots.Count);
 
         }
     }
@@ -98,8 +98,6 @@ public class InventoryUI : MonoBehaviour
             Destroy(UI_Manager.draggedIcon.gameObject);
             UI_Manager.draggedIcon = null;
         }
-
-        //Debug.Log("Done draging : " + draggedslot.name);
     }
     public void slotDrop(Slot_UI slot)
     {
