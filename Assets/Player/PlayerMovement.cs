@@ -79,6 +79,8 @@ public class PlayerMovement : MonoBehaviour
 
     private PlayerHp playerHp;
 
+    private Animator CanvasAnimator;
+
     void Start()
     {
         playerHp = GetComponent<PlayerHp>();
@@ -87,6 +89,8 @@ public class PlayerMovement : MonoBehaviour
 
         GameObject canvasObject = GameObject.Find("Canvas");
         inventoryUI = canvasObject.GetComponentInChildren<InventoryUI>();
+        CanvasAnimator = canvasObject.GetComponent<Animator>();
+        StartCoroutine(StartScreen());
 
         Swordbase = GetComponentInChildren<SwordBase>();
 
@@ -247,10 +251,6 @@ public class PlayerMovement : MonoBehaviour
 
         if (Input.GetKey(KeyCode.N))
             Debug.Break();
-
-        if (Input.GetKey(KeyCode.Backspace))
-            SceneManager.LoadScene("SampleScene");
-
     }
     private void FixedUpdate()
     {
@@ -403,12 +403,14 @@ public class PlayerMovement : MonoBehaviour
     {
         Destroy(GetComponent<BoxCollider2D>());
         hotbarscript.destroyCurrentWeapond();
-        isDead = true; 
+        isDead = true;
         CanMove = false; 
         animator.SetBool("isDead", true); //updates animator
         if (rb != null)
         rb.velocity = new Vector2(0, 0); //setts velocity to 0 
         AllCanAttack = false;
+
+        StartCoroutine(DeathScreen());
     }
     private void UpdateHorVer()
     {
@@ -521,5 +523,19 @@ public class PlayerMovement : MonoBehaviour
 
         newLookDir = DetermineLookDirection(mouseWorldPosition);
         lookDirVector = DetermineLookDirectionVector2(mouseWorldPosition);
+    }
+
+    IEnumerator DeathScreen()
+    {
+        yield return new WaitForSeconds(2f);
+        CanvasAnimator.SetTrigger("RollDeathScreen");
+        yield return new WaitForSeconds(1f); //animation is over 
+        SceneManager.LoadScene("SampleScene");
+    }
+
+    IEnumerator StartScreen()
+    {
+        CanvasAnimator.SetTrigger("RollStartScreen");
+        yield return null;
     }
 }

@@ -21,6 +21,8 @@ public class UI_Manager : MonoBehaviour
 
     private void Awake()
     {
+        getAllReferences();
+
         Initialize();
         if (inventorypanel != null)
             inventorypanel.SetActive(false);
@@ -114,6 +116,67 @@ public class UI_Manager : MonoBehaviour
             {
                 inventoryUIByName.Add(ui.inventoryName, ui);
             }
+        }
+    }
+
+    void getAllReferences()
+    {
+        /*GameObject[] allObjects = Resources.FindObjectsOfTypeAll<GameObject>();
+
+        foreach (GameObject obj in allObjects)
+        {
+            // Check if the object has the desired tag
+            if (obj.CompareTag("ToggleInvPanel"))
+            {
+                inventorypanel = obj;
+                print("Found [InventoryPanel]");
+                break;
+            }
+
+            if (obj.CompareTag("Player"))
+            {
+                print("Found [Player]");
+                playerMovement = obj.GetComponent<PlayerMovement>();
+                if (playerMovement != null)
+                    print("Found [PlayerMovement]");
+                else
+                    print("failed to find [PlayerMovement]");
+                break;
+            }   
+        }
+
+        if (inventorypanel == null)
+            print("Failed to find [InventoryPanel]");
+        if (playerMovement == null)
+            print("Failed to find [PlayerMovement]");*/
+
+        GameObject obj = GameObject.FindWithTag("ToggleInvPanel");
+        if (obj != null)
+        {
+            inventorypanel = obj;
+            print("Found [InventoryPanel]");
+            print(inventorypanel);
+        }
+        else
+        {
+            print("Failed to find [InventoryPanel]");
+        }
+
+        GameObject playerObj = GameObject.FindWithTag("Player");
+        if (playerObj != null)
+        {
+            playerMovement = playerObj.GetComponent<PlayerMovement>();
+            if (playerMovement != null)
+            {
+                print("Found [PlayerMovement]");
+                print(playerMovement);
+            }
+            else
+                print("Failed to find [PlayerMovement]");
+        }
+        else
+        {
+            print("Failed to find [Player]");
         }
     }
 }

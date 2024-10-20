@@ -24,10 +24,10 @@ public class SlimeAi : MonoBehaviour
     [SerializeField] private float retreatCooldown = 1f;
     private void Start()
     {
+        Target = GameManager.instance.player.gameObject;
         enemyHp = GetComponent<EnemyHp>();
         animator = GetComponent<Animator>();
         rb = GetComponent<Rigidbody2D>();
-        Target = GameManager.instance.player.gameObject;
         InvokeRepeating("InvokeMoveMethod", TimeBeweenHops, TimeBeweenHops);
     }
     private void Update()

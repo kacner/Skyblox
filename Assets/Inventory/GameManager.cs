@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 
 public class GameManager : MonoBehaviour
 {
@@ -21,13 +22,39 @@ public class GameManager : MonoBehaviour
         {
             instance = this;
         }
-
         DontDestroyOnLoad(this.gameObject);
 
         itemManager = GetComponent<ItemManager>();
         ui_Manager = GetComponent<UI_Manager>();
 
-        player = FindObjectOfType<Player>();
+        FindPlayerInScene();
     }
 
+    private void OnEnable()
+    {
+        SceneManager.sceneLoaded += OnSceneLoaded;
+    }
+
+    private void OnDisable()
+    {
+        SceneManager.sceneLoaded -= OnSceneLoaded;
+    }
+
+    private void OnSceneLoaded(Scene scene, LoadSceneMode mode)
+    {
+        FindPlayerInScene();
+    }
+
+    private void FixedUpdate()
+    {
+        if (player == null)
+        {
+            FindPlayerInScene();
+        }
+    }
+
+    void FindPlayerInScene()
+    {
+        player = FindObjectOfType<Player>();
+    }
 }

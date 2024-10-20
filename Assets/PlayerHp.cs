@@ -1,12 +1,16 @@
 using System.Collections;
 using UnityEngine;
 using UnityEngine.UI;
-
 public class PlayerHp : MonoBehaviour
 {
-
+    [Header("PlayerStats")]
     [SerializeField] private float current_HP;
     public float Max_HP = 10;
+    public float RegenerationAmount = 0.5f; //regen: hp / second
+    [SerializeField] private bool canRegenerate = true;
+    private Coroutine regenCoroutine;
+    [SerializeField] private float RegenCooldown = 2f;
+    private float CurrentRegenCooldown;
 
     private Rigidbody2D rb;
     private PlayerMovement playerMovement;
@@ -31,25 +35,42 @@ public class PlayerHp : MonoBehaviour
         playerMovement = GetComponent<PlayerMovement>();
 
 
-        CurrentInvincibilityTimer = invincibilityTimer;
-
         rb = GetComponent<Rigidbody2D>();
+
         current_HP = Max_HP;
 
-
         deathDMGmat = new Material(originalDeathMat);
-
         deathDMGmat = GetComponent<SpriteRenderer>().material;
-
         deathDMGmat.SetColor("_FlashColor", new Color(0.616f, 0.38f, 1f));
+
+        CurrentInvincibilityTimer = invincibilityTimer;
+
+        CurrentRegenCooldown = RegenCooldown;
     }
 
-
     private void FixedUpdate()
-    {
-        CurrentInvincibilityTimer -= Time.fixedDeltaTime; //subtrakts
+    {   
+        CurrentInvincibilityTimer -= Time.fixedDeltaTime; 
+        
+        CurrentRegenCooldown -= Time.fixedDeltaTime;
 
         CurrentInvincibilityTimer = Mathf.Clamp(CurrentInvincibilityTimer, 0, invincibilityTimer);
+        CurrentRegenCooldown = Mathf.Clamp(CurrentRegenCooldown, -1, RegenCooldown);
+
+        if (canRegenerate && regenCoroutine == null)
+        {
+            regenCoroutine = StartCoroutine(Regeneration());
+        }
+        else if (!canRegenerate && regenCoroutine != null)
+        {
+            StopCoroutine(regenCoroutine);
+            regenCoroutine = null; // Clear the reference
+        }
+
+        if (CurrentRegenCooldown < 0)
+            canRegenerate = true;
+        else
+            canRegenerate = false;
     }
 
     public void TakeDmg(float dmg, Vector3 AttackerPos, float KnockBackAmount) //meelee
@@ -64,6 +85,7 @@ public class PlayerHp : MonoBehaviour
             if ((current_HP - dmg) <= 0)
             {
                 StartCoroutine(RemoveRb());
+                current_HP = 0;
             }
             else
             {
@@ -71,9 +93,10 @@ public class PlayerHp : MonoBehaviour
             }
             StartCoroutine(updateHealthBar());
             CurrentInvincibilityTimer = invincibilityTimer;
+            CurrentRegenCooldown = RegenCooldown;
         }
-        
     }
+
     public void TakeDmg(float dmg, Vector3 AttackerPos, float KnockBackAmount, GameObject Arrow) //bow
     {
         if (CurrentInvincibilityTimer <= 0)
@@ -84,10 +107,10 @@ public class PlayerHp : MonoBehaviour
 
             applyKnockback(AttackerPos, KnockBackAmount);
             StartCoroutine(flashDMGcolor());
-
             if ((current_HP - dmg) <= 0)
             {
                 StartCoroutine(RemoveRb());
+                current_HP = 0;
             }
             else
             {
@@ -95,8 +118,8 @@ public class PlayerHp : MonoBehaviour
             }
             StartCoroutine(updateHealthBar());
             CurrentInvincibilityTimer = invincibilityTimer;
+            CurrentRegenCooldown = RegenCooldown;
         }
-        
     }
 
     private void applyKnockback(Vector3 attackerPos, float knockbackAmount)
@@ -109,6 +132,7 @@ public class PlayerHp : MonoBehaviour
             rb.AddForce(KBdir * knockbackAmount, ForceMode2D.Impulse);
         }
     }
+
     private IEnumerator flashDMGcolor()
     {
         float ElapsedTime = 0f;
@@ -119,7 +143,6 @@ public class PlayerHp : MonoBehaviour
             ElapsedTime += Time.deltaTime * speed;
             yield return null;
         }
-
         deathDMGmat.SetFloat("_FlashAmount", 0f);
     }
 
@@ -152,17 +175,44 @@ public class PlayerHp : MonoBehaviour
         }
     }
 
-    IEnumerator updateHealthBar()
+    /*IEnumerator updateHealthBar()
     {
         float healthPercentage = Mathf.Clamp01(current_HP / Max_HP);
-        float difference = Mathf.Abs(HPSlider.fillAmount - healthPercentage);
 
-        while (!Mathf.Approximately(HPSlider.fillAmount, healthPercentage))
+        while (Mathf.Abs(HPSlider.fillAmount - healthPercentage) > 0.01f)
         {
             HPSlider.fillAmount = Mathf.Lerp(HPSlider.fillAmount, healthPercentage, Time.deltaTime * SliderSpeed);
             yield return null;
         }
+        HPSlider.fillAmount = healthPercentage;
+    }*/
+    IEnumerator updateHealthBar()
+    {
+        float healthPercentage = Mathf.Clamp01(current_HP / Max_HP);
 
         HPSlider.fillAmount = healthPercentage;
+        yield return null;
+    }
+
+    private IEnumerator Regeneration()
+    {
+        while (current_HP < Max_HP)
+        {
+            yield return new WaitForSeconds(1f);
+
+            current_HP += RegenerationAmount;
+            current_HP = Mathf.Clamp(current_HP, 0, Max_HP);
+
+            StartCoroutine(updateHealthBar());
+
+
+            if (current_HP >= Max_HP)
+            {
+                regenCoroutine = null; // Clear the reference so the scrupt thiunks its no longer running
+                yield break; // Stop the while loop
+            }
+        }
+
+        regenCoroutine = null; // Reset coroutine reference when done
     }
 }
