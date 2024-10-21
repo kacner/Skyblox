@@ -176,7 +176,7 @@ public class PlayerMovement : MonoBehaviour
             CancelInvoke("UpdateHorVer");
         }
 
-        if (Input.GetKeyDown(KeyCode.Space) && !IsRolling && canRoll && !GameManager.instance.ui_Manager.isInventoryToggeld)
+        if (Input.GetKeyDown(KeyCode.Space) && !IsRolling && canRoll && !GameManager.instance.ui_Manager.isInventoryToggeld && rb != null)
         {
             StartCoroutine(Roll());
         }

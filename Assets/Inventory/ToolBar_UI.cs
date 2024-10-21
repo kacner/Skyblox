@@ -18,6 +18,7 @@ public class ToolBar_UI : MonoBehaviour
     private void Start()
     {
         hotbarScript = GameManager.instance.player.GetComponent<HotbarScript>();
+        UI_manager = GameManager.instance.ui_Manager;
         StartCoroutine(WaitForSeconds(0.1f));
     }
 
@@ -105,6 +106,11 @@ public class ToolBar_UI : MonoBehaviour
                 selectSlot(newIndex);
                 selectedSlotNumber = newIndex;
             }
+        }
+        if (UI_manager == null)
+        {
+            print("UI_Manager = null");
+            
         }
     }
     public void updateHotbarContent(int index, GameObject[] weapondsArray)

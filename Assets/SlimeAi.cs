@@ -30,7 +30,8 @@ public class SlimeAi : MonoBehaviour
         rb = GetComponent<Rigidbody2D>();
         InvokeRepeating("InvokeMoveMethod", TimeBeweenHops, TimeBeweenHops);
     }
-    private void Update()
+
+    private void FixedUpdate()
     {
         if (!enemyHp.isDead && Target != null && !GameManager.instance.player.GetComponent<PlayerMovement>().isDead)
         {
@@ -39,10 +40,11 @@ public class SlimeAi : MonoBehaviour
             animator.SetFloat("Horizontal", facingDirection);
             animator.SetFloat("Speed", Mathf.Abs(rb.velocity.x));
         }
-    }
+        else
+        {
+            StopAllCoroutines();
+        }
 
-    private void FixedUpdate()
-    {
         if (Vector2.Distance(transform.position, Target.transform.position) < 1f && Time.time > lastRetreatTime + retreatCooldown && isRetreetAvailable)
         {
             StartCoroutine(Retreet());

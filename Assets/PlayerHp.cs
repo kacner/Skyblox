@@ -11,6 +11,8 @@ public class PlayerHp : MonoBehaviour
     private Coroutine regenCoroutine;
     [SerializeField] private float RegenCooldown = 2f;
     private float CurrentRegenCooldown;
+    [SerializeField] private bool isInvincible = false;
+    private bool IsInvincibilityCoututineRunning = false;
 
     private Rigidbody2D rb;
     private PlayerMovement playerMovement;
@@ -43,8 +45,6 @@ public class PlayerHp : MonoBehaviour
         deathDMGmat = GetComponent<SpriteRenderer>().material;
         deathDMGmat.SetColor("_FlashColor", new Color(0.616f, 0.38f, 1f));
 
-        CurrentInvincibilityTimer = invincibilityTimer;
-
         CurrentRegenCooldown = RegenCooldown;
     }
 
@@ -71,6 +71,15 @@ public class PlayerHp : MonoBehaviour
             canRegenerate = true;
         else
             canRegenerate = false;
+
+        if (isInvincible && !IsInvincibilityCoututineRunning)
+        {
+            StartCoroutine(InvisibleFrames());
+        }
+        if (CurrentInvincibilityTimer > 0)
+            isInvincible = true;
+        else
+            isInvincible = false;
     }
 
     public void TakeDmg(float dmg, Vector3 AttackerPos, float KnockBackAmount) //meelee
@@ -146,6 +155,16 @@ public class PlayerHp : MonoBehaviour
         deathDMGmat.SetFloat("_FlashAmount", 0f);
     }
 
+    private IEnumerator InvisibleFrames()
+    {
+        IsInvincibilityCoututineRunning = true;
+        deathDMGmat.SetFloat("_Visible", 0);
+        yield return new WaitForSeconds(0.1f);
+        deathDMGmat.SetFloat("_Visible", 1);
+        yield return new WaitForSeconds(0.1f);
+        IsInvincibilityCoututineRunning = false;
+    }
+
     IEnumerator RemoveRb()
     {
         yield return new WaitForSeconds(0.5f);
@@ -175,17 +194,6 @@ public class PlayerHp : MonoBehaviour
         }
     }
 
-    /*IEnumerator updateHealthBar()
-    {
-        float healthPercentage = Mathf.Clamp01(current_HP / Max_HP);
-
-        while (Mathf.Abs(HPSlider.fillAmount - healthPercentage) > 0.01f)
-        {
-            HPSlider.fillAmount = Mathf.Lerp(HPSlider.fillAmount, healthPercentage, Time.deltaTime * SliderSpeed);
-            yield return null;
-        }
-        HPSlider.fillAmount = healthPercentage;
-    }*/
     IEnumerator updateHealthBar()
     {
         float healthPercentage = Mathf.Clamp01(current_HP / Max_HP);
