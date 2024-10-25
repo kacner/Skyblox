@@ -33,9 +33,16 @@ public class Collectibal : MonoBehaviour
     public GameObject[] RarityKit;
     public GameObject[] ResourceRarityKit;
 
+    [Space(10)]
+
+    [Header("Interaction")]
+    public GameObject InteractButton;
+
     private GameObject createdParent;
     void Start()
     {
+        InteractButton.SetActive(false);
+
         CreateParent(this.transform.gameObject);
 
         GameObject canvasObject = GameObject.Find("Canvas");
@@ -52,9 +59,21 @@ public class Collectibal : MonoBehaviour
     private void OnTriggerEnter2D(Collider2D collision)
     {
         Player player = collision.GetComponent<Player>();
-        if (player) //pickuplogic
+
+
+        if (player != null) //pickuplogic
         {
-            StartCoroutine(ExitMusicForAFilm(player));
+            InteractButton.SetActive(true);
+
+            if (Input.GetKeyDown(KeyCode.E))
+            {
+                StartCoroutine(ExitMusicForAFilm(player));
+                Destroy(InteractButton);
+            }
+        }
+        else
+        {
+            InteractButton.SetActive(false);
         }
     }
     
@@ -123,7 +142,7 @@ public class Collectibal : MonoBehaviour
         return null;
     }
 
-    public void Update()
+    public void FixedUpdate()
     {
         if (shouldbob)
         {

@@ -7,9 +7,9 @@ public class ToolBar_UI : MonoBehaviour
 {
     [SerializeField] private List<Slot_UI> toolbarSlots = new List<Slot_UI>();
 
-    private Slot_UI selectedSlot;
+    [SerializeField] private Slot_UI selectedSlot;
 
-    private HotbarScript hotbarScript;
+    [SerializeField] private HotbarScript hotbarScript;
 
     public int selectedSlotNumber;
 

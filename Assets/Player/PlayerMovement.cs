@@ -181,7 +181,7 @@ public class PlayerMovement : MonoBehaviour
             StartCoroutine(Roll());
         }
 
-        if (Input.GetKeyDown(KeyCode.E) && !isDead)
+        if (Input.GetKeyDown(KeyCode.Backspace) && !isDead)
         {
             Die();
         }
@@ -357,6 +357,8 @@ public class PlayerMovement : MonoBehaviour
             }
         }
 
+        playerHp.isInvincible = true;
+
         RollingPFX.enableEmission = true; // Enable particle effects
         createtrailsprite = true;
         CanMove = false;
@@ -385,6 +387,8 @@ public class PlayerMovement : MonoBehaviour
         createtrailsprite = false;
         RollingPFX.enableEmission = false;
         spriterenderer.color = initialColor;
+
+        playerHp.isInvincible = false;
 
         playerHp.changeHandMat();
 

@@ -11,7 +11,7 @@ public class InventoryUI : MonoBehaviour
 
     [SerializeField] private Canvas canvas;
 
-    private Inventory inventory;
+    [SerializeField] private Inventory inventory;
 
     private void Awake()
     {
