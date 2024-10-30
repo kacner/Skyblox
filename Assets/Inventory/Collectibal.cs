@@ -9,6 +9,7 @@ public class Collectibal : MonoBehaviour
 {
     [Header("Main PickupSettings")]
     private InventoryUI inventoryUI;
+    private Player player;
 
     [Space(10)]
 
@@ -21,8 +22,8 @@ public class Collectibal : MonoBehaviour
     [Space(10)]
 
     [Header("LightFxSettings")]
-    private SpriteRenderer RaySpriterenderer;
     public float fadeDuration = 1;
+    private SpriteRenderer RaySpriterenderer; 
     private Light2D LightSource;
 
     [Space(10)]
@@ -33,17 +34,12 @@ public class Collectibal : MonoBehaviour
     public GameObject[] RarityKit;
     public GameObject[] ResourceRarityKit;
 
-    [Space(10)]
-
-    [Header("Interaction")]
-    public GameObject InteractButton;
-
     private GameObject createdParent;
     void Start()
     {
-        InteractButton.SetActive(false);
-
-        CreateParent(this.transform.gameObject);
+        if (transform.parent == null)
+        CreateParent(this.gameObject);
+        //CreateParent(transform.parent.gameObject);
 
         GameObject canvasObject = GameObject.Find("Canvas");
         inventoryUI = canvasObject.GetComponentInChildren<InventoryUI>();
@@ -55,25 +51,16 @@ public class Collectibal : MonoBehaviour
         FixRarityKit();
 
         RaySpriterenderer = GetRaySpriterenderer(collectibalSpriterenderer);
+
+        player = GameManager.instance.player;
     }
     private void OnTriggerEnter2D(Collider2D collision)
     {
         Player player = collision.GetComponent<Player>();
 
-
         if (player != null) //pickuplogic
         {
-            InteractButton.SetActive(true);
-
-            if (Input.GetKeyDown(KeyCode.E))
-            {
-                StartCoroutine(ExitMusicForAFilm(player));
-                Destroy(InteractButton);
-            }
-        }
-        else
-        {
-            InteractButton.SetActive(false);
+            StartCoroutine(ExitMusicForAFilm(player));
         }
     }
     
@@ -150,6 +137,32 @@ public class Collectibal : MonoBehaviour
 
             transform.position = new Vector3(startPos.x, newY, startPos.z);
         }
+
+        print(transform.parent);
+
+        if (transform.parent != null)
+        {
+
+            if (player.transform.position.y < transform.parent.transform.position.y - 0.2f)
+            {
+                SpriteRenderer[] thisSpriterenderers = transform.parent.GetComponentsInChildren<SpriteRenderer>();
+                foreach (SpriteRenderer renderer in thisSpriterenderers)
+                {
+                    renderer.sortingLayerName = "Walk in Front of";
+                    transform.parent.GetComponentInChildren<ParticleSystemRenderer>().sortingLayerName = "Walk in Front of";
+                }
+            }
+            else
+            {
+                SpriteRenderer[] thisSpriterenderers = transform.parent.GetComponentsInChildren<SpriteRenderer>();
+                foreach (SpriteRenderer renderer in thisSpriterenderers)
+                {
+                    renderer.sortingLayerName = "Walk behind";
+                    transform.parent.GetComponentInChildren<ParticleSystemRenderer>().sortingLayerName = "Walk behind";
+                }
+            }
+        }
+
     }
 
     public void FixRarityKit()
@@ -214,7 +227,7 @@ public class Collectibal : MonoBehaviour
     }
     private void CreateParent(GameObject child)
     {
-        GameObject parent = new GameObject("--Pickup--");
+        GameObject parent = new GameObject(transform.parent.name);
 
         parent.transform.position = child.transform.position;
         parent.transform.rotation = child.transform.rotation;

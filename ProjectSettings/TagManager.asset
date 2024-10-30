@@ -14,9 +14,9 @@ TagManager:
   - UI
   - NoPost
   - 
-  - 
-  - 
-  - 
+  - Obstructors
+  - Reflections
+  - WaterPostProcessing
   - 
   - 
   - 
@@ -41,4 +41,25 @@ TagManager:
   m_SortingLayers:
   - name: Default
     uniqueID: 0
+    locked: 0
+  - name: Water
+    uniqueID: 1152366339
+    locked: 0
+  - name: Ground
+    uniqueID: 2366571967
+    locked: 0
+  - name: Walk in Front of
+    uniqueID: 2522570157
+    locked: 0
+  - name: tilemap Collision
+    uniqueID: 2214751153
+    locked: 0
+  - name: Player
+    uniqueID: 394587859
+    locked: 0
+  - name: Walk behind
+    uniqueID: 1295521477
+    locked: 0
+  - name: Decour
+    uniqueID: 3365237689
     locked: 0
