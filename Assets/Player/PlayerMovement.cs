@@ -3,6 +3,7 @@ using System.Collections;
 using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.SceneManagement;
+using UnityEngine.UI;
 
 public class PlayerMovement : MonoBehaviour
 {
@@ -66,6 +67,9 @@ public class PlayerMovement : MonoBehaviour
 
     [Header("Attack")]
     public bool IsAttacking = false;
+    public bool AllCanAttack = true;
+
+
 
     private HotbarScript hotbarscript;
 
@@ -75,7 +79,6 @@ public class PlayerMovement : MonoBehaviour
 
     Vector2 mouseScreenPosition;
 
-    public bool AllCanAttack = true;
 
     private PlayerHp playerHp;
 
@@ -126,6 +129,9 @@ public class PlayerMovement : MonoBehaviour
 
     void Update()
     {
+
+
+
         animator.SetBool("IsAttacking", IsAttacking);
 
         if (useMousePos)
@@ -542,4 +548,5 @@ public class PlayerMovement : MonoBehaviour
         CanvasAnimator.SetTrigger("RollStartScreen");
         yield return null;
     }
+
 }
