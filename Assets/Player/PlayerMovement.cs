@@ -69,6 +69,15 @@ public class PlayerMovement : MonoBehaviour
     public bool IsAttacking = false;
     public bool AllCanAttack = true;
 
+    [Space(10)]
+
+    [Header("Water")]
+    [SerializeField] public bool isInWater;
+    public Material WaterMat;
+    public bool Grounded; 
+    private Coroutine waterCoroutine;
+    private enum  WaterState { None, Entering, Exiting}
+    private WaterState waterState = WaterState.None;
 
 
     private HotbarScript hotbarscript;
@@ -129,7 +138,36 @@ public class PlayerMovement : MonoBehaviour
 
     void Update()
     {
+        if (!Grounded)
+        {
+            ActWhenChangingDir();
+        }
 
+        // Handle water entry and exit
+        if (isInWater && waterState != WaterState.Entering)
+        {
+            if (waterCoroutine != null)
+            {
+                StopCoroutine(waterCoroutine);
+            }
+            waterCoroutine = StartCoroutine(EnterWater());
+            waterState = WaterState.Entering;
+        }
+        else if (!isInWater && waterState != WaterState.Exiting)
+        {
+            if (waterCoroutine != null)
+            {
+                StopCoroutine(waterCoroutine);
+            }
+            waterCoroutine = StartCoroutine(ExitWater());
+            waterState = WaterState.Exiting;
+        }
+
+        // Reset water state if both conditions are false (no active water action)
+        if (!isInWater && Grounded)
+        {
+            waterState = WaterState.None;
+        }
 
 
         animator.SetBool("IsAttacking", IsAttacking);
@@ -549,4 +587,78 @@ public class PlayerMovement : MonoBehaviour
         yield return null;
     }
 
+
+    IEnumerator EnterWater()
+    {
+        float time = 0f;
+        float duration = 0.5f;
+        while (time < duration)
+        {
+            // WaterMat.SetVector("_Offset", Vector2.Lerp(WaterMat.GetVector("_Offset"), new Vector2(0, 0.02f), time / duration));
+            WaterMat.SetVector("_Offset", Vector2.Lerp(WaterMat.GetVector("_Offset"), new Vector2(0, 0.02f), time / duration));
+            time += Time.deltaTime;
+            print("EnteringWater    " + time + "time    " + duration + "duration");
+            yield return null;
+        }
+        print("EXITenterwater");
+
+        WaterMat.SetVector("_Offset", new Vector2(0, 0.02f));
+
+        waterState = WaterState.None; // Reset state when done§ 
+        waterCoroutine = null;
+        Grounded = false;
+    }
+    IEnumerator ExitWater()
+    {
+        float time = 0f;
+        float duration = 1f;
+        while (time < duration)
+        {
+            //WaterMat.SetVector("_Offset", Vector2.Lerp(WaterMat.GetVector("_Offset"), new Vector2(0, 0), time / duration));
+            WaterMat.SetVector("_Offset", Vector2.Lerp(WaterMat.GetVector("_Offset"), new Vector2(0, 0), time / duration));
+            time += Time.deltaTime;
+            print("Exeting    " + time + "time    " + duration + "duration");
+            yield return null;
+        }
+
+        print("EXITexitwater");
+
+        WaterMat.SetFloat("_CutofPosition", 1);
+
+        WaterMat.SetVector("_Offset", new Vector2(0, 0f)); //set the CutofPos
+
+        waterState = WaterState.None; // Reset state when done
+        waterCoroutine = null;
+        Grounded = true;
+    }
+
+
+    void ActWhenChangingDir()
+    {
+        if (lookDir == "Up")
+        {
+            WaterMat.SetFloat("_CutofPosition", 0.614f);
+        }
+        else if(lookDir == "UpRight")
+        {
+            WaterMat.SetFloat("_CutofPosition", 0.78f);
+        }
+        else if(lookDir == "Right" || lookDir == "DownRight")
+        {
+            WaterMat.SetFloat("_CutofPosition", 0.945f);
+        }
+        else if(lookDir == "Down")
+        {
+            WaterMat.SetFloat("_CutofPosition", 0.114f);
+        }
+        else if(lookDir == "Left" ||lookDir == "DownLeft")
+        {
+            WaterMat.SetFloat("_CutofPosition", 0.279f);
+        }
+        else if(lookDir == "UpLeft")
+        {
+            WaterMat.SetFloat("_CutofPosition", 0.447f);
+        }
+        
+    }
 }

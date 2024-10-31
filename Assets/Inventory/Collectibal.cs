@@ -138,8 +138,6 @@ public class Collectibal : MonoBehaviour
             transform.position = new Vector3(startPos.x, newY, startPos.z);
         }
 
-        print(transform.parent);
-
         if (transform.parent != null)
         {
 

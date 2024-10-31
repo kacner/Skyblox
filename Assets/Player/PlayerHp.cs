@@ -43,6 +43,7 @@ public class PlayerHp : MonoBehaviour
 
         deathDMGmat = new Material(originalDeathMat);
         deathDMGmat = GetComponent<SpriteRenderer>().material;
+        playerMovement.WaterMat = deathDMGmat;
         deathDMGmat.SetColor("_FlashColor", new Color(0.616f, 0.38f, 1f));
 
         CurrentRegenCooldown = RegenCooldown;
