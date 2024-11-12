@@ -101,7 +101,7 @@ public class Collectibal : MonoBehaviour
 
             LightSource.intensity = Mathf.Lerp(startIntensity, 0, progress);
 
-            progress += (rate * Time.fixedDeltaTime) / 2;
+            progress += (rate * Time.deltaTime) / 2;
 
             yield return null;
         }

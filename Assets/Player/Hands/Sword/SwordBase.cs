@@ -158,7 +158,7 @@ public class SwordBase : MonoBehaviour
 
         while (currentRotation < neededRotation) //waits for x seconds                              ////&/// attack 1
         {
-            float rotationThisFrame = rotationSpeed * Time.fixedDeltaTime;
+            float rotationThisFrame = rotationSpeed * Time.deltaTime;
 
             // Apply the rotation
             RotatingSword.RotateAround(transform.position, Vector3.forward, rotationThisFrame);
@@ -179,7 +179,7 @@ public class SwordBase : MonoBehaviour
 
         while (currentRotation > 0f)                                                                ////&/// attack 2
         {
-            float rotationThisFrame = rotationSpeed * Time.fixedDeltaTime;
+            float rotationThisFrame = rotationSpeed * Time.deltaTime;
 
             // Apply the reverse rotation
             RotatingSword.RotateAround(transform.position, Vector3.forward, -rotationThisFrame);

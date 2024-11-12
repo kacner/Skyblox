@@ -94,7 +94,7 @@ public class BowFire : MonoBehaviour
 
             if (Input.GetKey(KeyCode.Mouse1)) // Shooting starts
             {
-                holdtimer += Time.fixedDeltaTime;
+                holdtimer += Time.deltaTime;
                 holdtimer = Mathf.Clamp(holdtimer, 0, bowHoldTime);
 
                 playermovement.canRoll = false;

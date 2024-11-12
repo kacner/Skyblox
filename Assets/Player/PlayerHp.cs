@@ -51,9 +51,9 @@ public class PlayerHp : MonoBehaviour
 
     private void FixedUpdate()
     {   
-        CurrentInvincibilityTimer -= Time.fixedDeltaTime; 
+        CurrentInvincibilityTimer -= Time.deltaTime; 
         
-        CurrentRegenCooldown -= Time.fixedDeltaTime;
+        CurrentRegenCooldown -= Time.deltaTime;
 
         CurrentInvincibilityTimer = Mathf.Clamp(CurrentInvincibilityTimer, 0, invincibilityTimer);
         CurrentRegenCooldown = Mathf.Clamp(CurrentRegenCooldown, -1, RegenCooldown);

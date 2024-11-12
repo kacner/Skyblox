@@ -37,8 +37,10 @@ public class PlayerMovement : MonoBehaviour
     public float RollCooldown = 0.75f; //0.75f
     public bool IsRolling = false; //false
     public float RollForce = 500f; //500f //forcemode.impulse
-    public float RollDuration = 0.7f; //0.14f
+    public float RollDuration = 0.14f; //0.14f
+    private float iniRollForce = 500f; //500f //forcemode.impulse
     public float StillBoostFactor = 24000; //24000 //stillstanding forcemode.force
+    private float iniStillBoostFactor = 24000; //24000 //stillstanding forcemode.force
 
     public AnimationCurve rollSpeedCurve;
 
@@ -95,6 +97,10 @@ public class PlayerMovement : MonoBehaviour
 
     void Start()
     {
+        iniRollForce = RollForce;
+
+        iniStillBoostFactor = StillBoostFactor;
+
         playerHp = GetComponent<PlayerHp>();
 
         cursorspriteRectTransform.gameObject.SetActive(true);
@@ -314,7 +320,7 @@ public class PlayerMovement : MonoBehaviour
 
             Vector2 moveforce = velocityReq * acceleration; //calculate the force needed to reach the target velocity considering acceleration
 
-            rb.AddForce(moveforce * Time.fixedDeltaTime, ForceMode2D.Force); //applyes the movement to the rb
+            rb.AddForce(moveforce * Time.deltaTime, ForceMode2D.Force); //applyes the movement to the rb
 
             acceleration = maxSpeed + 325 / 0.9f; //bases the acceleration of
             
@@ -412,19 +418,24 @@ public class PlayerMovement : MonoBehaviour
 
         while (elapsedTime < RollDuration)
         {
-            float rollSpeedMultiplier = rollSpeedCurve.Evaluate(elapsedTime / RollDuration);
-            rollSpeedMultiplier *= 5f;
+            /*float rollSpeedMultiplier = rollSpeedCurve.Evaluate(elapsedTime / RollDuration);
+            rollSpeedMultiplier *= 5f;*/
             if (moveDirection == Vector2.zero) //initiate roll when still
             {
-                rb.AddForce(lookDirVector.normalized * StillBoostFactor * rollSpeedMultiplier * Time.fixedDeltaTime, ForceMode2D.Force);
+                rb.AddForce(lookDirVector.normalized * StillBoostFactor * Time.deltaTime, ForceMode2D.Force);
+                StillBoostFactor -= StillBoostFactor * 0.2f;
             }
             else //ini roll when moving
             {
-                rb.AddForce(lookDirVector.normalized * RollForce * rollSpeedMultiplier * Time.fixedDeltaTime, ForceMode2D.Force);
+                rb.AddForce(lookDirVector.normalized * RollForce * Time.deltaTime, ForceMode2D.Force);
+                RollForce -= RollForce * 0.2f;
             }
-            elapsedTime += Time.fixedDeltaTime;
+            elapsedTime += Time.deltaTime;
             yield return null;
         }
+
+        StillBoostFactor = iniStillBoostFactor;
+        RollForce = iniRollForce;
 
         CanMove = true;
         yield return new WaitForSeconds(emitParticleAfterInitialRoll);
