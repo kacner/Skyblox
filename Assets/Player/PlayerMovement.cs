@@ -1,9 +1,6 @@
-using JetBrains.Annotations;
 using System.Collections;
-using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.SceneManagement;
-using UnityEngine.UI;
 
 public class PlayerMovement : MonoBehaviour
 {
@@ -149,30 +146,36 @@ public class PlayerMovement : MonoBehaviour
             ActWhenChangingDir();
         }
 
-        // Handle water entry and exit
+        if (!isInWater && Grounded)
+        {
+            waterState = WaterState.None;
+        }
+
         if (isInWater && waterState != WaterState.Entering)
         {
+            // EnterWater method doesn overlap
             if (waterCoroutine != null)
             {
                 StopCoroutine(waterCoroutine);
             }
             waterCoroutine = StartCoroutine(EnterWater());
-            waterState = WaterState.Entering;
+            waterState = WaterState.Entering;  // Set state
         }
         else if (!isInWater && waterState != WaterState.Exiting)
         {
+            // ExitWater method doesnt overlap
             if (waterCoroutine != null)
             {
                 StopCoroutine(waterCoroutine);
             }
             waterCoroutine = StartCoroutine(ExitWater());
-            waterState = WaterState.Exiting;
+            waterState = WaterState.Exiting;  // Set state
         }
 
-        // Reset water state if both conditions are false (no active water action)
-        if (!isInWater && Grounded)
+        // Reset water state if both are false 
+        if (!isInWater && Grounded && waterState != WaterState.None)
         {
-            waterState = WaterState.None;
+            waterState = WaterState.None;  // Reset when both are false
         }
 
 
@@ -329,71 +332,6 @@ public class PlayerMovement : MonoBehaviour
     }
     private IEnumerator Roll()
     {
-        /*spriterenderer.material = SolidColorMat; //changes the playermat to solidcolor
-
-        Color initialColor = spriterenderer.color; //stores the innitial color of player
-        spriterenderer.color = DashColor; //makes the spriterenderers color to new color
-
-        GameObject[] allGameObjects = GameObject.FindObjectsOfType<GameObject>(); //putts all gameobjects in an array
-        foreach (GameObject child in allGameObjects)
-        {
-            if (child != null && child.name.Contains("__Weapond__"))
-            {
-                child.SetActive(false); 
-            }
-        }
-
-        RollingPFX.enableEmission = true; //enables emition 
-        createtrailsprite = true;
-        CanMove = false;
-        IsRolling = true;
-
-        if (dodgeRoll)
-        {
-            float dodgecount = 60f;
-
-            if (dodgecount != 0)
-            {
-                dodgecount -= 1;
-                rb.velocity = lookDirVector.normalized * 50f;
-            }
-        }
-        else
-        {
-            float elapsedTime = 0f;
-
-            while (elapsedTime < RollDuration)
-            {
-                if (moveDirection == Vector2.zero)
-                    rb.AddForce(lookDirVector.normalized * StillBoostFactor * Time.fixedDeltaTime, ForceMode2D.Force);
-                else
-                    rb.AddForce(lookDirVector.normalized * RollForce * Time.fixedDeltaTime, ForceMode2D.Impulse);
-
-                elapsedTime += Time.fixedDeltaTime;
-                yield return null;
-            }
-        }
-
-        CanMove = true;
-        yield return new WaitForSeconds(emitParticleAfterInitialRoll); //splitts up cooldown into 2 parts   1/2
-        createtrailsprite = false;
-        RollingPFX.enableEmission = false;
-        spriterenderer.color = initialColor;
-        spriterenderer.material = SpriteDefaultLit;
-
-        foreach (GameObject child in allGameObjects)
-        {
-            if (child != null && child.name.Contains("__Weapond__"))
-            {
-                child.SetActive(true);
-            }
-        }
-
-        yield return new WaitForSeconds(RollCooldown - emitParticleAfterInitialRoll);  //splitts up cooldown into 2 parts   2/2
-        IsRolling = false;*/
-
-
-
         spriterenderer.material = SolidColorMat; // Change player material to solid color
         Color initialColor = spriterenderer.color; // Store initial color
         spriterenderer.color = DashColor; // Change color to dash color
@@ -597,50 +535,36 @@ public class PlayerMovement : MonoBehaviour
         CanvasAnimator.SetTrigger("RollStartScreen");
         yield return null;
     }
-
-
     IEnumerator EnterWater()
     {
         float time = 0f;
         float duration = 0.5f;
+
         while (time < duration)
         {
-            // WaterMat.SetVector("_Offset", Vector2.Lerp(WaterMat.GetVector("_Offset"), new Vector2(0, 0.02f), time / duration));
             WaterMat.SetVector("_Offset", Vector2.Lerp(WaterMat.GetVector("_Offset"), new Vector2(0, 0.02f), time / duration));
             time += Time.deltaTime;
-            print("EnteringWater    " + time + "time    " + duration + "duration");
             yield return null;
         }
-        print("EXITenterwater");
 
         WaterMat.SetVector("_Offset", new Vector2(0, 0.02f));
-
-        waterState = WaterState.None; // Reset state when done§ 
-        waterCoroutine = null;
-        Grounded = false;
+        waterState = WaterState.None; // Reset state
     }
     IEnumerator ExitWater()
     {
         float time = 0f;
         float duration = 1f;
+
         while (time < duration)
         {
-            //WaterMat.SetVector("_Offset", Vector2.Lerp(WaterMat.GetVector("_Offset"), new Vector2(0, 0), time / duration));
             WaterMat.SetVector("_Offset", Vector2.Lerp(WaterMat.GetVector("_Offset"), new Vector2(0, 0), time / duration));
             time += Time.deltaTime;
-            print("Exeting    " + time + "time    " + duration + "duration");
             yield return null;
         }
 
-        print("EXITexitwater");
-
         WaterMat.SetFloat("_CutofPosition", 1);
-
-        WaterMat.SetVector("_Offset", new Vector2(0, 0f)); //set the CutofPos
-
-        waterState = WaterState.None; // Reset state when done
-        waterCoroutine = null;
-        Grounded = true;
+        WaterMat.SetVector("_Offset", new Vector2(0, 0f)); // Reset offset
+        waterState = WaterState.None; // Reset state
     }
 
 
