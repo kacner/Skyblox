@@ -15,6 +15,8 @@ public class NPCInteract : MonoBehaviour
     [SerializeField] private float CurrentInteractTime;
     [SerializeField] private bool isInteracting = false;
 
+    [SerializeField] private float TalkSpeed = 0.05f;
+
 
     private void Start()
     {
@@ -70,6 +72,7 @@ public class NPCInteract : MonoBehaviour
     void PressInteract()
     {
         interactButton.sprite = clicked;
+        ChatBubbel.Create(transform, new Vector3(-2f, 1.62f), "Help me vith the suringe, vill ya?", TalkSpeed);
     }
 
     void resetInteract()
