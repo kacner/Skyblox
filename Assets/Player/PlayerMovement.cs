@@ -570,30 +570,36 @@ public class PlayerMovement : MonoBehaviour
 
     void ActWhenChangingDir()
     {
-        if (lookDir == "Up")
+        if (isInWater)
         {
-            WaterMat.SetFloat("_CutofPosition", 0.614f);
+            if (lookDir == "Up")
+            {
+                WaterMat.SetFloat("_CutofPosition", 0.614f);
+            }
+            else if (lookDir == "UpRight")
+            {
+                WaterMat.SetFloat("_CutofPosition", 0.78f);
+            }
+            else if (lookDir == "Right" || lookDir == "DownRight")
+            {
+                WaterMat.SetFloat("_CutofPosition", 0.945f);
+            }
+            else if (lookDir == "Down")
+            {
+                WaterMat.SetFloat("_CutofPosition", 0.114f);
+            }
+            else if (lookDir == "Left" || lookDir == "DownLeft")
+            {
+                WaterMat.SetFloat("_CutofPosition", 0.279f);
+            }
+            else if (lookDir == "UpLeft")
+            {
+                WaterMat.SetFloat("_CutofPosition", 0.447f);
+            }
         }
-        else if(lookDir == "UpRight")
+        else
         {
-            WaterMat.SetFloat("_CutofPosition", 0.78f);
+            WaterMat.SetFloat("_CutofPosition", 1f);
         }
-        else if(lookDir == "Right" || lookDir == "DownRight")
-        {
-            WaterMat.SetFloat("_CutofPosition", 0.945f);
-        }
-        else if(lookDir == "Down")
-        {
-            WaterMat.SetFloat("_CutofPosition", 0.114f);
-        }
-        else if(lookDir == "Left" ||lookDir == "DownLeft")
-        {
-            WaterMat.SetFloat("_CutofPosition", 0.279f);
-        }
-        else if(lookDir == "UpLeft")
-        {
-            WaterMat.SetFloat("_CutofPosition", 0.447f);
-        }
-        
     }
 }
