@@ -75,6 +75,7 @@ public class PlayerMovement : MonoBehaviour
     public Material WaterMat;
     public bool Grounded; 
     private Coroutine waterCoroutine;
+    private bool isWaterSlowed;
     private enum  WaterState { None, Entering, Exiting}
     private WaterState waterState = WaterState.None;
 
@@ -176,6 +177,17 @@ public class PlayerMovement : MonoBehaviour
         if (!isInWater && Grounded && waterState != WaterState.None)
         {
             waterState = WaterState.None;  // Reset when both are false
+        }
+
+        if (isInWater && !isWaterSlowed)
+        {
+            isWaterSlowed = true;
+            maxSpeed /= 2;
+        }
+        else if (!isInWater && isWaterSlowed)
+        {
+            isWaterSlowed = false;
+            maxSpeed *= 2;
         }
 
 

@@ -1,32 +1,43 @@
 using System.Collections;
-using System.Security.Cryptography;
 using TMPro;
 using UnityEngine;
 
 public class ChatBubbel : MonoBehaviour
 {
-    public static void Create(Transform parent, Vector3 localPosition, string text, float talkspeed)
+    public static ChatBubbel Create(Transform parent, Vector3 localPosition, string text, float talkspeed, GameObject interactButton, NPCInteract npcInteract)
     {
         Transform chatBubbleTransform = Instantiate(GameAssets.i.pfChatBubble, parent);
-         
         chatBubbleTransform.localPosition = localPosition;
 
-        chatBubbleTransform.GetComponent<ChatBubbel>().Setup(text, talkspeed, chatBubbleTransform);
+        ChatBubbel chatBubble = chatBubbleTransform.GetComponent<ChatBubbel>();
+        chatBubble.Setup(text, talkspeed, chatBubbleTransform, interactButton, npcInteract);
 
+        return chatBubble;
     }
 
     public SpriteRenderer BackgroundSpriteRenderer;
     public SpriteRenderer iconSpriterenderer;
     public TextMeshPro ChatTextTmp;
     public Vector2 padding = new Vector2(1.2f, 0.5f);
+    private Coroutine typingCoroutine;
+    public Vector3 rightOffset = new Vector3(0.5f, 0f, 0f);
+    public Transform E_transformPos;
+    private Vector2 E_InitialPos;
 
-    private void Setup(string text, float talkspeed, Transform chatBubbleTransform)
+    private void Setup(string text, float talkspeed, Transform chatBubbleTransform, GameObject InteractButton, NPCInteract npcInteract)
     {
-        StartCoroutine(TypeEffect(text, talkspeed));
-        StartCoroutine(SpawnAndDespawnAnim(chatBubbleTransform, talkspeed, text));
+        E_InitialPos = E_transformPos.position;
+
+        if (typingCoroutine != null)
+        {
+            StopCoroutine(typingCoroutine);
+        }
+
+        typingCoroutine = StartCoroutine(TypeEffect(text, talkspeed, InteractButton));
+        StartCoroutine(DespawnTrigger(chatBubbleTransform, talkspeed, text, InteractButton, npcInteract));
     }
 
-    private IEnumerator TypeEffect(string text, float talkspeed)
+    private IEnumerator TypeEffect(string text, float talkspeed, GameObject interactButton)
     {
         ChatTextTmp.text = "";
 
@@ -40,19 +51,52 @@ public class ChatBubbel : MonoBehaviour
             BackgroundSpriteRenderer.size = textSize + padding;
 
             BackgroundSpriteRenderer.transform.localPosition = new Vector3(BackgroundSpriteRenderer.size.x / 2f, 0f);
+            
+            UpdateRightSideObjectPosition(E_transformPos, interactButton);
 
             yield return new WaitForSeconds(talkspeed);
+
+            if (Input.GetKeyDown(KeyCode.E))
+            {
+                ChatTextTmp.text = text;
+
+                ChatTextTmp.ForceMeshUpdate();
+                textSize = ChatTextTmp.GetRenderedValues(false);
+
+                BackgroundSpriteRenderer.size = textSize + padding;
+                BackgroundSpriteRenderer.transform.localPosition = new Vector3(BackgroundSpriteRenderer.size.x / 2f, 0f);
+                UpdateRightSideObjectPosition(E_transformPos, interactButton);
+                break;
+            }
         }
     }
 
-    private IEnumerator SpawnAndDespawnAnim(Transform chatBubbleTransform, float talkspeed, string text)
+    private IEnumerator DespawnTrigger(Transform chatBubbleTransform, float talkspeed, string text, GameObject InteractButton, NPCInteract npcInteract)
     {
         yield return new WaitForSeconds(3f + talkspeed * text.Length);
 
         GetComponent<Animator>().SetTrigger("Despawn");
 
+        npcInteract.DespawnInteractButton();
+
+        //this is my marker i want to trigger NPCInteract.DespawnInteractButton() from here or the other way around how could i do this 
+
         yield return new WaitForSeconds(1f);
 
+        InteractButton.transform.position = E_InitialPos;
+
         Destroy(chatBubbleTransform.gameObject);
+    }
+    private void UpdateRightSideObjectPosition(Transform targetObject, GameObject InteractButton)
+    {
+        Vector2 backgroundSize = BackgroundSpriteRenderer.size;
+
+        Vector3 rightmostPosition = new Vector3(backgroundSize.x, 0f, 0f);
+
+        Vector3 adjustedPosition = rightmostPosition + rightOffset;
+
+        targetObject.localPosition = adjustedPosition;
+
+        InteractButton.transform.position = E_transformPos.position;
     }
 }
