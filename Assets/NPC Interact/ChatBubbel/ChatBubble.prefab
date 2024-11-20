@@ -395,6 +395,7 @@ MonoBehaviour:
   padding: {x: 1.4, y: 0.7}
   rightOffset: {x: -1.2, y: -0.1, z: 0}
   E_transformPos: {fileID: 864698420846021216}
+  E_InitialOffset: {x: -0.621, y: 0.92}
 --- !u!95 &6508397582168945229
 Animator:
   serializedVersion: 5

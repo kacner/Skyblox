@@ -1,9 +1,5 @@
-using System;
 using System.Collections;
-using System.Collections.Generic;
-using Unity.VisualScripting;
 using UnityEngine;
-using UnityEngine.Experimental.AI;
 
 public class NPCInteract : MonoBehaviour
 {
@@ -31,15 +27,14 @@ public class NPCInteract : MonoBehaviour
     [Header("Dialouge")]
     [SerializeField] private string[] DialougeArr;
     private int CurrentDialouge = 0;
-    private float CurrentDialougeTime = 0;
+    [SerializeField] private float CurrentDialougeTime = 0;
     private ChatBubbel currentChatBubble;
 
 
-    private Animator animator;
+    public Animator E_Animator;
 
     private void Start()
     {
-        animator = GetComponent<Animator>();
         CurrentInteractTime = MinKeyPressTime;
         InvokeRepeating("UpdateDistance", 1, 0.3f);
     }
@@ -78,7 +73,7 @@ public class NPCInteract : MonoBehaviour
             canInteract = true;
 
 
-        if (canInteract && CanInteractTimer < 0)
+        if (canInteract)
         {
             if (CurrentDialougeTime > -1)
                 CurrentDialougeTime -= Time.deltaTime;
@@ -95,8 +90,10 @@ public class NPCInteract : MonoBehaviour
                         CurrentDialougeTime = 0;
 
                         interactCooldownTimer = interactCooldown;
+
+                        print("skripped Dialouge");
                     }
-                    else if (CurrentInteractTime < 0)
+                    else if (CurrentInteractTime < 0 && CanInteractTimer < 0)
                     {
                         PressInteract();
                         CurrentInteractTime = MinKeyPressTime;
@@ -159,6 +156,7 @@ public class NPCInteract : MonoBehaviour
             CurrentDialouge = 0;
             canInteract = false;
             CanInteractTimer = 5;
+            print("Should i?");
         }
     }
 
@@ -170,8 +168,8 @@ public class NPCInteract : MonoBehaviour
 
     private IEnumerator InteractionButtenAnimator()
     {
-        animator.SetTrigger("ButtonOff");
+        E_Animator.SetTrigger("ButtonOff");
         yield return new WaitForSeconds(2f);
-        animator.SetTrigger("ButtonOn");
+        E_Animator.SetTrigger("ButtonOn");
     }
 }

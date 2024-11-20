@@ -22,12 +22,10 @@ public class ChatBubbel : MonoBehaviour
     private Coroutine typingCoroutine;
     public Vector3 rightOffset = new Vector3(0.5f, 0f, 0f);
     public Transform E_transformPos;
-    private Vector2 E_InitialPos;
+    public Vector2 E_InitialOffset;
 
     private void Setup(string text, float talkspeed, Transform chatBubbleTransform, GameObject InteractButton, NPCInteract npcInteract)
     {
-        E_InitialPos = E_transformPos.position;
-
         if (typingCoroutine != null)
         {
             StopCoroutine(typingCoroutine);
@@ -83,7 +81,7 @@ public class ChatBubbel : MonoBehaviour
 
         yield return new WaitForSeconds(1f);
 
-        InteractButton.transform.position = E_InitialPos;
+        InteractButton.transform.localPosition = E_InitialOffset;
 
         Destroy(chatBubbleTransform.gameObject);
     }
