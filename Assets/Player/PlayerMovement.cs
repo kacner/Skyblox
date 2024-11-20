@@ -380,6 +380,8 @@ public class PlayerMovement : MonoBehaviour
             yield return null;
         }
 
+        StartCoroutine(GameManager.instance.camerScript.ShakeScreenForTime(RollDuration));
+
         StillBoostFactor = iniStillBoostFactor;
         RollForce = iniRollForce;
 

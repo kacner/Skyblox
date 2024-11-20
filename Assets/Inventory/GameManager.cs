@@ -8,6 +8,7 @@ public class GameManager : MonoBehaviour
     public static GameManager instance;
     public ItemManager itemManager;
     public UI_Manager ui_Manager;
+    public CameraScript camerScript;
 
     public Player player;
 
