@@ -178,7 +178,6 @@ public class PlayerHp : MonoBehaviour
     {
         GetComponent<SpriteRenderer>().material = deathDMGmat;
 
-
         Transform[] transformArray = GetComponentsInChildren<Transform>(true);
 
         foreach (Transform child in transformArray)

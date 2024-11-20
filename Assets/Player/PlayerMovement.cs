@@ -138,8 +138,6 @@ public class PlayerMovement : MonoBehaviour
             DetermineLookDirection(moveDirection);
         }
     }
-
-
     void Update()
     {
         if (!Grounded)
@@ -348,8 +346,8 @@ public class PlayerMovement : MonoBehaviour
         Color initialColor = spriterenderer.color; // Store initial color
         spriterenderer.color = DashColor; // Change color to dash color
 
-        Transform[] allGameObjects = GetComponentsInChildren<Transform>(); // Get all game objects
-        foreach (Transform child in allGameObjects)
+        Transform[] allChildren = GetComponentsInChildren<Transform>(); // Get all game objects
+        foreach (Transform child in allChildren)
         {
             if (child != null && child.name.Contains("__Weapond__"))
             {
@@ -368,8 +366,6 @@ public class PlayerMovement : MonoBehaviour
 
         while (elapsedTime < RollDuration)
         {
-            /*float rollSpeedMultiplier = rollSpeedCurve.Evaluate(elapsedTime / RollDuration);
-            rollSpeedMultiplier *= 5f;*/
             if (moveDirection == Vector2.zero) //initiate roll when still
             {
                 rb.AddForce(lookDirVector.normalized * StillBoostFactor * Time.deltaTime, ForceMode2D.Force);
@@ -397,7 +393,7 @@ public class PlayerMovement : MonoBehaviour
 
         playerHp.changeHandMat();
 
-        foreach (Transform child in allGameObjects)
+        foreach (Transform child in allChildren)
         {
             if (child != null && child.name.Contains("__Weapond__"))
             {

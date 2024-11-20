@@ -77,14 +77,13 @@ public class ChatBubbel : MonoBehaviour
 
         npcInteract.DespawnInteractButton();
 
-        //this is my marker i want to trigger NPCInteract.DespawnInteractButton() from here or the other way around how could i do this 
-
         yield return new WaitForSeconds(1f);
 
         InteractButton.transform.localPosition = E_InitialOffset;
 
         Destroy(chatBubbleTransform.gameObject);
     }
+
     private void UpdateRightSideObjectPosition(Transform targetObject, GameObject InteractButton)
     {
         Vector2 backgroundSize = BackgroundSpriteRenderer.size;

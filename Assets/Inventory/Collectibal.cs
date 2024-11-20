@@ -1,6 +1,4 @@
 using System.Collections;
-using System.ComponentModel;
-using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.Rendering.Universal;
 
@@ -38,8 +36,13 @@ public class Collectibal : MonoBehaviour
     void Start()
     {
         if (transform.parent == null)
-        CreateParent(this.gameObject);
-        //CreateParent(transform.parent.gameObject);
+        {
+            CreateParent(this.gameObject);
+        }
+        else
+        {
+            print(transform.parent.name);
+        }
 
         GameObject canvasObject = GameObject.Find("Canvas");
         inventoryUI = canvasObject.GetComponentInChildren<InventoryUI>();
@@ -72,6 +75,7 @@ public class Collectibal : MonoBehaviour
         if (item != null)
         {
             player.inventory.Add("Backpack", item);
+            print("added");
             Destroy(GetComponent<BoxCollider2D>()); //removes collition detec
             inventoryUI.Refresh();
         }
@@ -225,7 +229,9 @@ public class Collectibal : MonoBehaviour
     }
     private void CreateParent(GameObject child)
     {
-        GameObject parent = new GameObject(transform.parent.name);
+        string parentName = transform.parent != null ? transform.parent.name : (gameObject.name + "Parent");
+
+        GameObject parent = new GameObject(parentName);
 
         parent.transform.position = child.transform.position;
         parent.transform.rotation = child.transform.rotation;

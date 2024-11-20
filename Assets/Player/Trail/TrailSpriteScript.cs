@@ -14,21 +14,22 @@ public class TrailSpriteScript : MonoBehaviour
         spriteRenderer = GetComponent<SpriteRenderer>();
         spriteRenderer.sortingOrder = -2;
 
-        Transform childTransform = transform.Find(childName);
 
-        Material childMaterial = childTransform.GetComponent<SpriteRenderer>().material;
-
-        spriteRenderer.material = childMaterial;
-
-        Destroy(transform.Find("Shadow").gameObject);
 
         Transform[] childrenObj = GetComponentsInChildren<Transform>();
         foreach (Transform obj in childrenObj)
         {
-            if (obj.name.Contains("__Weapond__"))
+            if (obj.name.Contains(childName))
             {
-                Destroy(obj);
-                break;
+                Transform childTransform = obj;
+
+                Material childMaterial = childTransform.GetComponent<SpriteRenderer>().material;
+
+                spriteRenderer.material = childMaterial;
+            }
+            if (obj.name.Contains("WaterCheck") || obj.name.Contains("DmgParticleSystem") || obj.name.Contains("Shadow") || obj.name.Contains("Camera") || obj.name.Contains("__Weapond__"))
+            {
+                Destroy(obj.gameObject);
             }
         }
 
