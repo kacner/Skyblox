@@ -36,6 +36,9 @@ public class NPCInteract : MonoBehaviour
     private bool DistanceOverload = false;
     private bool hasSkipped = false;
 
+    private Coroutine HandleEndOfDialougeCorotine;
+    private Coroutine ExitRangeCorotine;
+
     private void Start()
     {
         CurrentInteractTime = MinKeyPressTime;
@@ -53,12 +56,24 @@ public class NPCInteract : MonoBehaviour
             }
             else
             {
-                ExitRange();
+                if (ExitRangeCorotine == null)
+                    ExitRangeCorotine = StartCoroutine(ExitRange());
+                else
+                {
+                    StopCoroutine(ExitRangeCorotine);
+                    ExitRangeCorotine = StartCoroutine(ExitRange());
+                }
             }
         }
         else
         {
-            ExitRange();
+            if (ExitRangeCorotine == null)
+            ExitRangeCorotine = StartCoroutine(ExitRange());
+            else
+            {
+                StopCoroutine(ExitRangeCorotine);
+                ExitRangeCorotine = StartCoroutine(ExitRange());
+            }
         }
     }
     private void Update()
@@ -87,7 +102,16 @@ public class NPCInteract : MonoBehaviour
             if (isWithingDistance && interactCooldownTimer <= 0)
             {
 
-                if (Input.GetKeyDown(KeyCode.E))
+                if (Input.GetKey(KeyCode.E))
+                {
+                    interactButton.sprite = clicked;
+                }
+                else
+                {
+                    resetInteract();
+                }
+
+                if (Input.GetKeyUp(KeyCode.E))
                 {
                     if (CurrentDialougeTime > 0 && hasSkipped)
                     {
@@ -97,14 +121,10 @@ public class NPCInteract : MonoBehaviour
                     }
                     else if (CurrentInteractTime < 0 && CanInteractTimer < 0)
                     {
-                        PressInteract();
                         CurrentInteractTime = MinKeyPressTime;
                         interactCooldownTimer = interactCooldown / 2;
+                        PressInteract();
                     }
-                }
-                else
-                {
-                    resetInteract();
                 }
             }
         }
@@ -116,54 +136,34 @@ public class NPCInteract : MonoBehaviour
         interactButton.enabled = true;
     }
 
-    void ExitRange()
+    private IEnumerator ExitRange()
     {
         isWithingDistance = false;
         interactButton.enabled = false;
 
         resetInteract();
-    }
 
+        StartCoroutine(GameManager.instance.camerScript.Zoom(3f, 320));
+
+        StartCoroutine(GameManager.instance.camerScript.MoveToWardsForTime(GameManager.instance.player.transform, 1f));
+
+        yield return new WaitForSeconds(1f);
+
+        GameManager.instance.camerScript.ShouldFollow = true;
+
+        ExitRangeCorotine = null;
+    }
     void PressInteract()
     {
-        interactButton.sprite = clicked;
         playDialouge();
+        StartCoroutine(GameManager.instance.camerScript.Zoom(3f, 320 / 2));
+        StartCoroutine(GameManager.instance.camerScript.MoveToWardsForTime(transform, 1f));
     }
 
     void resetInteract()
     {
         interactButton.sprite = unclicked;
     }
-
-    /*void playDialouge()
-    {
-        if (CurrentDialouge == DialougeArr.Length - 1) //lastDialougeDetection
-        {
-            Debug.Log("This is the last dialogue!");
-            StartCoroutine(Disable_EforTime(TalkSpeed * DialougeArr[CurrentDialouge].Length + 3.5f));
-        }
-
-        if (CurrentDialouge < DialougeArr.Length)
-        {
-            if (currentChatBubble != null) 
-            {
-                Destroy(currentChatBubble.gameObject);
-            }
-
-            currentChatBubble = ChatBubbel.Create(transform, new Vector3(-2f, 1.62f), DialougeArr[CurrentDialouge], TalkSpeed, interactButton.gameObject, this);
-
-            CurrentDialougeTime = DialougeArr[CurrentDialouge].Length * TalkSpeed + 3f;
-
-            CurrentDialouge++;
-        }
-        else
-        {
-            CurrentDialouge = 0;
-            canInteract = false;
-            CanInteractTimer = 5;
-            interactCooldownTimer = interactCooldown;
-        }
-    }*/
     void playDialouge()
     {
         if (CurrentDialouge == DialougeArr.Length - 1) //lastDialougeDetection
@@ -183,11 +183,17 @@ public class NPCInteract : MonoBehaviour
 
             CurrentDialougeTime = DialougeArr[CurrentDialouge].Length * TalkSpeed + 3f;
 
-            // Check if it's the last dialogue
             if (CurrentDialouge == DialougeArr.Length - 1)
             {
                 Debug.Log("This is the last dialogue!");
-                StartCoroutine(HandleEndOfDialogue());
+
+                if (HandleEndOfDialougeCorotine == null)
+                HandleEndOfDialougeCorotine = StartCoroutine(HandleEndOfDialogue());
+                else
+                {
+                    StopCoroutine(HandleEndOfDialougeCorotine);
+                    HandleEndOfDialougeCorotine = StartCoroutine(HandleEndOfDialogue());
+                }
             }
 
             CurrentDialouge++;
@@ -201,6 +207,17 @@ public class NPCInteract : MonoBehaviour
         canInteract = false;
         CanInteractTimer = 5;
         interactCooldownTimer = interactCooldown;
+
+
+        StartCoroutine(GameManager.instance.camerScript.Zoom(3f, 320));
+
+        StartCoroutine(GameManager.instance.camerScript.MoveToWardsForTime(GameManager.instance.player.transform, 1f));
+
+        yield return new WaitForSeconds(1f);
+
+        GameManager.instance.camerScript.ShouldFollow = true;
+
+        HandleEndOfDialougeCorotine = null;
     }
 
     public void DespawnInteractButton()

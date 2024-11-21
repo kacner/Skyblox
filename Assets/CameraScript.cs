@@ -5,32 +5,28 @@ using UnityEngine.Experimental.Rendering.Universal;
 
 public class CameraScript : MonoBehaviour
 {
-    public bool shouldFollow = true;
     public float CameraFollowSpeed = 10f;
     [SerializeField] private float updateTolerance = 0.1f;
     public AnimationCurve ShakeStrenght;
     private Vector3 shakeOffset = Vector3.zero;
     private Vector3 movetowardsOffset;
     public Transform NPC;
+    public bool ShouldFollow = true;
 
+    PixelPerfectCamera ppCAmrea;
+
+    private void Start()
+    {
+        ppCAmrea = GetComponent<PixelPerfectCamera>();
+    }
     private void Update()
     {
-        if (Input.GetKeyDown(KeyCode.E))
-        {
-            shouldFollow = false;
-            StartCoroutine(MoveToWardsForTime(NPC, 4f));
-            StartCoroutine(zoomIn(3f, 320/2));
-        }
-        else if (Input.GetKeyDown(KeyCode.O))
-        {
-            StartCoroutine(zoomIn(3f, 320));
-        }
-
         CameraMovement(movetowardsOffset);
     }
 
     public IEnumerator ShakeScreenForTime(float time)
     {
+        Debug.Log("You forgot my shake!.... Shake that body...");
         float elapsedTime = 0;
 
         while (elapsedTime < time)
@@ -44,57 +40,45 @@ public class CameraScript : MonoBehaviour
         shakeOffset = Vector3.zero;
     }
 
-    void CameraMovement(Vector3 FinalOffset)
+    private void CameraMovement(Vector3 FinalOffset)
     {
-        Vector3 currentPosition = transform.position;
-        Vector3 targetPosition = new Vector3(GameManager.instance.player.transform.position.x, GameManager.instance.player.transform.position.y, -10);
-
-        if (Vector3.Distance(currentPosition, targetPosition) > updateTolerance)
+        if (ShouldFollow)
         {
-            transform.position = Vector3.Lerp(currentPosition, targetPosition + FinalOffset, Time.fixedDeltaTime * CameraFollowSpeed);
-        }
+            Vector3 currentPosition = transform.position;
+            Vector3 targetPosition = new Vector3(GameManager.instance.player.transform.position.x, GameManager.instance.player.transform.position.y, -10);
 
-        transform.position += shakeOffset;
+            if (Vector3.Distance(currentPosition, targetPosition) > updateTolerance)
+            {
+                transform.position = Vector3.Lerp(currentPosition, targetPosition + FinalOffset, Time.fixedDeltaTime * CameraFollowSpeed);
+            }
+
+            transform.position += shakeOffset;
+        }
     }
-    private IEnumerator MoveToWardsForTime(Transform target, float duration)
+    public IEnumerator MoveToWardsForTime(Transform target, float transitionDuration)
     {
+        Debug.Log("MovingToWardsForTime");
+        ShouldFollow = false;
+
         float timer = 0f;
 
         Vector3 startPosition = transform.position;
         Vector3 targetPosition = new Vector3(target.position.x, target.position.y, transform.position.z);
 
-        float transitionduration = duration / 3;
-
-        while (timer < transitionduration)
+        while (timer < transitionDuration)
         {
             timer += Time.deltaTime;
-            float t = Mathf.Clamp01(timer / transitionduration);
 
-            transform.position = Vector3.Lerp(startPosition, targetPosition, t);
+            transform.position = Vector3.Lerp(startPosition, targetPosition, timer);
 
             yield return null;
         }
 
-        StartCoroutine(StayForTime(target, duration * 0.66f));
+        transform.position = targetPosition;
     }
-    private IEnumerator StayForTime(Transform target, float duration)
+    public IEnumerator Zoom(float duration, int zoomAmount)
     {
-        float timer = 0f;
-        while (timer < duration)
-        {
-            timer += Time.deltaTime;
-
-            transform.position = new Vector3(target.position.x, target.position.y, transform.position.z);
-
-
-            yield return null;
-        }
-
-        transform.position = new Vector3(target.position.x, target.position.y, transform.position.z);
-    }
-    private IEnumerator zoomIn(float duration, int zoomAmount)
-    {
-        PixelPerfectCamera ppCAmrea = GetComponent<PixelPerfectCamera>();
+        Debug.Log("Zooming");
         float time = 0;
 
         while (time < duration)
