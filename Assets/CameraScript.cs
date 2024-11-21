@@ -1,6 +1,7 @@
+using System;
 using System.Collections;
-using TMPro;
 using UnityEngine;
+using UnityEngine.Experimental.Rendering.Universal;
 
 public class CameraScript : MonoBehaviour
 {
@@ -18,6 +19,11 @@ public class CameraScript : MonoBehaviour
         {
             shouldFollow = false;
             StartCoroutine(MoveToWardsForTime(NPC, 4f));
+            StartCoroutine(zoomIn(3f, 320/2));
+        }
+        else if (Input.GetKeyDown(KeyCode.O))
+        {
+            StartCoroutine(zoomIn(3f, 320));
         }
 
         CameraMovement(movetowardsOffset);
@@ -31,7 +37,7 @@ public class CameraScript : MonoBehaviour
         {
             elapsedTime += Time.deltaTime;
             float strength = ShakeStrenght.Evaluate(elapsedTime / time);
-            shakeOffset = Random.insideUnitSphere * strength;
+            shakeOffset = UnityEngine.Random.insideUnitSphere * strength;
             yield return null;
         }
 
@@ -85,5 +91,23 @@ public class CameraScript : MonoBehaviour
         }
 
         transform.position = new Vector3(target.position.x, target.position.y, transform.position.z);
+    }
+    private IEnumerator zoomIn(float duration, int zoomAmount)
+    {
+        PixelPerfectCamera ppCAmrea = GetComponent<PixelPerfectCamera>();
+        float time = 0;
+
+        while (time < duration)
+        {
+            time += Time.deltaTime;
+
+            ppCAmrea.refResolutionX = Convert.ToInt32(Mathf.Lerp(ppCAmrea.refResolutionX, zoomAmount, time / duration));
+            ppCAmrea.refResolutionY = Convert.ToInt32(Mathf.Lerp(ppCAmrea.refResolutionY, zoomAmount / 2, time / duration));
+
+            yield return null;
+        }
+
+        ppCAmrea.refResolutionX = zoomAmount;
+        ppCAmrea.refResolutionY = zoomAmount / 2;
     }
 }
