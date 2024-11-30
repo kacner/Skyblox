@@ -1,5 +1,6 @@
 using System;
 using System.Collections;
+using Unity.Collections.LowLevel.Unsafe;
 using UnityEngine;
 using UnityEngine.Experimental.Rendering.Universal;
 
@@ -9,19 +10,18 @@ public class CameraScript : MonoBehaviour
     [SerializeField] private float updateTolerance = 0.1f;
     public AnimationCurve ShakeStrenght;
     private Vector3 shakeOffset = Vector3.zero;
-    private Vector3 movetowardsOffset;
-    public Transform NPC;
-    public bool ShouldFollow = true;
+    public Transform FollowingTarget;
 
     PixelPerfectCamera ppCAmrea;
 
     private void Start()
     {
         ppCAmrea = GetComponent<PixelPerfectCamera>();
+        FollowingTarget = GameManager.instance.player.transform;
     }
     private void Update()
     {
-        CameraMovement(movetowardsOffset);
+        CameraFollowTarget(FollowingTarget);
     }
 
     public IEnumerator ShakeScreenForTime(float time)
@@ -40,41 +40,17 @@ public class CameraScript : MonoBehaviour
         shakeOffset = Vector3.zero;
     }
 
-    private void CameraMovement(Vector3 FinalOffset)
+    private void CameraFollowTarget(Transform Target)
     {
-        if (ShouldFollow)
+        Vector3 currentPosition = transform.position;
+        Vector3 targetPosition = new Vector3(Target.position.x, Target.position.y, -10);
+
+        if (Vector3.Distance(currentPosition, targetPosition) > updateTolerance)
         {
-            Vector3 currentPosition = transform.position;
-            Vector3 targetPosition = new Vector3(GameManager.instance.player.transform.position.x, GameManager.instance.player.transform.position.y, -10);
-
-            if (Vector3.Distance(currentPosition, targetPosition) > updateTolerance)
-            {
-                transform.position = Vector3.Lerp(currentPosition, targetPosition + FinalOffset, Time.fixedDeltaTime * CameraFollowSpeed);
-            }
-
-            transform.position += shakeOffset;
-        }
-    }
-    public IEnumerator MoveToWardsForTime(Transform target, float transitionDuration)
-    {
-        Debug.Log("MovingToWardsForTime");
-        ShouldFollow = false;
-
-        float timer = 0f;
-
-        Vector3 startPosition = transform.position;
-        Vector3 targetPosition = new Vector3(target.position.x, target.position.y, transform.position.z);
-
-        while (timer < transitionDuration)
-        {
-            timer += Time.deltaTime;
-
-            transform.position = Vector3.Lerp(startPosition, targetPosition, timer);
-
-            yield return null;
+            transform.position = Vector3.Lerp(currentPosition, targetPosition, Time.fixedDeltaTime * CameraFollowSpeed);
         }
 
-        transform.position = targetPosition;
+        transform.position += shakeOffset;
     }
     public IEnumerator Zoom(float duration, int zoomAmount)
     {
@@ -93,5 +69,11 @@ public class CameraScript : MonoBehaviour
 
         ppCAmrea.refResolutionX = zoomAmount;
         ppCAmrea.refResolutionY = zoomAmount / 2;
+    }
+
+    public IEnumerator ChangeFollowSpeedAfterTime(float followspeed, float time)
+    {
+        yield return new WaitForSeconds(time);
+        CameraFollowSpeed = followspeed;
     }
 }

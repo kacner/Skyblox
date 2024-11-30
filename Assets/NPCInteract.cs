@@ -26,54 +26,55 @@ public class NPCInteract : MonoBehaviour
 
     [Header("Dialouge")]
     [SerializeField] private string[] DialougeArr;
+    [SerializeField] private AnimationState[] Emotion;
     [SerializeField] private int CurrentDialouge = 0;
     [SerializeField] private float CurrentDialougeTime = 0;
     private ChatBubbel currentChatBubble;
-
 
     public Animator E_Animator;
 
     private bool DistanceOverload = false;
     private bool hasSkipped = false;
 
-    private Coroutine HandleEndOfDialougeCorotine;
-    private Coroutine ExitRangeCorotine;
+    private Transform playerTransform;
+    private CameraScript camerascript;
 
+    public AnimationState currentState = AnimationState.Idle;
+    private Animator animator;
+    public enum AnimationState
+    {
+        Angry,
+        Pointing,
+        HandsOut,
+        HandInPocket,
+        Idle
+    }
     private void Start()
     {
         CurrentInteractTime = MinKeyPressTime;
+        Invoke("ConnectReferences", 0.25f);
         InvokeRepeating("UpdateDistance", 1, 0.3f);
+
+        animator = GetComponent<Animator>();
     }
 
     void UpdateDistance()
     {
         if (CanInteractTimer < 0 && !DistanceOverload)
         {
-            distance = Vector2.Distance(transform.position, GameManager.instance.player.transform.position);
+            distance = Vector2.Distance(transform.position, playerTransform.position);
             if (distance < InteractRange)
             {
                 EnterRange();
             }
             else
             {
-                if (ExitRangeCorotine == null)
-                    ExitRangeCorotine = StartCoroutine(ExitRange());
-                else
-                {
-                    StopCoroutine(ExitRangeCorotine);
-                    ExitRangeCorotine = StartCoroutine(ExitRange());
-                }
+                ExitRange();
             }
         }
         else
         {
-            if (ExitRangeCorotine == null)
-            ExitRangeCorotine = StartCoroutine(ExitRange());
-            else
-            {
-                StopCoroutine(ExitRangeCorotine);
-                ExitRangeCorotine = StartCoroutine(ExitRange());
-            }
+            ExitRange();
         }
     }
     private void Update()
@@ -136,28 +137,24 @@ public class NPCInteract : MonoBehaviour
         interactButton.enabled = true;
     }
 
-    private IEnumerator ExitRange()
+    private void ExitRange()
     {
         isWithingDistance = false;
         interactButton.enabled = false;
 
         resetInteract();
 
-        StartCoroutine(GameManager.instance.camerScript.Zoom(3f, 320));
+        StartCoroutine(camerascript.Zoom(3f, 320));
 
-        StartCoroutine(GameManager.instance.camerScript.MoveToWardsForTime(GameManager.instance.player.transform, 1f));
-
-        yield return new WaitForSeconds(1f);
-
-        GameManager.instance.camerScript.ShouldFollow = true;
-
-        ExitRangeCorotine = null;
+        camerascript.FollowingTarget = playerTransform;
+        StartCoroutine(camerascript.ChangeFollowSpeedAfterTime(10f, 1f));
     }
     void PressInteract()
     {
         playDialouge();
-        StartCoroutine(GameManager.instance.camerScript.Zoom(3f, 320 / 2));
-        StartCoroutine(GameManager.instance.camerScript.MoveToWardsForTime(transform, 1f));
+        StartCoroutine(camerascript.ChangeFollowSpeedAfterTime(1f, 0.01f));
+        StartCoroutine(camerascript.Zoom(3f, 212));
+        camerascript.FollowingTarget = transform;
     }
 
     void resetInteract()
@@ -180,6 +177,7 @@ public class NPCInteract : MonoBehaviour
         if (CurrentDialouge < DialougeArr.Length)
         {
             currentChatBubble = ChatBubbel.Create(transform, new Vector3(-2f, 1.62f), DialougeArr[CurrentDialouge], TalkSpeed, interactButton.gameObject, this);
+            ChangeState(Emotion[CurrentDialouge]);
 
             CurrentDialougeTime = DialougeArr[CurrentDialouge].Length * TalkSpeed + 3f;
 
@@ -187,13 +185,8 @@ public class NPCInteract : MonoBehaviour
             {
                 Debug.Log("This is the last dialogue!");
 
-                if (HandleEndOfDialougeCorotine == null)
-                HandleEndOfDialougeCorotine = StartCoroutine(HandleEndOfDialogue());
-                else
-                {
-                    StopCoroutine(HandleEndOfDialougeCorotine);
-                    HandleEndOfDialougeCorotine = StartCoroutine(HandleEndOfDialogue());
-                }
+                StartCoroutine(HandleEndOfDialogue());
+                
             }
 
             CurrentDialouge++;
@@ -207,17 +200,11 @@ public class NPCInteract : MonoBehaviour
         canInteract = false;
         CanInteractTimer = 5;
         interactCooldownTimer = interactCooldown;
+        ChangeState(AnimationState.Idle);
 
-
-        StartCoroutine(GameManager.instance.camerScript.Zoom(3f, 320));
-
-        StartCoroutine(GameManager.instance.camerScript.MoveToWardsForTime(GameManager.instance.player.transform, 1f));
-
-        yield return new WaitForSeconds(1f);
-
-        GameManager.instance.camerScript.ShouldFollow = true;
-
-        HandleEndOfDialougeCorotine = null;
+        StartCoroutine(camerascript.ChangeFollowSpeedAfterTime(10f, 1f));
+        StartCoroutine(camerascript.Zoom(3f, 320));
+        camerascript.FollowingTarget = playerTransform;
     }
 
     public void DespawnInteractButton()
@@ -239,5 +226,54 @@ public class NPCInteract : MonoBehaviour
         yield return new WaitForSeconds(time);
         interactButton.enabled = true;
         DistanceOverload = false;
+    }
+
+    private void ConnectReferences()
+    {
+        playerTransform = GameManager.instance.player.transform;
+        camerascript = GameManager.instance.camerScript;
+    }
+
+
+
+
+
+
+
+    public void ChangeState(AnimationState newState)
+    {
+        if (currentState == newState) return;
+
+        ExitState(currentState);
+
+        EnterState(newState);
+
+        currentState = newState;
+    }
+
+    private void EnterState(AnimationState state)
+    {
+        switch (state)
+        {
+            case AnimationState.Idle:
+                animator.Play("CaptainNPCIdle");
+                break;
+            case AnimationState.Pointing:
+                animator.Play("CaptainPointing");
+                break;
+            case AnimationState.HandInPocket:
+                animator.Play("CaptainHandInPocket");
+                break;
+            case AnimationState.HandsOut:
+                animator.Play("CaptainHandsOut");
+                break;
+            case AnimationState.Angry:
+                animator.Play("CaptainAngry");
+                break;
+        }
+    }
+
+    private void ExitState(AnimationState state)
+    {
     }
 }
