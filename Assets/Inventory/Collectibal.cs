@@ -75,7 +75,6 @@ public class Collectibal : MonoBehaviour
         if (item != null)
         {
             player.inventory.Add("Backpack", item);
-            print("added");
             Destroy(GetComponent<BoxCollider2D>()); //removes collition detec
             inventoryUI.Refresh();
         }

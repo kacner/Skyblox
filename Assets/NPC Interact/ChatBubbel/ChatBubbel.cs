@@ -71,7 +71,7 @@ public class ChatBubbel : MonoBehaviour
 
     private IEnumerator DespawnTrigger(Transform chatBubbleTransform, float talkspeed, string text, GameObject InteractButton, NPCInteract npcInteract)
     {
-        yield return new WaitForSeconds(3f + talkspeed * text.Length);
+        yield return new WaitForSeconds(npcInteract.dialougeExtraTime + talkspeed * text.Length);
 
         GetComponent<Animator>().SetTrigger("Despawn");
 

@@ -30,6 +30,7 @@ public class NPCInteract : MonoBehaviour
     [SerializeField] private int CurrentDialouge = 0;
     [SerializeField] private float CurrentDialougeTime = 0;
     private ChatBubbel currentChatBubble;
+    public float dialougeExtraTime = 6f;
 
     public Animator E_Animator;
 
@@ -147,7 +148,7 @@ public class NPCInteract : MonoBehaviour
         StartCoroutine(camerascript.Zoom(3f, 320));
 
         camerascript.FollowingTarget = playerTransform;
-        StartCoroutine(camerascript.ChangeFollowSpeedAfterTime(10f, 1f));
+        StartCoroutine(camerascript.ChangeFollowSpeedAfterTime(10f, 1.2f));
     }
     void PressInteract()
     {
@@ -166,7 +167,7 @@ public class NPCInteract : MonoBehaviour
         if (CurrentDialouge == DialougeArr.Length - 1) //lastDialougeDetection
         {
             Debug.Log("This is the last dialogue!");
-            StartCoroutine(Disable_EforTime(TalkSpeed * DialougeArr[CurrentDialouge].Length + 3.5f));
+            StartCoroutine(Disable_EforTime(TalkSpeed * DialougeArr[CurrentDialouge].Length + dialougeExtraTime + 0.5f));
         }
 
         if (currentChatBubble != null)
@@ -179,7 +180,7 @@ public class NPCInteract : MonoBehaviour
             currentChatBubble = ChatBubbel.Create(transform, new Vector3(-2f, 1.62f), DialougeArr[CurrentDialouge], TalkSpeed, interactButton.gameObject, this);
             ChangeState(Emotion[CurrentDialouge]);
 
-            CurrentDialougeTime = DialougeArr[CurrentDialouge].Length * TalkSpeed + 3f;
+            CurrentDialougeTime = DialougeArr[CurrentDialouge].Length * TalkSpeed + dialougeExtraTime;
 
             if (CurrentDialouge == DialougeArr.Length - 1)
             {
@@ -195,14 +196,14 @@ public class NPCInteract : MonoBehaviour
 
     private IEnumerator HandleEndOfDialogue()
     {
-        yield return new WaitForSeconds(DialougeArr[CurrentDialouge].Length * TalkSpeed + 3f); // Wait for dialogue to finish
+        yield return new WaitForSeconds(DialougeArr[CurrentDialouge].Length * TalkSpeed + dialougeExtraTime); // Wait for dialogue to finish
         CurrentDialouge = 0;
         canInteract = false;
         CanInteractTimer = 5;
         interactCooldownTimer = interactCooldown;
         ChangeState(AnimationState.Idle);
 
-        StartCoroutine(camerascript.ChangeFollowSpeedAfterTime(10f, 1f));
+        StartCoroutine(camerascript.ChangeFollowSpeedAfterTime(10f, 1.2f));
         StartCoroutine(camerascript.Zoom(3f, 320));
         camerascript.FollowingTarget = playerTransform;
     }

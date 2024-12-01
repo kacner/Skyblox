@@ -198,7 +198,7 @@ public class PlayerMovement : MonoBehaviour
             DetermineLookDirection(mouseWorldPosition);
         }
 
-        if (CanMove && !GameManager.instance.ui_Manager.isInventoryToggeld)
+        if (CanMove && !GameManager.instance.ui_Manager.isInventoryToggeld && !createtrailsprite)
         {
             moveX = Input.GetAxisRaw("Horizontal"); //value -1 or 1. left or right
             moveY = Input.GetAxisRaw("Vertical"); //value -1 or 1. down and up

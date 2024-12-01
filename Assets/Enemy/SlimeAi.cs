@@ -76,7 +76,6 @@ public class SlimeAi : MonoBehaviour
 
         if (PlayerHP != null)
         {
-            Debug.Log("Hit detected on Player!");
 
             PlayerHP.TakeDmg(Damage, transform.position, KnockbackAmount);
         }

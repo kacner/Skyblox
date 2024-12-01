@@ -54,7 +54,6 @@ public class CameraScript : MonoBehaviour
     }
     public IEnumerator Zoom(float duration, int zoomAmount)
     {
-        Debug.Log("Zooming");
         float time = 0;
 
         while (time < duration)

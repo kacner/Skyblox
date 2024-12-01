@@ -1,6 +1,8 @@
 using System.Collections;
 using UnityEngine;
 using UnityEngine.UI;
+using Water2D;
+
 public class PlayerHp : MonoBehaviour
 {
     [Header("PlayerStats")]
@@ -31,6 +33,7 @@ public class PlayerHp : MonoBehaviour
     [Header("DisplaySettings")]
     [SerializeField] private Image HPSlider;
     [SerializeField] private float SliderSpeed = 5;
+    [SerializeField] private Obstructor obstructor;
 
     void Start()
     {
@@ -94,7 +97,7 @@ public class PlayerHp : MonoBehaviour
 
             if ((current_HP - dmg) <= 0)
             {
-                StartCoroutine(RemoveRb());
+                StartCoroutine(RemoveRbNdie());
                 current_HP = 0;
             }
             else
@@ -119,7 +122,12 @@ public class PlayerHp : MonoBehaviour
             StartCoroutine(flashDMGcolor());
             if ((current_HP - dmg) <= 0)
             {
-                StartCoroutine(RemoveRb());
+                if (obstructor != null)
+                    Destroy(obstructor);
+                else
+                    Debug.Log("Obstructor is null or already destroyed.");
+
+                StartCoroutine(RemoveRbNdie());
                 current_HP = 0;
             }
             else
@@ -166,11 +174,10 @@ public class PlayerHp : MonoBehaviour
         IsInvincibilityCoututineRunning = false;
     }
 
-    IEnumerator RemoveRb()
+    IEnumerator RemoveRbNdie()
     {
         yield return new WaitForSeconds(0.5f);
         Destroy(rb);
-
         playerMovement.Die();
     }
 
