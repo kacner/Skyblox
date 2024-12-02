@@ -369,12 +369,12 @@ public class PlayerMovement : MonoBehaviour
             if (moveDirection == Vector2.zero) //initiate roll when still
             {
                 rb.AddForce(lookDirVector.normalized * StillBoostFactor * Time.deltaTime, ForceMode2D.Force);
-                StillBoostFactor -= StillBoostFactor * 0.2f;
+                StillBoostFactor -= StillBoostFactor * 0.2f * Time.deltaTime;
             }
             else //ini roll when moving
             {
                 rb.AddForce(lookDirVector.normalized * RollForce * Time.deltaTime, ForceMode2D.Force);
-                RollForce -= RollForce * 0.2f;
+                RollForce -= RollForce * 0.2f * Time.deltaTime;
             }
             elapsedTime += Time.deltaTime;
             yield return null;

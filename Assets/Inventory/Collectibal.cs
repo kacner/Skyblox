@@ -39,10 +39,6 @@ public class Collectibal : MonoBehaviour
         {
             CreateParent(this.gameObject);
         }
-        else
-        {
-            print(transform.parent.name);
-        }
 
         GameObject canvasObject = GameObject.Find("Canvas");
         inventoryUI = canvasObject.GetComponentInChildren<InventoryUI>();
@@ -74,6 +70,7 @@ public class Collectibal : MonoBehaviour
         Item item = GetComponent<Item>();
         if (item != null)
         {
+            print("Added" + gameObject.name);
             player.inventory.Add("Backpack", item);
             Destroy(GetComponent<BoxCollider2D>()); //removes collition detec
             inventoryUI.Refresh();

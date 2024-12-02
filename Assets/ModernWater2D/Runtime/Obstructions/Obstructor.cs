@@ -80,6 +80,7 @@ namespace Water2D
 
         public void Destroy() 
         {
+            print("destr");
             ObstructorManager.instance.RemoveObstructor(transform);
             if (_data != null && _data.child != null) DestroyImmediate(_data.child.gameObject);
             DestroyImmediate(this);

@@ -176,6 +176,15 @@ public class PlayerHp : MonoBehaviour
 
     IEnumerator RemoveRbNdie()
     {
+
+        //  obstructor.Destroy();
+        ObstructorManager.instance.RemoveObstructor(transform);
+
+        if (obstructor.data != null && obstructor.data.child != null) Destroy(obstructor.data.child.gameObject);
+        
+        Destroy(obstructor);
+
+        print("playerhpDesrtoy");
         yield return new WaitForSeconds(0.5f);
         Destroy(rb);
         playerMovement.Die();
