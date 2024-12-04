@@ -71,6 +71,7 @@ public class NPCInteract : MonoBehaviour
             else
             {
                 ExitRange();
+                ChangeState(AnimationState.Idle);
             }
         }
         else
@@ -144,7 +145,6 @@ public class NPCInteract : MonoBehaviour
         interactButton.enabled = false;
 
         resetInteract();
-
         StartCoroutine(camerascript.Zoom(3f, 320));
 
         camerascript.FollowingTarget = playerTransform;
@@ -166,7 +166,6 @@ public class NPCInteract : MonoBehaviour
     {
         if (CurrentDialouge == DialougeArr.Length - 1) //lastDialougeDetection
         {
-            Debug.Log("This is the last dialogue!");
             StartCoroutine(Disable_EforTime(TalkSpeed * DialougeArr[CurrentDialouge].Length + dialougeExtraTime + 0.5f));
         }
 
@@ -177,17 +176,14 @@ public class NPCInteract : MonoBehaviour
 
         if (CurrentDialouge < DialougeArr.Length)
         {
-            currentChatBubble = ChatBubbel.Create(transform, new Vector3(-2f, 1.62f), DialougeArr[CurrentDialouge], TalkSpeed, interactButton.gameObject, this);
+            currentChatBubble = ChatBubbel.Create(transform, new Vector3(-2f, 1.62f), DialougeArr[CurrentDialouge], TalkSpeed, interactButton.gameObject, this, AnimationState.Idle);
             ChangeState(Emotion[CurrentDialouge]);
 
             CurrentDialougeTime = DialougeArr[CurrentDialouge].Length * TalkSpeed + dialougeExtraTime;
 
             if (CurrentDialouge == DialougeArr.Length - 1)
             {
-                Debug.Log("This is the last dialogue!");
-
                 StartCoroutine(HandleEndOfDialogue());
-                
             }
 
             CurrentDialouge++;
@@ -201,7 +197,6 @@ public class NPCInteract : MonoBehaviour
         canInteract = false;
         CanInteractTimer = 5;
         interactCooldownTimer = interactCooldown;
-        ChangeState(AnimationState.Idle);
 
         StartCoroutine(camerascript.ChangeFollowSpeedAfterTime(10f, 1.2f));
         StartCoroutine(camerascript.Zoom(3f, 320));
@@ -235,17 +230,9 @@ public class NPCInteract : MonoBehaviour
         camerascript = GameManager.instance.camerScript;
     }
 
-
-
-
-
-
-
     public void ChangeState(AnimationState newState)
     {
         if (currentState == newState) return;
-
-        ExitState(currentState);
 
         EnterState(newState);
 
@@ -272,9 +259,5 @@ public class NPCInteract : MonoBehaviour
                 animator.Play("CaptainAngry");
                 break;
         }
-    }
-
-    private void ExitState(AnimationState state)
-    {
     }
 }

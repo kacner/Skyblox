@@ -1,16 +1,17 @@
+using System;
 using System.Collections;
 using TMPro;
 using UnityEngine;
 
 public class ChatBubbel : MonoBehaviour
 {
-    public static ChatBubbel Create(Transform parent, Vector3 localPosition, string text, float talkspeed, GameObject interactButton, NPCInteract npcInteract)
+    public static ChatBubbel Create(Transform parent, Vector3 localPosition, string text, float talkspeed, GameObject interactButton, NPCInteract npcInteract, NPCInteract.AnimationState Idle)
     {
         Transform chatBubbleTransform = Instantiate(GameAssets.i.pfChatBubble, parent);
         chatBubbleTransform.localPosition = localPosition;
 
         ChatBubbel chatBubble = chatBubbleTransform.GetComponent<ChatBubbel>();
-        chatBubble.Setup(text, talkspeed, chatBubbleTransform, interactButton, npcInteract);
+        chatBubble.Setup(text, talkspeed, chatBubbleTransform, interactButton, npcInteract, Idle);
 
         return chatBubble;
     }
@@ -24,7 +25,7 @@ public class ChatBubbel : MonoBehaviour
     public Transform E_transformPos;
     public Vector2 E_InitialOffset;
 
-    private void Setup(string text, float talkspeed, Transform chatBubbleTransform, GameObject InteractButton, NPCInteract npcInteract)
+    private void Setup(string text, float talkspeed, Transform chatBubbleTransform, GameObject InteractButton, NPCInteract npcInteract, NPCInteract.AnimationState Idle)
     {
         if (typingCoroutine != null)
         {
@@ -32,7 +33,7 @@ public class ChatBubbel : MonoBehaviour
         }
 
         typingCoroutine = StartCoroutine(TypeEffect(text, talkspeed, InteractButton));
-        StartCoroutine(DespawnTrigger(chatBubbleTransform, talkspeed, text, InteractButton, npcInteract));
+        StartCoroutine(DespawnTrigger(chatBubbleTransform, talkspeed, text, InteractButton, npcInteract, Idle));
     }
 
     private IEnumerator TypeEffect(string text, float talkspeed, GameObject interactButton)
@@ -69,7 +70,7 @@ public class ChatBubbel : MonoBehaviour
         }
     }
 
-    private IEnumerator DespawnTrigger(Transform chatBubbleTransform, float talkspeed, string text, GameObject InteractButton, NPCInteract npcInteract)
+    private IEnumerator DespawnTrigger(Transform chatBubbleTransform, float talkspeed, string text, GameObject InteractButton, NPCInteract npcInteract, NPCInteract.AnimationState Idle)
     {
         yield return new WaitForSeconds(npcInteract.dialougeExtraTime + talkspeed * text.Length);
 
@@ -81,6 +82,8 @@ public class ChatBubbel : MonoBehaviour
 
         InteractButton.transform.localPosition = E_InitialOffset;
 
+        npcInteract.ChangeState(Idle);
+        print("IDLEING");
         Destroy(chatBubbleTransform.gameObject);
     }
 

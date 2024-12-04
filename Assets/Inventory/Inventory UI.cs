@@ -1,6 +1,9 @@
+using System;
+using System.Collections;
 using System.Collections.Generic;
 using Unity.VisualScripting;
 using UnityEngine;
+using UnityEngine.EventSystems;
 using UnityEngine.UI;
 
 public class InventoryUI : MonoBehaviour
@@ -12,10 +15,15 @@ public class InventoryUI : MonoBehaviour
     [SerializeField] private Canvas canvas;
 
     [SerializeField] private Inventory inventory;
-
+    private GraphicRaycaster graphicRaycaster;
+    private PointerEventData pointerEventData;
+    private EventSystem eventSystem;
+    private HashSet<Slot_UI> previouslyRaycastedSlots = new HashSet<Slot_UI>();
     private void Awake()
     {
         canvas = FindObjectOfType<Canvas>();
+        graphicRaycaster = canvas.GetComponent<GraphicRaycaster>();
+        eventSystem = EventSystem.current;
     }
 
     private void Start()
@@ -34,6 +42,11 @@ public class InventoryUI : MonoBehaviour
                 if (inventory.slots[i].itemName != "")
                 {
                     slots[i].SetItem(inventory.slots[i]);
+                    slots[i].itemIcon.enabled = true;
+
+                    Color TempColor = slots[i].RarityBackLight.color;
+                    TempColor.a = 1;
+                    slots[i].RarityBackLight.color = TempColor;
                 }
                 else
                 {
@@ -81,22 +94,41 @@ public class InventoryUI : MonoBehaviour
         UI_Manager.draggedIcon = Instantiate(UI_Manager.draggedSlot.itemIcon);
         UI_Manager.draggedIcon.transform.SetParent(canvas.transform);
         UI_Manager.draggedIcon.raycastTarget = false;
-        UI_Manager.draggedIcon.rectTransform.sizeDelta = new Vector2(180, 180);
+        StartCoroutine(OnlerpPickedUpItemScale());
 
         MoveToMousePos(UI_Manager.draggedIcon.gameObject);
-    }
+        slot.itemIcon.enabled = false;
 
+        Color TempColor = slot.RarityBackLight.color;
+        TempColor.a = 0;
+        slot.RarityBackLight.color = TempColor;
+    }
     public void slotDrag()
     {
         if (UI_Manager.draggedIcon != null)
-        MoveToMousePos(UI_Manager.draggedIcon.gameObject);
+        {
+            MoveToMousePos(UI_Manager.draggedIcon.gameObject);
+
+            DestroySlotHighlight();
+
+            // Perform raycast
+            pointerEventData = new PointerEventData(eventSystem)
+            {
+                position = Input.mousePosition
+            };
+
+            List<RaycastResult> results = new List<RaycastResult>();
+            graphicRaycaster.Raycast(pointerEventData, results);
+
+            CreateSlotHighlight(results);
+
+        }
     }
     public void slotEndDrag()
     {
         if (UI_Manager.draggedIcon != null)
         {
-            Destroy(UI_Manager.draggedIcon.gameObject);
-            UI_Manager.draggedIcon = null;
+            StartCoroutine(HandleSlotEndDrag());
         }
     }
     public void slotDrop(Slot_UI slot)
@@ -138,5 +170,87 @@ public class InventoryUI : MonoBehaviour
             counter++;
             slot.inventory = inventory;
         }
+    }
+    void CreateSlotHighlight(List<RaycastResult> results)
+    {
+        foreach (RaycastResult result in results)
+        {
+            Slot_UI slot = result.gameObject.GetComponent<Slot_UI>();
+            if (slot != null && slot.RarityBackLight.color.a == 0)
+            {
+                Image image = slot.GetComponent<Image>();
+                Color tempColor = image.color;
+                tempColor.a = 0.05f;
+                image.color = tempColor;
+
+
+                previouslyRaycastedSlots.Add(slot);
+            }
+        }
+    }
+    void DestroySlotHighlight()
+    {
+        foreach (Slot_UI slot in previouslyRaycastedSlots)
+        {
+            if (slot != null && slot.GetComponent<Image>() != null)
+            {
+                Image image = slot.GetComponent<Image>();
+                Color tempColor = image.color;
+                tempColor.a = 0;
+                image.color = tempColor;
+            }
+        }
+        previouslyRaycastedSlots.Clear();
+    }
+    
+    private IEnumerator HandleSlotEndDrag()
+    {
+        StartCoroutine(OfflerpPickedUpItemScale()); //lerp slot size insted of dragged icon size
+        yield return null;
+        
+    }
+
+    private IEnumerator OnlerpPickedUpItemScale()
+    {
+        if (UI_Manager.draggedIcon.rectTransform != null)
+        {
+
+            float timer = 0;
+            float duration = 0.15f;
+
+            while (timer < duration)
+            {
+                timer += Time.deltaTime;
+                UI_Manager.draggedIcon.rectTransform.sizeDelta = Vector2.Lerp(new Vector2(120, 120), new Vector2(165, 165), timer / duration);
+                yield return null;
+            }
+            UI_Manager.draggedIcon.rectTransform.sizeDelta = new Vector2(155, 155);
+
+        }
+        else
+            print("Erhmmmm.. something went very wrong");
+    }
+
+    private IEnumerator OfflerpPickedUpItemScale()
+    {
+        if (UI_Manager.draggedIcon.rectTransform != null)
+        {
+            float timer = 0;
+            float duration = 0.15f;
+
+            while (timer < duration)
+            {
+                timer += Time.deltaTime;
+                UI_Manager.draggedIcon.rectTransform.sizeDelta = Vector2.Lerp(new Vector2(165, 165), new Vector2(120, 120), timer / duration);
+                yield return null;
+            }
+            UI_Manager.draggedIcon.rectTransform.sizeDelta = new Vector2(120, 120);
+            DestroySlotHighlight();
+            Destroy(UI_Manager.draggedIcon.gameObject);
+            UI_Manager.draggedIcon = null;
+            GameManager.instance.ui_Manager.RefreshAll();
+        }
+        else
+            print("Erhmmmm.. something went very wrong 2");
     }
 }
