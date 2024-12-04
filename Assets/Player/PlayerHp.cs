@@ -33,7 +33,6 @@ public class PlayerHp : MonoBehaviour
     [Header("DisplaySettings")]
     [SerializeField] private Image HPSlider;
     [SerializeField] private float SliderSpeed = 5;
-    [SerializeField] private Obstructor obstructor;
 
     void Start()
     {
@@ -122,8 +121,8 @@ public class PlayerHp : MonoBehaviour
             StartCoroutine(flashDMGcolor());
             if ((current_HP - dmg) <= 0)
             {
-                if (obstructor != null)
-                    Destroy(obstructor);
+                if (GameManager.instance.playerObstructor != null)
+                    Destroy(GameManager.instance.playerObstructor);
                 else
                     Debug.Log("Obstructor is null or already destroyed.");
 
@@ -176,15 +175,8 @@ public class PlayerHp : MonoBehaviour
 
     IEnumerator RemoveRbNdie()
     {
+        GameManager.instance.RemovePlayerObstructor();
 
-        //  obstructor.Destroy();
-        ObstructorManager.instance.RemoveObstructor(transform);
-
-        if (obstructor.data != null && obstructor.data.child != null) Destroy(obstructor.data.child.gameObject);
-        
-        Destroy(obstructor);
-
-        print("playerhpDesrtoy");
         yield return new WaitForSeconds(0.5f);
         Destroy(rb);
         playerMovement.Die();

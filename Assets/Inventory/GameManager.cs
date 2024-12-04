@@ -2,6 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.SceneManagement;
+using Water2D;
 
 public class GameManager : MonoBehaviour
 {
@@ -9,6 +10,7 @@ public class GameManager : MonoBehaviour
     public ItemManager itemManager;
     public UI_Manager ui_Manager;
     public CameraScript camerScript;
+    public Obstructor playerObstructor;
 
     public Player player;
 
@@ -57,5 +59,12 @@ public class GameManager : MonoBehaviour
     void FindPlayerInScene()
     {
         player = FindObjectOfType<Player>();
+    }
+
+    public void RemovePlayerObstructor()
+    {
+        ObstructorManager.instance.RemoveObstructor(transform);
+        if (playerObstructor.data != null && playerObstructor.data.child != null) Destroy(playerObstructor.data.child.gameObject);
+        Destroy(playerObstructor);
     }
 }

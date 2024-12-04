@@ -1,6 +1,8 @@
 using System.Collections;
+using UnityEditor.SceneManagement;
 using UnityEngine;
 using UnityEngine.SceneManagement;
+using Water2D;
 
 public class PlayerMovement : MonoBehaviour
 {
@@ -92,6 +94,8 @@ public class PlayerMovement : MonoBehaviour
     private PlayerHp playerHp;
 
     private Animator CanvasAnimator;
+    [SerializeField] private Obstructor obstructor;
+    [SerializeField] private bool hasObstructor = false;
 
     void Start()
     {
@@ -186,10 +190,22 @@ public class PlayerMovement : MonoBehaviour
         {
             isWaterSlowed = false;
             maxSpeed *= 2;
+
         }
-
-
         animator.SetBool("IsAttacking", IsAttacking);
+
+        if (isInWater && !hasObstructor && GameManager.instance.playerObstructor == null)
+        {
+            Obstructor tempRefObstructor = GameManager.instance.playerObstructor = gameObject.AddComponent<Obstructor>();
+            tempRefObstructor.height = 0.444f;
+            GameManager.instance.playerObstructor.CreateData();
+            hasObstructor = true;
+        }
+        else if (!isInWater && hasObstructor)
+        {
+            GameManager.instance.RemovePlayerObstructor();
+            hasObstructor = false;
+        }
 
         if (useMousePos)
         {
@@ -402,6 +418,9 @@ public class PlayerMovement : MonoBehaviour
                 child.gameObject.SetActive(true);
             }
         }
+
+        if (GameManager.instance.playerObstructor != null)
+        GameManager.instance.playerObstructor.CreateData(); //refeshes obstructor
 
         yield return new WaitForSeconds(RollCooldown - emitParticleAfterInitialRoll);
         IsRolling = false;

@@ -24,7 +24,7 @@ namespace Water2D
 
         public void CreateData()
         {
-            Transform obstructor = (_data != null && _data.child!=null ) ? _data.child : new GameObject("obstructor : " + name).transform;
+            Transform obstructor = (_data != null && _data.child != null ) ? _data.child : new GameObject("obstructor : " + name).transform;
             Transform source = transform;
 
 #if UNITY_EDITOR
