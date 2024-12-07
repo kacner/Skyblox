@@ -63,10 +63,10 @@ public class InventoryUI : MonoBehaviour
 
     public void Remove()
     {
-        if(UI_Manager.draggedSlot != null)
+        if (UI_Manager.draggedSlot != null)
         {
 
-        Item itemToDrop = GameManager.instance.itemManager.GetItemByName(inventory.slots[UI_Manager.draggedSlot.slotID].itemName);
+            Item itemToDrop = GameManager.instance.itemManager.GetItemByName(inventory.slots[UI_Manager.draggedSlot.slotID].itemName);
 
             if (itemToDrop != null)
             {
@@ -74,6 +74,7 @@ public class InventoryUI : MonoBehaviour
                 {
                     GameManager.instance.player.dropItem(itemToDrop);
                     inventory.Remove(UI_Manager.draggedSlot.slotID);
+                    Destroy(UI_Manager.draggedIcon.gameObject);
                 }
                 else
                 {
@@ -97,38 +98,35 @@ public class InventoryUI : MonoBehaviour
         StartCoroutine(OnlerpPickedUpItemScale());
 
         MoveToMousePos(UI_Manager.draggedIcon.gameObject);
-        slot.itemIcon.enabled = false;
 
-        Color TempColor = slot.RarityBackLight.color;
-        TempColor.a = 0;
-        slot.RarityBackLight.color = TempColor;
+        Int32.TryParse(slot.quantityText.text, out int number);
+        if (number < 1 || !UI_Manager.dragSingle)
+        {
+            slot.itemIcon.enabled = false;
+            Color TempColor = slot.RarityBackLight.color;
+            TempColor.a = 0;
+            slot.RarityBackLight.color = TempColor;
+            slot.quantityText.enabled = false; 
+        }
     }
     public void slotDrag()
     {
         if (UI_Manager.draggedIcon != null)
         {
             MoveToMousePos(UI_Manager.draggedIcon.gameObject);
-
             DestroySlotHighlight();
-
-            // Perform raycast
-            pointerEventData = new PointerEventData(eventSystem)
-            {
-                position = Input.mousePosition
-            };
-
-            List<RaycastResult> results = new List<RaycastResult>();
-            graphicRaycaster.Raycast(pointerEventData, results);
-
-            CreateSlotHighlight(results);
-
+            Slot_UI slot = UIRayCastSlot();
+            CreateSlotHighlight(slot);
+            if (slot != null && slot.quantityText != null)
+            slot.quantityText.enabled = true;
         }
     }
     public void slotEndDrag()
     {
-        if (UI_Manager.draggedIcon != null)
+        Slot_UI slot = UIRayCastSlot();
+        if (UI_Manager.draggedIcon != null && slot != null)
         {
-            StartCoroutine(HandleSlotEndDrag());
+            StartCoroutine(OfflerpPickedUpItemScale(slot)); //lerp slot size insted of dragged icon size
         }
     }
     public void slotDrop(Slot_UI slot)
@@ -171,21 +169,17 @@ public class InventoryUI : MonoBehaviour
             slot.inventory = inventory;
         }
     }
-    void CreateSlotHighlight(List<RaycastResult> results)
+    void CreateSlotHighlight(Slot_UI slot)
     {
-        foreach (RaycastResult result in results)
+        if (slot != null && slot.RarityBackLight.color.a == 0)
         {
-            Slot_UI slot = result.gameObject.GetComponent<Slot_UI>();
-            if (slot != null && slot.RarityBackLight.color.a == 0)
-            {
-                Image image = slot.GetComponent<Image>();
-                Color tempColor = image.color;
-                tempColor.a = 0.05f;
-                image.color = tempColor;
+            Image image = slot.GetComponent<Image>();
+            Color tempColor = image.color;
+            tempColor.a = 0.05f;
+            image.color = tempColor;
 
 
-                previouslyRaycastedSlots.Add(slot);
-            }
+            previouslyRaycastedSlots.Add(slot);
         }
     }
     void DestroySlotHighlight()
@@ -203,12 +197,6 @@ public class InventoryUI : MonoBehaviour
         previouslyRaycastedSlots.Clear();
     }
     
-    private IEnumerator HandleSlotEndDrag()
-    {
-        StartCoroutine(OfflerpPickedUpItemScale()); //lerp slot size insted of dragged icon size
-        yield return null;
-        
-    }
 
     private IEnumerator OnlerpPickedUpItemScale()
     {
@@ -221,19 +209,21 @@ public class InventoryUI : MonoBehaviour
             while (timer < duration)
             {
                 timer += Time.deltaTime;
-                UI_Manager.draggedIcon.rectTransform.sizeDelta = Vector2.Lerp(new Vector2(120, 120), new Vector2(165, 165), timer / duration);
+                if (UI_Manager.draggedIcon.rectTransform != null)
+                    UI_Manager.draggedIcon.rectTransform.sizeDelta = Vector2.Lerp(new Vector2(120, 120), new Vector2(165, 165), timer / duration);
                 yield return null;
             }
-            UI_Manager.draggedIcon.rectTransform.sizeDelta = new Vector2(155, 155);
+            if (UI_Manager.draggedIcon.rectTransform != null)
+                UI_Manager.draggedIcon.rectTransform.sizeDelta = new Vector2(155, 155);
 
         }
         else
-            print("Erhmmmm.. something went very wrong");
+            print("Erhmmmm.. No rect transform on the slot");
     }
 
-    private IEnumerator OfflerpPickedUpItemScale()
+    private IEnumerator OfflerpPickedUpItemScale(Slot_UI slot)
     {
-        if (UI_Manager.draggedIcon.rectTransform != null)
+        if (UI_Manager.draggedIcon != null && slot != null)
         {
             float timer = 0;
             float duration = 0.15f;
@@ -241,16 +231,47 @@ public class InventoryUI : MonoBehaviour
             while (timer < duration)
             {
                 timer += Time.deltaTime;
+                UI_Manager.draggedIcon.transform.position = Vector2.Lerp(UI_Manager.draggedIcon.transform.position, slot.GetComponent<RectTransform>().position, timer / duration);
                 UI_Manager.draggedIcon.rectTransform.sizeDelta = Vector2.Lerp(new Vector2(165, 165), new Vector2(120, 120), timer / duration);
                 yield return null;
             }
+            UI_Manager.draggedIcon.transform.position = slot.GetComponent<RectTransform>().position;
             UI_Manager.draggedIcon.rectTransform.sizeDelta = new Vector2(120, 120);
             DestroySlotHighlight();
             Destroy(UI_Manager.draggedIcon.gameObject);
             UI_Manager.draggedIcon = null;
+            slot = null;
             GameManager.instance.ui_Manager.RefreshAll();
         }
         else
-            print("Erhmmmm.. something went very wrong 2");
+        {
+            print("Erhmmmm.. No rect transform on slot 2");
+
+            Destroy(UI_Manager.draggedIcon.gameObject);
+            UI_Manager.draggedIcon = null;
+        }
+    }
+
+    Slot_UI UIRayCastSlot()
+    {
+        pointerEventData = new PointerEventData(eventSystem)
+        {
+            position = Input.mousePosition
+        };
+
+        List<RaycastResult> results = new List<RaycastResult>();
+        graphicRaycaster.Raycast(pointerEventData, results);
+
+        foreach (RaycastResult result in results)
+        {
+            Slot_UI slot = result.gameObject.GetComponent<Slot_UI>();
+            if (slot != null)
+            {
+
+                return slot;
+            }
+        }
+
+        return null;
     }
 }

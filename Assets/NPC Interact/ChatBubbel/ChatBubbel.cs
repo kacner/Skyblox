@@ -5,7 +5,7 @@ using UnityEngine;
 
 public class ChatBubbel : MonoBehaviour
 {
-    public static ChatBubbel Create(Transform parent, Vector3 localPosition, string text, float talkspeed, GameObject interactButton, NPCInteract npcInteract, NPCInteract.AnimationState Idle)
+    public static ChatBubbel Create(Transform parent, Vector3 localPosition, string text, float talkspeed, GameObject interactButton, SimpleNPCInteract npcInteract, SimpleNPCInteract.AnimationState Idle)
     {
         Transform chatBubbleTransform = Instantiate(GameAssets.i.pfChatBubble, parent);
         chatBubbleTransform.localPosition = localPosition;
@@ -25,7 +25,7 @@ public class ChatBubbel : MonoBehaviour
     public Transform E_transformPos;
     public Vector2 E_InitialOffset;
 
-    private void Setup(string text, float talkspeed, Transform chatBubbleTransform, GameObject InteractButton, NPCInteract npcInteract, NPCInteract.AnimationState Idle)
+    private void Setup(string text, float talkspeed, Transform chatBubbleTransform, GameObject InteractButton, SimpleNPCInteract npcInteract, SimpleNPCInteract.AnimationState Idle)
     {
         if (typingCoroutine != null)
         {
@@ -70,7 +70,7 @@ public class ChatBubbel : MonoBehaviour
         }
     }
 
-    private IEnumerator DespawnTrigger(Transform chatBubbleTransform, float talkspeed, string text, GameObject InteractButton, NPCInteract npcInteract, NPCInteract.AnimationState Idle)
+    private IEnumerator DespawnTrigger(Transform chatBubbleTransform, float talkspeed, string text, GameObject InteractButton, SimpleNPCInteract npcInteract, SimpleNPCInteract.AnimationState Idle)
     {
         yield return new WaitForSeconds(npcInteract.dialougeExtraTime + talkspeed * text.Length);
 

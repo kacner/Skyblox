@@ -1,0 +1,255 @@
+using System.Collections;
+using UnityEngine;
+
+public class AdvancedNPCInteract : MonoBehaviour
+{
+    public bool HasChoise = false;
+    [Header("InteractionSettings")]
+    public bool canInteract = true;
+    public SpriteRenderer interactButton;
+    [SerializeField] private float distance;
+    [SerializeField] private float InteractRange = 3f;
+    public Sprite unclicked;
+    public Sprite clicked;
+    [SerializeField] private float MinKeyPressTime = 1f;
+    [SerializeField] private float CurrentInteractTime;
+    [SerializeField] private bool isWithingDistance = false;
+    [SerializeField] private float CanInteractTimer = 0f;
+    [SerializeField] private float interactCooldown = 0.5f;
+    private float interactCooldownTimer = 0f;
+    [SerializeField] private bool isInteracting = false;
+
+    [Space(10)]
+
+    [Header("Writing Settings")]
+    [SerializeField] private float TalkSpeed = 0.05f;
+    
+    [Space(10)]
+
+    [Header("Dialouge")]
+    [SerializeField] private string[] DialougeArr;
+    [SerializeField] private AnimationState[] Emotion;
+    [SerializeField] private int CurrentDialouge = 0;
+
+    public Animator E_Animator;
+
+    private bool DistanceOverload = false;
+
+    private Transform playerTransform;
+
+    public AnimationState currentState = AnimationState.Idle;
+    private Animator animator;
+    private UI_Manager UI_manager;
+    [HideInInspector] public bool hasFinishedTypeOut = false;
+    [HideInInspector] public bool wantToSkip = false;
+    
+    public enum AnimationState
+    {
+        Angry,
+        Pointing,
+        HandsOut,
+        HandInPocket,
+        Idle
+    }
+    private void Start()
+    {
+        CurrentInteractTime = MinKeyPressTime;
+        Invoke("ConnectReferences", 0.25f);
+        InvokeRepeating("UpdateDistance", 1, 0.3f);
+
+        animator = GetComponent<Animator>();
+        UI_manager = GameManager.instance.ui_Manager;
+    }
+
+    void UpdateDistance()
+    {
+        if (CanInteractTimer < 0 && !DistanceOverload && !isInteracting)
+        {
+            distance = Vector2.Distance(transform.position, playerTransform.position);
+            if (distance < InteractRange)
+            {
+                EnterRange();
+            }
+            else
+            {
+                ExitRange();
+                ChangeState(AnimationState.Idle);
+            }
+        }
+        else
+        {
+            ExitRange();
+        }
+    }
+    private void Update()
+    {
+        if (interactCooldownTimer > 0)
+            interactCooldownTimer -= Time.deltaTime;
+
+        if (CanInteractTimer > 0)
+            CanInteractTimer -= Time.deltaTime;
+
+
+        if (interactCooldownTimer > 0)
+            canInteract = false;
+        else
+            canInteract = true;
+
+
+        if (canInteract && !GameManager.instance.ui_Manager.isInventoryToggeld)
+        {
+
+            if (CurrentInteractTime > -1)
+                CurrentInteractTime -= Time.deltaTime;
+
+            if (isWithingDistance && interactCooldownTimer <= 0)
+            {
+
+                if (Input.GetKey(KeyCode.E))
+                {
+                    interactButton.sprite = clicked;
+                }
+                else
+                {
+                    resetInteract();
+                }
+
+                if (Input.GetKeyUp(KeyCode.E))
+                {
+                    if (CurrentInteractTime < 0 && CanInteractTimer < 0)
+                    {
+                        CurrentInteractTime = MinKeyPressTime;
+                        interactCooldownTimer = interactCooldown / 2;
+                        PressInteract();
+                    }
+                }
+            }
+        }
+    }
+
+    void EnterRange()
+    {
+        isWithingDistance = true;
+        interactButton.enabled = true;
+    }
+
+    private void ExitRange()
+    {
+        isWithingDistance = false;
+        interactButton.enabled = false;
+        isInteracting = false;
+        resetInteract();
+    }
+    void PressInteract()
+    {
+        if (!GameManager.instance.ui_Manager.isInventoryToggeld)
+        {
+            GameManager.instance.ui_Manager.toggleInteractionMenu(this);
+            playDialouge();
+        }
+    }
+
+    void resetInteract()
+    {
+        interactButton.sprite = unclicked;
+    }
+    void playDialouge()
+    {
+
+        if (CurrentDialouge == DialougeArr.Length - 1) //lastDialougeDetection
+        {
+
+            //StartCoroutine(Disable_EforTime(TalkSpeed * DialougeArr[CurrentDialouge].Length + dialougeExtraTime + 0.5f));
+        }
+
+        if (CurrentDialouge < DialougeArr.Length)
+        {
+            StartCoroutine(TypeEffect(DialougeArr[CurrentDialouge], TalkSpeed));
+            ChangeState(Emotion[CurrentDialouge]);
+
+        }
+    }
+
+    public void nextdialouge()
+    {
+        CurrentDialouge++;
+        playDialouge();
+    }
+
+    public void DespawnInteractButton()
+    {
+        StartCoroutine(InteractionButtenAnimator());
+    }
+
+    private IEnumerator InteractionButtenAnimator()
+    {
+        E_Animator.SetTrigger("ButtonOff");
+        yield return new WaitForSeconds(2f);
+        E_Animator.SetTrigger("ButtonOn");
+    }
+
+    private IEnumerator Disable_EforTime(float time)
+    {
+        DistanceOverload = true;
+        interactButton.enabled = false;
+        yield return new WaitForSeconds(time);
+        interactButton.enabled = true;
+        DistanceOverload = false;
+    }
+
+    private void ConnectReferences()
+    {
+        playerTransform = GameManager.instance.player.transform;
+    }
+
+    public void ChangeState(AnimationState newState)
+    {
+        if (currentState == newState) return;
+
+        EnterState(newState);
+
+        currentState = newState;
+    }
+
+    private void EnterState(AnimationState state)
+    {
+        switch (state)
+        {
+            case AnimationState.Idle:
+                animator.Play("CaptainNPCIdle");
+                break;
+            case AnimationState.Pointing:
+                animator.Play("CaptainPointing");
+                break;
+            case AnimationState.HandInPocket:
+                animator.Play("CaptainHandInPocket");
+                break;
+            case AnimationState.HandsOut:
+                animator.Play("CaptainHandsOut");
+                break;
+            case AnimationState.Angry:
+                animator.Play("CaptainAngry");
+                break;
+        }
+    }
+    private IEnumerator TypeEffect(string text, float talkspeed)
+    {
+        hasFinishedTypeOut = false;
+        UI_manager.interactionmenuDialougeTmp.text = "";
+
+        foreach (char letter in text)
+        {
+            UI_manager.interactionmenuDialougeTmp.text += letter;
+
+            yield return new WaitForSeconds(talkspeed);
+
+            if (wantToSkip)
+            {
+                UI_manager.interactionmenuDialougeTmp.text = text;
+                break;
+            }
+        }
+        wantToSkip = false;
+        hasFinishedTypeOut = true;
+    }
+}
