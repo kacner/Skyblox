@@ -19,11 +19,6 @@ public class UI_Manager : MonoBehaviour
     public static bool dragSingle;
 
     public bool isInventoryToggeld = false;
-
-    public GameObject InteractionMenu;
-    public bool isinteractionmenuOpen = false;
-    public TextMeshProUGUI interactionmenuDialougeTmp;
-    [HideInInspector] public AdvancedNPCInteract lastknownInteractScript;
     private void Awake()
     {
         Initialize();
@@ -120,30 +115,5 @@ public class UI_Manager : MonoBehaviour
                 inventoryUIByName.Add(ui.inventoryName, ui);
             }
         }
-    }
-
-    public void toggleInteractionMenu(AdvancedNPCInteract LastKnownInteractScript)
-    {
-        lastknownInteractScript = LastKnownInteractScript;
-        if (isinteractionmenuOpen)
-        {
-            closeInteractionMenu();
-            isinteractionmenuOpen = false;
-        }
-        else
-        {
-            OpenInteractionMenu();
-            isinteractionmenuOpen = true;
-        }
-    }
-    private void OpenInteractionMenu()
-    {
-        InteractionMenu.SetActive(true);
-        isinteractionmenuOpen = true;
-    }
-    private void closeInteractionMenu()
-    {
-        InteractionMenu.SetActive(false);
-        isinteractionmenuOpen = false;
     }
 }

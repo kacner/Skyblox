@@ -1,9 +1,14 @@
+using JetBrains.Annotations;
 using System.Collections;
 using UnityEngine;
 
 public class AdvancedNPCInteract : MonoBehaviour
 {
-    public bool HasChoise = false;
+    public Dialougue Dialouge;
+    [SerializeField] private string Name;
+
+    [Space(10)]
+
     [Header("InteractionSettings")]
     public bool canInteract = true;
     public SpriteRenderer interactButton;
@@ -18,11 +23,6 @@ public class AdvancedNPCInteract : MonoBehaviour
     [SerializeField] private float interactCooldown = 0.5f;
     private float interactCooldownTimer = 0f;
     [SerializeField] private bool isInteracting = false;
-
-    [Space(10)]
-
-    [Header("Writing Settings")]
-    [SerializeField] private float TalkSpeed = 0.05f;
     
     [Space(10)]
 
@@ -142,11 +142,7 @@ public class AdvancedNPCInteract : MonoBehaviour
     }
     void PressInteract()
     {
-        if (!GameManager.instance.ui_Manager.isInventoryToggeld)
-        {
-            GameManager.instance.ui_Manager.toggleInteractionMenu(this);
-            playDialouge();
-        }
+        playDialouge();
     }
 
     void resetInteract()
@@ -156,7 +152,7 @@ public class AdvancedNPCInteract : MonoBehaviour
     void playDialouge()
     {
 
-        if (CurrentDialouge == DialougeArr.Length - 1) //lastDialougeDetection
+        /*if (CurrentDialouge == DialougeArr.Length - 1) //lastDialougeDetection
         {
 
             //StartCoroutine(Disable_EforTime(TalkSpeed * DialougeArr[CurrentDialouge].Length + dialougeExtraTime + 0.5f));
@@ -165,9 +161,11 @@ public class AdvancedNPCInteract : MonoBehaviour
         if (CurrentDialouge < DialougeArr.Length)
         {
             StartCoroutine(TypeEffect(DialougeArr[CurrentDialouge], TalkSpeed));
-            ChangeState(Emotion[CurrentDialouge]);
 
-        }
+        }*/
+
+        DialougueManager.Instance.StartDialogue(Name, Dialouge.RootNode, Dialouge);
+           // ChangeState(Emotion[CurrentDialouge]);
     }
 
     public void nextdialouge()
@@ -231,25 +229,5 @@ public class AdvancedNPCInteract : MonoBehaviour
                 animator.Play("CaptainAngry");
                 break;
         }
-    }
-    private IEnumerator TypeEffect(string text, float talkspeed)
-    {
-        hasFinishedTypeOut = false;
-        UI_manager.interactionmenuDialougeTmp.text = "";
-
-        foreach (char letter in text)
-        {
-            UI_manager.interactionmenuDialougeTmp.text += letter;
-
-            yield return new WaitForSeconds(talkspeed);
-
-            if (wantToSkip)
-            {
-                UI_manager.interactionmenuDialougeTmp.text = text;
-                break;
-            }
-        }
-        wantToSkip = false;
-        hasFinishedTypeOut = true;
     }
 }

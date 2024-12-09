@@ -1,0 +1,45 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e1ec783af43e64f4bbc6d2ee33d32157, type: 3}
+  m_Name: TestDialogue
+  m_EditorClassIdentifier: 
+  RootNode:
+    DialougueText: vould you like to K.Y.S?
+    responses:
+    - responseText: vhy, yes!
+      nextNode:
+        DialougueText: vell go ahead hoe
+        responses:
+        - responseText: vait?!?!?
+          nextNode:
+            DialougueText: 
+            responses: []
+        - responseText: okii <33
+          nextNode:
+            DialougueText: 
+            responses: []
+    - responseText: Hell nav u tippin'
+      nextNode:
+        DialougueText: guys i told you hes to afraid to do it..
+        responses:
+        - responseText: no im not
+          nextNode:
+            DialougueText: 
+            responses: []
+        - responseText: ok lets do it
+          nextNode:
+            DialougueText: 
+            responses: []
+        - responseText: '*pisses pants*'
+          nextNode:
+            DialougueText: 
+            responses: []
