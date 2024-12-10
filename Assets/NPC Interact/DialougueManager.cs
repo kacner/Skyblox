@@ -37,11 +37,14 @@ public class DialougueManager : MonoBehaviour
     }
 
     // Starts the dialogue with given title and dialogue node
-    public void StartDialogue(string title, DialougueNode node, Dialougue dialouge)
+    public void StartDialogue(string title, DialougueNode node, Dialougue dialouge, AdvancedNPCInteract advancedNpc)
     {
+        advancedNpc.ChangeState(node.Emotion);
         Dialouge = dialouge;
+
+
         // Display the dialogue UI
-        ShowDialogue();
+        ShowDialogue(); 
 
         // Set dialogue title and body text
         DialogTitleText.text = title;
@@ -62,18 +65,18 @@ public class DialougueManager : MonoBehaviour
             buttonObj.GetComponentInChildren<TextMeshProUGUI>().text = response.responseText;
 
             // Setup button to trigger SelectResponse when clicked
-            buttonObj.GetComponent<Button>().onClick.AddListener(() => SelectResponse(response, title));
+            buttonObj.GetComponent<Button>().onClick.AddListener(() => SelectResponse(response, title, advancedNpc));
             buttons.Add(buttonObj);
         }
     }
 
     // Handles response selection and triggers next dialogue node
-    public void SelectResponse(DialougueResponse response, string title)
+    public void SelectResponse(DialougueResponse response, string title, AdvancedNPCInteract advancedNpc)
     {
         // Check if there's a follow-up node
         if (!response.nextNode.IsLastNode())
         {
-            StartDialogue(title, response.nextNode, Dialouge); // Start next dialogue
+            StartDialogue(title, response.nextNode, Dialouge, advancedNpc); // Start next dialogue
         }
         else
         {
@@ -118,7 +121,7 @@ public class DialougueManager : MonoBehaviour
     private void Update()
     {
         if (Input.GetKeyDown(KeyCode.Space) && !hasFinnishedTypeOut)
-            wantToSkip = true;       
+            wantToSkip = true;
     }
     private IEnumerator TypeEffect(string text, float talkspeed)
     {

@@ -23,10 +23,13 @@ MonoBehaviour:
           nextNode:
             DialougueText: 
             responses: []
-        - responseText: okii <33
+            Emotion: 0
+        - responseText: 'okii '
           nextNode:
             DialougueText: 
             responses: []
+            Emotion: 0
+        Emotion: 1
     - responseText: Hell nav u tippin'
       nextNode:
         DialougueText: guys i told you hes to afraid to do it..
@@ -35,11 +38,17 @@ MonoBehaviour:
           nextNode:
             DialougueText: 
             responses: []
+            Emotion: 0
         - responseText: ok lets do it
           nextNode:
             DialougueText: 
             responses: []
+            Emotion: 0
         - responseText: '*pisses pants*'
           nextNode:
             DialougueText: 
             responses: []
+            Emotion: 0
+        Emotion: 2
+    Emotion: 0
+  TalkSpeed: 0.05

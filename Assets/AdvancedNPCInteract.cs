@@ -43,6 +43,7 @@ public class AdvancedNPCInteract : MonoBehaviour
     [HideInInspector] public bool hasFinishedTypeOut = false;
     [HideInInspector] public bool wantToSkip = false;
     
+    [System.Serializable]
     public enum AnimationState
     {
         Angry,
@@ -151,21 +152,7 @@ public class AdvancedNPCInteract : MonoBehaviour
     }
     void playDialouge()
     {
-
-        /*if (CurrentDialouge == DialougeArr.Length - 1) //lastDialougeDetection
-        {
-
-            //StartCoroutine(Disable_EforTime(TalkSpeed * DialougeArr[CurrentDialouge].Length + dialougeExtraTime + 0.5f));
-        }
-
-        if (CurrentDialouge < DialougeArr.Length)
-        {
-            StartCoroutine(TypeEffect(DialougeArr[CurrentDialouge], TalkSpeed));
-
-        }*/
-
-        DialougueManager.Instance.StartDialogue(Name, Dialouge.RootNode, Dialouge);
-           // ChangeState(Emotion[CurrentDialouge]);
+        DialougueManager.Instance.StartDialogue(Name, Dialouge.RootNode, Dialouge, this);
     }
 
     public void nextdialouge()
