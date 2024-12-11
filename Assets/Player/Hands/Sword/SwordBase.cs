@@ -46,6 +46,7 @@ public class SwordBase : MonoBehaviour
 
     [Header("Statistics")]
     public ItemData ThisSwordsItemDataSheet;
+    private UI_Manager ui_manager;
 
 
     void Start()
@@ -63,6 +64,7 @@ public class SwordBase : MonoBehaviour
         updateAnimationLayers();
 
         RotatingSword.GetComponent<SpriteRenderer>().enabled = false;
+        ui_manager = GameManager.instance.ui_Manager;
     }
     void Update()
     {
@@ -86,7 +88,7 @@ public class SwordBase : MonoBehaviour
 
         updateAnimationLayers();
 
-        if (Input.GetKeyDown(KeyCode.Mouse0) && IsAttacking == false && playermovement.AllCanAttack)
+        if (Input.GetKeyDown(KeyCode.Mouse0) && IsAttacking == false && ui_manager.currentState == UI_Manager.UIState.None)
         {
            StartCoroutine(Attack());
         }

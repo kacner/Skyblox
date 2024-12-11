@@ -14,21 +14,36 @@ public class UI_Manager : MonoBehaviour
 
     public PlayerMovement playerMovement;
 
+    public GameObject PauseMenu;
+    public GameObject CursorSprite;
+
     public static Slot_UI draggedSlot;
     public static Image draggedIcon;
     public static bool dragSingle;
 
-    public bool isInventoryToggeld = false;
+    public bool isInventoryToggled = false;
+    public bool isDialougeWindowToggled = false;
+
+    public enum UIState
+    {
+        Inventory,
+        DialougeManager,
+        None,
+        PauseMenu
+    }
+    public UIState currentState = UIState.None;
     private void Awake()
     {
         Initialize();
         if (inventorypanel != null)
             inventorypanel.SetActive(false);
+
+        ChangeState(UIState.None);
     }
 
     private void Update()
     {
-        if (Input.GetKey(KeyCode.LeftShift))
+        if (Input.GetKey(KeyCode.LeftShift)) //multiple draging in inventory
         {
             dragSingle = false;
         }
@@ -37,35 +52,24 @@ public class UI_Manager : MonoBehaviour
             dragSingle = true;
         }
 
-        if (Input.GetKeyDown(KeyCode.Tab))
+        if (currentState == UIState.None && Input.GetKeyDown(KeyCode.Tab)) //opening inventory
         {
-            ToggleInventoryUI();
+            ChangeState(UIState.Inventory);
+        }
+        else if (currentState == UIState.Inventory && Input.GetKeyDown(KeyCode.Tab)) //closinginventory
+        {
+            ChangeState(UIState.None);
         }
 
-        if (Input.GetKeyDown(KeyCode.Escape))
+        if (Input.GetKeyDown(KeyCode.Escape)) //pausemenu or clousemenu
         {
-            closeInventory();
-        }
-    }
-    public void ToggleInventoryUI()
-    {
-        if (inventorypanel != null)
-        {
-
-            if (!inventorypanel.activeSelf)
+            if (currentState != UIState.None)
             {
-                inventorypanel.SetActive(true);
-                RefreshInventoryUI("Backpack");
-                isInventoryToggeld = true;
-                Cursor.visible = true;
-                playerMovement.AllCanAttack = false;
+                exitState();
             }
             else
             {
-                inventorypanel.SetActive(false);
-                isInventoryToggeld = false;
-                Cursor.visible = false;
-                playerMovement.AllCanAttack = true;
+                ChangeState(currentState == UIState.PauseMenu ? UIState.None : UIState.PauseMenu);
             }
         }
     }
@@ -75,9 +79,15 @@ public class UI_Manager : MonoBehaviour
         if (inventorypanel != null)
         {
             inventorypanel.SetActive(false);
-            isInventoryToggeld = false;
             Cursor.visible = false;
-            playerMovement.AllCanAttack = true;
+        }
+    }
+    public void openInventory()
+    {
+        if (inventorypanel != null)
+        {
+            inventorypanel.SetActive(true);
+            Cursor.visible = true;
         }
     }
 
@@ -115,5 +125,84 @@ public class UI_Manager : MonoBehaviour
                 inventoryUIByName.Add(ui.inventoryName, ui);
             }
         }
+    }
+
+
+    public void ChangeState(UIState newState)
+    {
+        DeactivateCurrentState();
+
+        currentState = newState;
+
+        ActivateNewState();
+    }
+
+    private void DeactivateCurrentState()
+    {
+        switch (currentState)
+        {
+            case UIState.Inventory:
+                CursorSprite.SetActive(true);
+                inventoryUIs[0].slotEndDrag();
+                closeInventory();
+                break;
+
+            case UIState.PauseMenu:
+                PauseMenu.SetActive(false);
+                CursorSprite.SetActive(true);
+                break;
+
+            case UIState.DialougeManager:
+                GameManager.instance.DialougeManager.HideDialogue();
+                CursorSprite.SetActive(true);
+                break;
+
+            case UIState.None:
+                //this dosent have to do anything
+                break;
+        }
+    }
+    private void ActivateNewState()
+    {
+        switch (currentState)
+        {
+            case UIState.Inventory:
+                openInventory();
+                CursorSprite.SetActive(false);
+                Cursor.visible = true;
+                break;
+
+            case UIState.PauseMenu:
+                PauseMenu.SetActive(true);
+                CursorSprite.SetActive(false);
+                Cursor.visible = true;
+                break;
+
+            case UIState.DialougeManager:
+                GameManager.instance.DialougeManager.ShowDialogue();
+                CursorSprite.SetActive(false);
+                Cursor.visible = true;
+                break;
+
+            case UIState.None:
+                DisableAllUI();
+                break;
+        }
+    }
+    private void DisableAllUI() //call exitstate insted
+    {
+        closeInventory();
+        GameManager.instance.DialougeManager.HideDialogue();
+        PauseMenu.SetActive(false);
+        Cursor.visible = false;
+
+        CursorSprite.SetActive(true);
+        inventoryUIs[0].slotEndDrag();
+    }
+
+    public void exitState()
+    {
+        ChangeState(UIState.None);
+        Cursor.visible = false;
     }
 }

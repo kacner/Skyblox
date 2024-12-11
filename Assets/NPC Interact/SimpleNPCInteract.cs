@@ -42,6 +42,8 @@ public class SimpleNPCInteract : MonoBehaviour
 
     public AnimationState currentState = AnimationState.Idle;
     private Animator animator;
+    private UI_Manager ui_manager;
+
     public enum AnimationState
     {
         Angry,
@@ -57,11 +59,12 @@ public class SimpleNPCInteract : MonoBehaviour
         InvokeRepeating("UpdateDistance", 1, 0.3f);
 
         animator = GetComponent<Animator>();
+        ui_manager = GameManager.instance.ui_Manager;
     }
 
     void UpdateDistance()
     {
-        if (CanInteractTimer < 0 && !DistanceOverload)
+        if (CanInteractTimer < 0 && !DistanceOverload && ui_manager.currentState == UI_Manager.UIState.None)
         {
             distance = Vector2.Distance(transform.position, playerTransform.position);
             if (distance < InteractRange)
@@ -94,7 +97,7 @@ public class SimpleNPCInteract : MonoBehaviour
             canInteract = true;
 
 
-        if (canInteract && !GameManager.instance.ui_Manager.isInventoryToggeld)
+        if (canInteract && !GameManager.instance.ui_Manager.isInventoryToggled)
         {
             if (CurrentDialougeTime > -1)
                 CurrentDialougeTime -= Time.deltaTime;

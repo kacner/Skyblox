@@ -37,6 +37,7 @@ public class BowFire : MonoBehaviour
     public ItemData ThisBowsItemDataSheet;
 
     public float maxArrowVelocity = 80;
+    private UI_Manager ui_manager;
 
     void Start()
     {
@@ -65,6 +66,7 @@ public class BowFire : MonoBehaviour
 
         inventory = GameManager.instance.player.inventory.GetInventoryByName("Backpack");
         HotbarInventory = GameManager.instance.player.inventory.GetInventoryByName("Toolbar");
+        ui_manager = GameManager.instance.ui_Manager;
     }
 
     void Update()
@@ -84,7 +86,7 @@ public class BowFire : MonoBehaviour
         }
 
         //handels the shooting of the bow 
-        if (inventory.GetArrowCount() >= 1 && playermovement.AllCanAttack || HotbarInventory.GetArrowCount() >= 1 && playermovement.AllCanAttack)
+        if (inventory.GetArrowCount() >= 1 && ui_manager.currentState == UI_Manager.UIState.None || HotbarInventory.GetArrowCount() >= 1 && ui_manager.currentState == UI_Manager.UIState.None)
         {
             bool inventoryHadTheArrow;
             if (inventory.GetArrowCount() >= 1)

@@ -11,6 +11,7 @@ public class GameManager : MonoBehaviour
     public UI_Manager ui_Manager;
     public CameraScript camerScript;
     public Obstructor playerObstructor;
+    public DialougueManager DialougeManager;
 
     public Player player;
 
@@ -29,6 +30,7 @@ public class GameManager : MonoBehaviour
 
         itemManager = GetComponent<ItemManager>();
         ui_Manager = GetComponent<UI_Manager>();
+        DialougeManager = GetComponent<DialougueManager>();
 
         FindPlayerInScene();
     }

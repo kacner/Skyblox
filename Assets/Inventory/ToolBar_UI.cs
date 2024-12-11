@@ -45,7 +45,7 @@ public class ToolBar_UI : MonoBehaviour
 
     private void checkAlphaNumericKeys()
     {
-        if (!UI_manager.isInventoryToggeld)
+        if (!UI_manager.isInventoryToggled)
         {
 
             if (Input.GetKeyDown(KeyCode.Alpha1))

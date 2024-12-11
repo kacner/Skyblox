@@ -29,7 +29,6 @@ public class AdvancedNPCInteract : MonoBehaviour
     [Header("Dialouge")]
     [SerializeField] private string[] DialougeArr;
     [SerializeField] private AnimationState[] Emotion;
-    [SerializeField] private int CurrentDialouge = 0;
 
     public Animator E_Animator;
 
@@ -52,6 +51,11 @@ public class AdvancedNPCInteract : MonoBehaviour
         HandInPocket,
         Idle
     }
+    public void totalReset()
+    {
+        interactCooldownTimer = interactCooldown / 2;
+        CurrentInteractTime = MinKeyPressTime;
+    }
     private void Start()
     {
         CurrentInteractTime = MinKeyPressTime;
@@ -64,7 +68,7 @@ public class AdvancedNPCInteract : MonoBehaviour
 
     void UpdateDistance()
     {
-        if (CanInteractTimer < 0 && !DistanceOverload && !isInteracting)
+        if (CanInteractTimer < 0 && !DistanceOverload && !isInteracting && UI_manager.currentState == UI_Manager.UIState.None)
         {
             distance = Vector2.Distance(transform.position, playerTransform.position);
             if (distance < InteractRange)
@@ -97,7 +101,7 @@ public class AdvancedNPCInteract : MonoBehaviour
             canInteract = true;
 
 
-        if (canInteract && !GameManager.instance.ui_Manager.isInventoryToggeld)
+        if (canInteract && !GameManager.instance.ui_Manager.isInventoryToggled)
         {
 
             if (CurrentInteractTime > -1)
@@ -153,12 +157,6 @@ public class AdvancedNPCInteract : MonoBehaviour
     void playDialouge()
     {
         DialougueManager.Instance.StartDialogue(Name, Dialouge.RootNode, Dialouge, this);
-    }
-
-    public void nextdialouge()
-    {
-        CurrentDialouge++;
-        playDialouge();
     }
 
     public void DespawnInteractButton()

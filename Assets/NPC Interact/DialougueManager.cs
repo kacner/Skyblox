@@ -17,6 +17,8 @@ public class DialougueManager : MonoBehaviour
     private bool hasFinnishedTypeOut = false;
     private bool wantToSkip = false;
     private List<GameObject> buttons;
+    private AdvancedNPCInteract advancedNpc;
+    private Coroutine typeEffect;
 
     private void Awake()
     {
@@ -30,19 +32,24 @@ public class DialougueManager : MonoBehaviour
         }
 
         buttons = new List<GameObject>();
-        HideDialogue();
+    }
+
+    private void Start()
+    {
+        GameManager.instance.ui_Manager?.exitState(); //same as hideDialouge
     }
 
     public void StartDialogue(string title, DialougueNode node, Dialougue dialouge, AdvancedNPCInteract advancedNpc)
     {
+        this.advancedNpc = advancedNpc;
         advancedNpc.ChangeState(node.Emotion);
         Dialouge = dialouge;
 
 
-        ShowDialogue(); 
+        GameManager.instance.ui_Manager.ChangeState(UI_Manager.UIState.DialougeManager); // same as showdialouge
 
         DialogTitleText.text = title;
-        StartCoroutine(TypeEffect(node.DialougueText, dialouge.TalkSpeed));
+        typeEffect = StartCoroutine(TypeEffect(node.DialougueText, dialouge.TalkSpeed));
 
         foreach (Transform child in responseButtonContainer)
         {
@@ -70,16 +77,24 @@ public class DialougueManager : MonoBehaviour
         }
         else
         {
-            HideDialogue();
+            GameManager.instance.ui_Manager.exitState(); //same as hideDialouge
         }
     }
 
     public void HideDialogue()
     {
         DialogueParent.SetActive(false);
+        if (typeEffect != null)
+        StopCoroutine(typeEffect);
+
+        if (advancedNpc != null)
+        {
+            advancedNpc.ChangeState(AdvancedNPCInteract.AnimationState.Idle);
+            advancedNpc.totalReset();
+        }
     }
 
-    private void ShowDialogue()
+    public void ShowDialogue()
     {
         DialogueParent.SetActive(true);
     }
@@ -103,35 +118,6 @@ public class DialougueManager : MonoBehaviour
         if (Input.GetKeyDown(KeyCode.Space) && !hasFinnishedTypeOut)
             wantToSkip = true;
     }
-    /*private IEnumerator TypeEffect(string text, float talkspeed)
-    {
-        hasFinnishedTypeOut = false;
-        DialogBodyText.text = "";
-
-        foreach (char letter in text)
-        {
-            SkipText.GetComponent<Animator>().SetTrigger("FadeIn");
-
-            DialogBodyText.text += letter;
-
-            yield return new WaitForSeconds(talkspeed);
-
-            if (wantToSkip)
-            {
-                SkipText.GetComponent<Animator>().SetTrigger("FadeOut");
-                DialogBodyText.text = text;
-                break;
-            }
-
-            if (letter.count = text.Length * 0.7f)
-                SkipText.GetComponent<Animator>().SetTrigger("FadeOut");
-        }
-        wantToSkip = false;
-        hasFinnishedTypeOut = true;
-
-        if (buttons.Count > 0)
-            ShowButtons();
-    }*/
 
     IEnumerator TypeEffect(string text, float talkspeed)
     {

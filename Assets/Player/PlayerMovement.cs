@@ -68,7 +68,7 @@ public class PlayerMovement : MonoBehaviour
 
     [Header("Attack")]
     public bool IsAttacking = false;
-    public bool AllCanAttack = true;
+    
 
     [Space(10)]
 
@@ -78,9 +78,18 @@ public class PlayerMovement : MonoBehaviour
     public bool Grounded; 
     private Coroutine waterCoroutine;
     private bool isWaterSlowed;
-    private enum  WaterState { None, Entering, Exiting}
     private WaterState waterState = WaterState.None;
+    [SerializeField] private Obstructor obstructor;
+    [SerializeField] private bool hasObstructor = false;
+    private enum  WaterState 
+    { 
+        None,
+        Entering,
+        Exiting
+    }
+    [Space(10)]
 
+    private Animator CanvasAnimator;
 
     private HotbarScript hotbarscript;
 
@@ -88,14 +97,12 @@ public class PlayerMovement : MonoBehaviour
 
     private InventoryUI inventoryUI;
 
-    Vector2 mouseScreenPosition;
+    private Vector2 mouseScreenPosition;
 
+    private UI_Manager ui_manager;
 
     private PlayerHp playerHp;
 
-    private Animator CanvasAnimator;
-    [SerializeField] private Obstructor obstructor;
-    [SerializeField] private bool hasObstructor = false;
 
     void Start()
     {
@@ -141,6 +148,7 @@ public class PlayerMovement : MonoBehaviour
             lookDirVector = DetermineLookDirectionVector2(moveDirection);
             DetermineLookDirection(moveDirection);
         }
+        ui_manager = GameManager.instance.ui_Manager;
     }
     void Update()
     {
@@ -214,7 +222,7 @@ public class PlayerMovement : MonoBehaviour
             DetermineLookDirection(mouseWorldPosition);
         }
 
-        if (CanMove && !GameManager.instance.ui_Manager.isInventoryToggeld && !createtrailsprite)
+        if (CanMove && ui_manager.currentState == UI_Manager.UIState.None && !createtrailsprite)
         {
             moveX = Input.GetAxisRaw("Horizontal"); //value -1 or 1. left or right
             moveY = Input.GetAxisRaw("Vertical"); //value -1 or 1. down and up
@@ -255,7 +263,7 @@ public class PlayerMovement : MonoBehaviour
             CancelInvoke("UpdateHorVer");
         }
 
-        if (Input.GetKeyDown(KeyCode.Space) && !IsRolling && canRoll && !GameManager.instance.ui_Manager.isInventoryToggeld && rb != null)
+        if (Input.GetKeyDown(KeyCode.Space) && !IsRolling && canRoll && ui_manager.currentState == UI_Manager.UIState.None && rb != null)
         {
             StartCoroutine(Roll());
         }
@@ -264,17 +272,6 @@ public class PlayerMovement : MonoBehaviour
         {
             Die();
         }
-
-        if (GameManager.instance.ui_Manager.isInventoryToggeld)
-        {
-            cursorspriteRectTransform.gameObject.SetActive(false);
-        }
-        else
-        {
-            cursorspriteRectTransform.gameObject.SetActive(true);
-            inventoryUI.slotEndDrag();
-        }
-
         
         if (rb != null && rb.velocity.magnitude > 6)
         {
@@ -323,10 +320,7 @@ public class PlayerMovement : MonoBehaviour
         if (Input.GetKeyDown(KeyCode.M))
             SlowMotion = !SlowMotion;
 
-        if (SlowMotion == true)
-            Time.timeScale = 0.1f;
-        else
-            Time.timeScale = 1f;
+        Time.timeScale = SlowMotion ? 0.1f : 1f;
 
         if (Input.GetKey(KeyCode.N))
             Debug.Break();
@@ -434,7 +428,6 @@ public class PlayerMovement : MonoBehaviour
         animator.SetBool("isDead", true); //updates animator
         if (rb != null)
         rb.velocity = new Vector2(0, 0); //setts velocity to 0 
-        AllCanAttack = false;
 
         StartCoroutine(DeathScreen());
     }
