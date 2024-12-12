@@ -168,6 +168,27 @@ TextureImporter:
       name: CoiseBubble_2
       rect:
         serializedVersion: 2
+        x: 170
+        y: 4
+        width: 23
+        height: 32
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 32430b4adddec61499b16bafc58697a3
+      internalID: -2005907949
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: CoiseBubble_3
+      rect:
+        serializedVersion: 2
         x: 38
         y: 2
         width: 37
@@ -179,8 +200,8 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: 32430b4adddec61499b16bafc58697a3
-      internalID: -2005907949
+      spriteID: 74a706fb3b75df04b95249da7537a86f
+      internalID: 1194282016
       vertices: []
       indices: 
       edges: []
@@ -199,6 +220,7 @@ TextureImporter:
       CoiseBubble_0: 416871434
       CoiseBubble_1: 223130603
       CoiseBubble_2: -2005907949
+      CoiseBubble_3: 1194282016
   mipmapLimitGroupName: 
   pSDRemoveMatte: 0
   userData: 

@@ -21,9 +21,14 @@ MonoBehaviour:
         responses:
         - responseText: vait?!?!?
           nextNode:
-            DialougueText: 
-            responses: []
-            Emotion: 0
+            DialougueText: Nej mammas liv LEK INTE MED MIG!!!!
+            responses:
+            - responseText: OKIII <3
+              nextNode:
+                DialougueText: 
+                responses: []
+                Emotion: 0
+            Emotion: 1
         - responseText: 'okii '
           nextNode:
             DialougueText: 
@@ -44,7 +49,7 @@ MonoBehaviour:
             DialougueText: 
             responses: []
             Emotion: 0
-        - responseText: '*pisses pants*'
+        - responseText: '''''pisses pants'''''
           nextNode:
             DialougueText: 
             responses: []

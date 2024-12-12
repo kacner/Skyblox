@@ -147,7 +147,7 @@ public class DialougueManager : MonoBehaviour
                 skipTextAnimator.SetTrigger("FadeOut");
 
                 DialogBodyText.text = text; 
-                yield break;
+                break;
             }
 
             if (shouldShowSkip && i >= text.Length * 0.6f)
