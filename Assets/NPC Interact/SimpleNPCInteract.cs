@@ -12,7 +12,6 @@ public class SimpleNPCInteract : MonoBehaviour
     public Sprite clicked;
     [SerializeField] private float MinKeyPressTime = 1f;
     [SerializeField] private float CurrentInteractTime;
-    [SerializeField] private bool isWithingDistance = false;
     [SerializeField] private float CanInteractTimer = 0f;
     [SerializeField] private float interactCooldown = 0.5f;
     private float interactCooldownTimer = 0f;
@@ -43,7 +42,8 @@ public class SimpleNPCInteract : MonoBehaviour
     public AnimationState currentState = AnimationState.Idle;
     private Animator animator;
     private UI_Manager ui_manager;
-
+    private Interactable interactable;
+    private InteractionManager interactionManager;
     public enum AnimationState
     {
         Angry,
@@ -54,6 +54,8 @@ public class SimpleNPCInteract : MonoBehaviour
     }
     private void Start()
     {
+        interactionManager = GameManager.instance.InteractionManager;
+        interactable = GetComponent<Interactable>();
         CurrentInteractTime = MinKeyPressTime;
         Invoke("ConnectReferences", 0.25f);
         InvokeRepeating("UpdateDistance", 1, 0.3f);
@@ -66,8 +68,7 @@ public class SimpleNPCInteract : MonoBehaviour
     {
         if (CanInteractTimer < 0 && !DistanceOverload && ui_manager.currentState == UI_Manager.UIState.None)
         {
-            distance = Vector2.Distance(transform.position, playerTransform.position);
-            if (distance < InteractRange)
+            if (interactable.IsWithingRange)
             {
                 EnterRange();
             }
@@ -79,6 +80,7 @@ public class SimpleNPCInteract : MonoBehaviour
         }
         else
         {
+            print("exit2");
             ExitRange();
         }
     }
@@ -97,7 +99,7 @@ public class SimpleNPCInteract : MonoBehaviour
             canInteract = true;
 
 
-        if (canInteract && !GameManager.instance.ui_Manager.isInventoryToggled)
+        if (canInteract && ui_manager.currentState == UI_Manager.UIState.None)
         {
             if (CurrentDialougeTime > -1)
                 CurrentDialougeTime -= Time.deltaTime;
@@ -105,7 +107,7 @@ public class SimpleNPCInteract : MonoBehaviour
             if (CurrentInteractTime > -1)
                 CurrentInteractTime -= Time.deltaTime;
 
-            if (isWithingDistance && interactCooldownTimer <= 0)
+            if (interactable.IsWithingRange && interactCooldownTimer <= 0)
             {
 
                 if (Input.GetKey(KeyCode.E))
@@ -138,13 +140,11 @@ public class SimpleNPCInteract : MonoBehaviour
 
     void EnterRange()
     {
-        isWithingDistance = true;
         interactButton.enabled = true;
     }
 
     private void ExitRange()
     {
-        isWithingDistance = false;
         interactButton.enabled = false;
 
         resetInteract();
@@ -262,5 +262,10 @@ public class SimpleNPCInteract : MonoBehaviour
                 animator.Play("CaptainAngry");
                 break;
         }
+    }
+
+    public void Interact()
+    {
+        print("interacted" + name);
     }
 }

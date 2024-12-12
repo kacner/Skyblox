@@ -12,7 +12,7 @@ public class GameManager : MonoBehaviour
     public CameraScript camerScript;
     public Obstructor playerObstructor;
     public DialougueManager DialougeManager;
-
+    public InteractionManager InteractionManager;
     public Player player;
 
     private void Awake()

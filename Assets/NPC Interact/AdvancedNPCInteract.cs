@@ -41,7 +41,7 @@ public class AdvancedNPCInteract : MonoBehaviour
     private UI_Manager UI_manager;
     [HideInInspector] public bool hasFinishedTypeOut = false;
     [HideInInspector] public bool wantToSkip = false;
-    
+    private Interactable interactable;
     [System.Serializable]
     public enum AnimationState
     {
@@ -58,6 +58,7 @@ public class AdvancedNPCInteract : MonoBehaviour
     }
     private void Start()
     {
+        interactable = GetComponent<Interactable>();
         CurrentInteractTime = MinKeyPressTime;
         Invoke("ConnectReferences", 0.25f);
         InvokeRepeating("UpdateDistance", 1, 0.3f);
@@ -68,10 +69,9 @@ public class AdvancedNPCInteract : MonoBehaviour
 
     void UpdateDistance()
     {
-        if (CanInteractTimer < 0 && !DistanceOverload && !isInteracting && UI_manager.currentState == UI_Manager.UIState.None)
+        if (CanInteractTimer < 0 && !DistanceOverload && !isInteracting && UI_manager.currentState == UI_Manager.UIState.None && GameManager.instance.InteractionManager.ClosestObject == interactable)
         {
-            distance = Vector2.Distance(transform.position, playerTransform.position);
-            if (distance < InteractRange)
+            if (interactable.IsWithingRange)
             {
                 EnterRange();
             }
@@ -101,7 +101,7 @@ public class AdvancedNPCInteract : MonoBehaviour
             canInteract = true;
 
 
-        if (canInteract && !GameManager.instance.ui_Manager.isInventoryToggled)
+        if (canInteract && GameManager.instance.ui_Manager.currentState == UI_Manager.UIState.None)
         {
 
             if (CurrentInteractTime > -1)
