@@ -1,7 +1,5 @@
-using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-using UnityEngine.Rendering;
 
 public class InteractionManager : MonoBehaviour
 {
@@ -9,6 +7,7 @@ public class InteractionManager : MonoBehaviour
     public Interactable ClosestObject;
     [SerializeField] private float interactionRange = 2f;
     public Interactable UsableClosetsObject;
+    public Interactable newClosestObject;
     private void Start()
     {
         ObjectsWithinRange = new List<Interactable>();
@@ -36,10 +35,12 @@ public class InteractionManager : MonoBehaviour
     private void UpdateClosestInteractable()
     {
         float closestDistance = float.MaxValue;
-        Interactable newClosestObject = null;
+        newClosestObject = null;
 
         foreach (Interactable interactable in ObjectsWithinRange)
         {
+            if (interactable == null) continue;
+
             float distance = Vector2.Distance(transform.position, interactable.transform.position);
             if (distance < closestDistance)
             {

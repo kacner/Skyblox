@@ -44,6 +44,7 @@ public class SimpleNPCInteract : MonoBehaviour
     private UI_Manager ui_manager;
     private Interactable interactable;
     private InteractionManager interactionManager;
+    private bool wasInRange = true;
     public enum AnimationState
     {
         Angry,
@@ -57,9 +58,7 @@ public class SimpleNPCInteract : MonoBehaviour
         interactionManager = GameManager.instance.InteractionManager;
         interactable = GetComponent<Interactable>();
         CurrentInteractTime = MinKeyPressTime;
-        Invoke("ConnectReferences", 0.25f);
-        InvokeRepeating("UpdateDistance", 1, 0.3f);
-
+        Invoke("ConnectReferences", 0.01f);
         animator = GetComponent<Animator>();
         ui_manager = GameManager.instance.ui_Manager;
     }
@@ -68,24 +67,37 @@ public class SimpleNPCInteract : MonoBehaviour
     {
         if (CanInteractTimer < 0 && !DistanceOverload && ui_manager.currentState == UI_Manager.UIState.None)
         {
-            if (interactable.IsWithingRange)
+            if (interactionManager.ClosestObject != null && interactable.IsWithingRange)
             {
-                EnterRange();
+
+                if (!wasInRange)
+                {
+                    print("enterrange");
+                    EnterRange();
+                    wasInRange = true;
+                }
             }
-            else
+            else //felet tar denhär
             {
-                ExitRange();
-                ChangeState(AnimationState.Idle);
+                if (wasInRange)
+                {
+
+                    print("exitrange");
+                    ExitRange();
+                    ChangeState(AnimationState.Idle);
+                    wasInRange = false;
+                }
             }
         }
         else
         {
-            print("exit2");
             ExitRange();
         }
     }
     private void Update()
     {
+        Invoke("UpdateDistance", 0.02f);
+
         if (interactCooldownTimer > 0)
             interactCooldownTimer -= Time.deltaTime;
 
