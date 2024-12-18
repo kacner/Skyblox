@@ -95,8 +95,6 @@ public class PlayerMovement : MonoBehaviour
 
     private SwordBase Swordbase;
 
-    private InventoryUI inventoryUI;
-
     private Vector2 mouseScreenPosition;
 
     private UI_Manager ui_manager;
@@ -115,7 +113,6 @@ public class PlayerMovement : MonoBehaviour
         cursorspriteRectTransform.gameObject.SetActive(true);
 
         GameObject canvasObject = GameObject.Find("Canvas");
-        inventoryUI = canvasObject.GetComponentInChildren<InventoryUI>();
         CanvasAnimator = canvasObject.GetComponent<Animator>();
         StartCoroutine(StartScreen());
 
