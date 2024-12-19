@@ -1,6 +1,3 @@
-using System.Collections;
-using System.Collections.Generic;
-using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.UI;
 using TMPro;
@@ -59,6 +56,7 @@ public class Slot_UI : MonoBehaviour
 
         if (DropButton != null)
             DropButton.gameObject.SetActive(false);
+      
     }
 
     public void SetHighLight(bool isOn)

@@ -51,13 +51,9 @@ public class InventoryUI : MonoBehaviour
                 else
                 {
                     slots[i].setEmpty();
+                    inventory.slots[i].count = 0;
                 }
             }
-        }
-        else
-        {
-            print(slots.Count + "      " + inventory.slots.Count);
-
         }
     }
 

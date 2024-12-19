@@ -1,4 +1,3 @@
-using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -14,14 +13,20 @@ public class InventoryManager : MonoBehaviour
     [Header("HotBar")]
     public Inventory toolbar;
     public int toolbarSlotCount;
+    
+    [Header("ArmorSlots")]
+    public Inventory ArmorSlot;
+    public int ArmorSlotsCount;
 
     private void Awake()
     {
         backpack = new Inventory(backpackSlotCount);
         toolbar = new Inventory(toolbarSlotCount);
+        ArmorSlot = new Inventory(ArmorSlotsCount);
 
         inventoryByName.Add("Backpack", backpack);
         inventoryByName.Add("Toolbar", toolbar);
+        inventoryByName.Add("ArmorSlots", ArmorSlot);
     }
 
     public void Add(string inventoryName, Item item)

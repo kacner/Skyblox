@@ -127,7 +127,6 @@ public class UI_Manager : MonoBehaviour
         }
     }
 
-
     public void ChangeState(UIState newState)
     {
         DeactivateCurrentState();

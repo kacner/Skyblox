@@ -185,6 +185,27 @@ TextureImporter:
       indices: 
       edges: []
       weights: []
+    - serializedVersion: 2
+      name: ItemPickUpsSpriteSheet_3
+      rect:
+        serializedVersion: 2
+        x: 48
+        y: 112
+        width: 16
+        height: 16
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: b2329eb548e03b047832226b00e0d01a
+      internalID: 750316040
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
     outline: []
     physicsShape: []
     bones: []
@@ -199,6 +220,7 @@ TextureImporter:
       ItemPickUpsSpriteSheet_0: -424800725
       ItemPickUpsSpriteSheet_1: 988290006
       ItemPickUpsSpriteSheet_2: -899688518
+      ItemPickUpsSpriteSheet_3: 750316040
   mipmapLimitGroupName: 
   pSDRemoveMatte: 0
   userData: 
