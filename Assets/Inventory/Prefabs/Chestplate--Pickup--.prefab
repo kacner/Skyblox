@@ -150,6 +150,7 @@ MonoBehaviour:
   fadeDuration: 1
   isResource: 0
   Rarity: 3
+  ArmorType: 2
   RarityKit:
   - {fileID: 2911597514144680636, guid: e2544a34676ba0743be36d8dbc62acfc, type: 3}
   - {fileID: 4943502330349436060, guid: 18a958714ec9bb948a2c706043db9e39, type: 3}

@@ -45,7 +45,7 @@ public class SwordBase : MonoBehaviour
     private bool hasHitTheFirstWay = false;
 
     [Header("Statistics")]
-    public ItemData ThisSwordsItemDataSheet;
+    public WeapondData ThisSwordsWeapondDataSheet;
     private UI_Manager ui_manager;
 
 
@@ -401,7 +401,7 @@ public class SwordBase : MonoBehaviour
         {
             Debug.Log("Hit detected on enemy!");
 
-            enemyHP.TakeDmg(ThisSwordsItemDataSheet.Damage, transform.position, 20f);
+            enemyHP.TakeDmg(ThisSwordsWeapondDataSheet.Damage, transform.position, 20f);
         }
     }
 }

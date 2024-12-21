@@ -21,7 +21,7 @@ public class ArrowScript : MonoBehaviour
     public Sprite CutArrow;
     
     [HideInInspector] public Vector3 latePlayerPos;
-    [HideInInspector] public ItemData TheBowsItemDataSheet;
+    [HideInInspector] public WeapondData TheBowsWeapondDataSheet;
 
     [HideInInspector] public float MaxChargeTime;
     [HideInInspector] public float ChargedTime;
@@ -82,7 +82,7 @@ public class ArrowScript : MonoBehaviour
 
             print(ChargedTime + "      " + MaxChargeTime);
 
-            float finalDmg = TheBowsItemDataSheet.Damage * (ChargedTime / MaxChargeTime);
+            float finalDmg = TheBowsWeapondDataSheet.Damage * (ChargedTime / MaxChargeTime);
 
             enemyHP.TakeDmg(finalDmg, latePlayerPos, 20f, this.gameObject);
 

@@ -1,6 +1,7 @@
 using UnityEngine;
 using UnityEngine.UI;
 using TMPro;
+using static UnityEditor.Progress;
 
 
 public class Slot_UI : MonoBehaviour
@@ -12,13 +13,17 @@ public class Slot_UI : MonoBehaviour
     public Image RarityBackLight;
     public string slotItemsRarity;
     public Inventory inventory;
-
+    public bool WantsArmorItem = false;
+    [SerializeField] public ArmorType WantsArmorType;
+    public ArmorType SlothasArmorType;
     [SerializeField] private GameObject highLight;
 
     public void SetItem(Inventory.Slot slot)
     {
         if (slot != null)
         {
+
+
             itemIcon.sprite = slot.icon;
             itemIcon.color = new Color(1, 1, 1, 1);
             
@@ -32,6 +37,7 @@ public class Slot_UI : MonoBehaviour
             }
             
             slotItemsRarity = slot.itemRarity;
+            SlothasArmorType = slot.HasArmorType;
             checkRarityLevel();
         }
         else

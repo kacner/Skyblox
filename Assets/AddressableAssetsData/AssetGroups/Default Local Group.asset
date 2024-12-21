@@ -32,6 +32,11 @@ MonoBehaviour:
     m_ReadOnly: 0
     m_SerializedLabels: []
     FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: 7e7d56d3bec5bdf4d97d378d8fed5ce7
+    m_Address: Assets/Inventory/Prefabs/Chestplate--Pickup--.prefab
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    FlaggedDuringContentUpdateRestriction: 0
   m_ReadOnly: 0
   m_Settings: {fileID: 11400000, guid: 331b7f8ec97411b4f8ff2d7b86c2f29c, type: 2}
   m_SchemaSet:

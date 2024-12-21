@@ -29,6 +29,7 @@ public class Collectibal : MonoBehaviour
     [Header("RaritySettings")]
     public bool isResource = false;
     public RarityLevel Rarity;
+    public ArmorType ArmorType = ArmorType.None;
     public GameObject[] RarityKit;
     public GameObject[] ResourceRarityKit;
 
@@ -139,7 +140,6 @@ public class Collectibal : MonoBehaviour
 
         if (transform.parent != null)
         {
-
             if (player.transform.position.y < transform.parent.transform.position.y - 0.2f)
             {
                 SpriteRenderer[] thisSpriterenderers = transform.parent.GetComponentsInChildren<SpriteRenderer>();

@@ -9,10 +9,11 @@ MonoBehaviour:
   m_GameObject: {fileID: 0}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 4982c227b10fae24db1b68566ff20544, type: 3}
+  m_Script: {fileID: 11500000, guid: 189a7e54710b37a42aaa05d2722c9568, type: 3}
   m_Name: Rookie_Sword
   m_EditorClassIdentifier: 
   itemName: Rookie_Sword
   icon: {fileID: -899688518, guid: 1ce750b9edbcd3548873929a38a114db, type: 3}
-  Rarity: common
+  Rarity: Common
+  itemType: 0
   Damage: 2

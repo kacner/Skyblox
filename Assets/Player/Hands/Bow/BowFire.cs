@@ -34,7 +34,7 @@ public class BowFire : MonoBehaviour
     private Inventory inventory;
     private Inventory HotbarInventory;
 
-    public ItemData ThisBowsItemDataSheet;
+    public WeapondData ThisBowsWeapondDataSheet;
 
     public float maxArrowVelocity = 80;
     private UI_Manager ui_manager;
@@ -127,7 +127,7 @@ public class BowFire : MonoBehaviour
                     GameObject Arrow = Instantiate(arrow, bulletTransform.position, Quaternion.identity);
                     ArrowScript arrowScript = Arrow.GetComponent<ArrowScript>();
                     arrowScript.force = Mathf.Clamp(holdtimer * maxArrowVelocity, 20, maxArrowVelocity);
-                    arrowScript.TheBowsItemDataSheet = ThisBowsItemDataSheet;
+                    arrowScript.TheBowsWeapondDataSheet = ThisBowsWeapondDataSheet;
                     arrowScript.latePlayerPos = transform.position;
                     arrowScript.MaxChargeTime = bowHoldTime;
                     arrowScript.ChargedTime = holdtimer;

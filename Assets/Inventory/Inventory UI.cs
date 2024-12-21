@@ -85,7 +85,7 @@ public class InventoryUI : MonoBehaviour
         }
     }
 
-    public void SlotsBeginDrag(Slot_UI slot)
+    public void SlotsBeginDrag(Slot_UI slot) //starting drag and creating the draggedslot 
     {
         UI_Manager.draggedSlot = slot;
         UI_Manager.draggedIcon = Instantiate(UI_Manager.draggedSlot.itemIcon);
@@ -105,7 +105,7 @@ public class InventoryUI : MonoBehaviour
             slot.quantityText.enabled = false; 
         }
     }
-    public void slotDrag()
+    public void slotDrag() //currently dragging
     {
         if (UI_Manager.draggedIcon != null)
         {
@@ -117,7 +117,7 @@ public class InventoryUI : MonoBehaviour
             slot.quantityText.enabled = true;
         }
     }
-    public void slotEndDrag()
+    public void slotEndDrag() // ending dragging
     {
         Slot_UI slot = UIRayCastSlot();
         if (UI_Manager.draggedIcon != null && slot != null)
@@ -125,17 +125,17 @@ public class InventoryUI : MonoBehaviour
             StartCoroutine(OfflerpPickedUpItemScale(slot)); //lerp slot size insted of dragged icon size
         }
     }
-    public void slotDrop(Slot_UI slot)
+    public void slotDrop(Slot_UI slot) // Ended dragging
     {
         if (slot != null)
         {
             if (UI_Manager.dragSingle)
             {
-                UI_Manager.draggedSlot.inventory.MoveSlot(UI_Manager.draggedSlot.slotID, slot.slotID, slot.inventory);
+                UI_Manager.draggedSlot.inventory.MoveSlot(UI_Manager.draggedSlot.slotID, slot.slotID, slot.inventory, slot);
             }
             else
             {
-                UI_Manager.draggedSlot.inventory.MoveSlot(UI_Manager.draggedSlot.slotID, slot.slotID, slot.inventory, UI_Manager.draggedSlot.inventory.slots[UI_Manager.draggedSlot.slotID].count);
+                UI_Manager.draggedSlot.inventory.MoveSlot(UI_Manager.draggedSlot.slotID, slot.slotID, slot.inventory, slot, UI_Manager.draggedSlot.inventory.slots[UI_Manager.draggedSlot.slotID].count);
 
             }
         }

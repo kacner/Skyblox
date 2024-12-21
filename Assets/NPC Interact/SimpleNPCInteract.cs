@@ -72,7 +72,6 @@ public class SimpleNPCInteract : MonoBehaviour
 
                 if (!wasInRange)
                 {
-                    print("enterrange");
                     EnterRange();
                     wasInRange = true;
                 }
@@ -81,8 +80,6 @@ public class SimpleNPCInteract : MonoBehaviour
             {
                 if (wasInRange)
                 {
-
-                    print("exitrange");
                     ExitRange();
                     ChangeState(AnimationState.Idle);
                     wasInRange = false;

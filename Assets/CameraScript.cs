@@ -26,7 +26,7 @@ public class CameraScript : MonoBehaviour
 
     public IEnumerator ShakeScreenForTime(float time)
     {
-        Debug.Log("You forgot my shake!.... Shake that body...");
+        //Debug.Log("You forgot my shake!.... Shake that body...");
         float elapsedTime = 0;
 
         while (elapsedTime < time)

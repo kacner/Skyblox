@@ -9,10 +9,10 @@ MonoBehaviour:
   m_GameObject: {fileID: 0}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 4982c227b10fae24db1b68566ff20544, type: 3}
-  m_Name: ChestPlate
+  m_Script: {fileID: 11500000, guid: 4fc72fca5fb95374fb5dbca6a39f40cd, type: 3}
+  m_Name: Chestplate
   m_EditorClassIdentifier: 
   itemName: Chestplate
   icon: {fileID: 750316040, guid: 1ce750b9edbcd3548873929a38a114db, type: 3}
-  Rarity: ledgendairy
-  Damage: 0
+  Rarity: Epic
+  armorType: 2
