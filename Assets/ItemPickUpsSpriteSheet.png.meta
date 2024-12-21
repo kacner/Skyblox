@@ -206,6 +206,69 @@ TextureImporter:
       indices: 
       edges: []
       weights: []
+    - serializedVersion: 2
+      name: ItemPickUpsSpriteSheet_4
+      rect:
+        serializedVersion: 2
+        x: 64
+        y: 112
+        width: 16
+        height: 16
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: dcd594c41d698664ab6fde21fd3eacc9
+      internalID: 1833251877
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: ItemPickUpsSpriteSheet_5
+      rect:
+        serializedVersion: 2
+        x: 80
+        y: 112
+        width: 16
+        height: 16
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 99ac482cdeadf1a4fb38e8265f9ebb07
+      internalID: 1715059390
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: ItemPickUpsSpriteSheet_6
+      rect:
+        serializedVersion: 2
+        x: 96
+        y: 112
+        width: 16
+        height: 16
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 3b61fab671a6e584083a24d5991d6c71
+      internalID: -1381525095
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
     outline: []
     physicsShape: []
     bones: []
@@ -221,6 +284,9 @@ TextureImporter:
       ItemPickUpsSpriteSheet_1: 988290006
       ItemPickUpsSpriteSheet_2: -899688518
       ItemPickUpsSpriteSheet_3: 750316040
+      ItemPickUpsSpriteSheet_4: 1833251877
+      ItemPickUpsSpriteSheet_5: 1715059390
+      ItemPickUpsSpriteSheet_6: -1381525095
   mipmapLimitGroupName: 
   pSDRemoveMatte: 0
   userData: 

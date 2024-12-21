@@ -37,6 +37,21 @@ MonoBehaviour:
     m_ReadOnly: 0
     m_SerializedLabels: []
     FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: ae3a3cc416ab7f24f89da841bcd9b35a
+    m_Address: Assets/Inventory/Prefabs/CargoPants--Pickup--.prefab
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: 46fa3af9135390d4996a7a5f5eed0baf
+    m_Address: Assets/Inventory/Prefabs/Boots--Pickup--.prefab
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: 4ceeabad9d61cf8458b61046069e793b
+    m_Address: Assets/Inventory/Prefabs/Crown--Pickup--.prefab
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    FlaggedDuringContentUpdateRestriction: 0
   m_ReadOnly: 0
   m_Settings: {fileID: 11400000, guid: 331b7f8ec97411b4f8ff2d7b86c2f29c, type: 2}
   m_SchemaSet:

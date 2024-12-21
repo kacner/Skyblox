@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using Unity.VisualScripting.FullSerializer;
 using UnityEngine;
 using static Inventory;
 using static UnityEditor.Progress;
@@ -14,7 +15,7 @@ public class Inventory
         public int count;
         public Sprite icon;
         public int maxAllowed = 64;
-        public string itemRarity;
+        public Rarity itemRarity;
         public ArmorType HasArmorType;
 
 
@@ -39,9 +40,10 @@ public class Inventory
 
         public bool CanAddItem(string itemName, Slot_UI ToSlot_UI = null, Slot ToSlot = null)
         {
+           // Debug.Log(ToSlot_UI.WantsArmorType == GetSlotArmorType(UI_Manager.draggedSlot.slotID, ToSlot_UI.inventory));
             if ((this.itemName == itemName && count < maxAllowed) || ToSlot.IsEmpty)
             { // om man kan stacka items
-                if (ToSlot_UI && ToSlot_UI.WantsArmorItem)
+                if (ToSlot_UI != null && ToSlot_UI.isArmorSlot)
                 {
                     if (ToSlot_UI != null && ToSlot.IsEmpty && ToSlot_UI.WantsArmorType == GetSlotArmorType(UI_Manager.draggedSlot.slotID, ToSlot_UI.inventory))
                         return true;
@@ -51,7 +53,7 @@ public class Inventory
                 else
                    return true;
             }
-            else if (ToSlot_UI != null && ToSlot.IsEmpty && ToSlot_UI.WantsArmorItem && ToSlot_UI.WantsArmorType == GetSlotArmorType(UI_Manager.draggedSlot.slotID, ToSlot_UI.inventory))
+            else if (ToSlot_UI != null && ToSlot.IsEmpty && ToSlot_UI.isArmorSlot && ToSlot_UI.WantsArmorType == GetSlotArmorType(UI_Manager.draggedSlot.slotID, ToSlot_UI.inventory))
             { //om inget finns i slotten och vill ha armor armortype machar
                 return true;
             }
@@ -61,8 +63,16 @@ public class Inventory
 
         ArmorType GetSlotArmorType(int index, Inventory inventory)
         {
-            Debug.Log(inventory.slots[index].HasArmorType);
-            return inventory.slots[index].HasArmorType;
+            if (UI_Manager.draggedSlot != null && UI_Manager.draggedSlot.SlothasArmorType != null)
+            {
+                return UI_Manager.draggedSlot.SlothasArmorType;
+            }
+            else
+            {
+                Debug.Log("DraggedSlot == Null!!!");
+                return ArmorType.None;
+            }
+
         }
 
         public void AddItem(Item item)
@@ -77,11 +87,12 @@ public class Inventory
             count++;
         }
 
-        public void AddItem(string itemName, Sprite icon, int maxAllowed, string Rarity)
+        public void AddItem(string itemName, Sprite icon, int maxAllowed, Rarity Rarity, ArmorType ArmorType)
         {
             this.itemName = itemName;
             this.icon = icon;
             this.itemRarity = Rarity;
+            this.HasArmorType = ArmorType;
             count++;
             this.maxAllowed = maxAllowed;
         }
@@ -96,6 +107,8 @@ public class Inventory
                 {
                     icon = null;
                     itemName = "";
+                    itemRarity = Rarity.None;
+                    HasArmorType = ArmorType.None;
                 }
             }
         }
@@ -168,7 +181,7 @@ public class Inventory
         }
     }
 
-    public string GetRarityFromSlot(int index)
+    public Rarity GetRarityFromSlot(int index)
     {
         return slots[index].itemRarity;
     }
@@ -183,7 +196,7 @@ public class Inventory
         {
             for (int i = 0; i < numToMove; i++)
             {   
-                Toslot.AddItem(fromslot.itemName, fromslot.icon, fromslot.maxAllowed, fromslot.itemRarity);
+                Toslot.AddItem(fromslot.itemName, fromslot.icon, fromslot.maxAllowed, fromslot.itemRarity, fromslot.HasArmorType);
                 fromslot.RemoveItem();
             }
         }

@@ -131,7 +131,7 @@ TextureImporter:
         width: 237
         height: 127
       alignment: 0
-      pivot: {x: 0, y: 0}
+      pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
       physicsShape: []
@@ -152,7 +152,7 @@ TextureImporter:
         width: 145
         height: 22
       alignment: 0
-      pivot: {x: 0, y: 0}
+      pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
       physicsShape: []
@@ -173,7 +173,7 @@ TextureImporter:
         width: 20
         height: 22
       alignment: 0
-      pivot: {x: 0, y: 0}
+      pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
       physicsShape: []
@@ -194,7 +194,7 @@ TextureImporter:
         width: 14
         height: 14
       alignment: 0
-      pivot: {x: 0, y: 0}
+      pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
       physicsShape: []
@@ -215,7 +215,7 @@ TextureImporter:
         width: 20
         height: 22
       alignment: 0
-      pivot: {x: 0, y: 0}
+      pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
       physicsShape: []
@@ -236,7 +236,7 @@ TextureImporter:
         width: 54
         height: 62
       alignment: 0
-      pivot: {x: 0, y: 0}
+      pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
       physicsShape: []
@@ -252,12 +252,12 @@ TextureImporter:
       name: tab_inventory_6
       rect:
         serializedVersion: 2
-        x: 60
-        y: 40
-        width: 144
-        height: 6
+        x: 464
+        y: 50
+        width: 15
+        height: 15
       alignment: 0
-      pivot: {x: 0, y: 0}
+      pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
       physicsShape: []
@@ -273,12 +273,12 @@ TextureImporter:
       name: tab_inventory_7
       rect:
         serializedVersion: 2
-        x: 308
-        y: 3
-        width: 145
-        height: 22
+        x: 60
+        y: 40
+        width: 144
+        height: 6
       alignment: 0
-      pivot: {x: 0, y: 0}
+      pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
       physicsShape: []
@@ -286,6 +286,90 @@ TextureImporter:
       bones: []
       spriteID: bb832dc7086cc804fb07f6ee44357d53
       internalID: -1077410920
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: tab_inventory_8
+      rect:
+        serializedVersion: 2
+        x: 464
+        y: 34
+        width: 15
+        height: 15
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 654d94ea1dec7a446b456ae23f0fbb4d
+      internalID: 165593474
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: tab_inventory_9
+      rect:
+        serializedVersion: 2
+        x: 308
+        y: 3
+        width: 145
+        height: 22
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 5b728c78157159c43aac93d5b298d578
+      internalID: 1653614156
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: tab_inventory_10
+      rect:
+        serializedVersion: 2
+        x: 465
+        y: 18
+        width: 13
+        height: 15
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 6df97d7aca94a6d46a605efe90503708
+      internalID: 1934714229
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: tab_inventory_11
+      rect:
+        serializedVersion: 2
+        x: 464
+        y: 2
+        width: 15
+        height: 16
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: c3d13c4c3bdc60d4d9739b5add0f4f56
+      internalID: 1132399883
       vertices: []
       indices: 
       edges: []
@@ -303,12 +387,16 @@ TextureImporter:
     nameFileIdTable:
       tab_inventory_0: 529230237
       tab_inventory_1: -1225557112
+      tab_inventory_10: 1934714229
+      tab_inventory_11: 1132399883
       tab_inventory_2: 1207525295
       tab_inventory_3: -1934688703
       tab_inventory_4: 705654695
       tab_inventory_5: 59086351
       tab_inventory_6: 1582012619
       tab_inventory_7: -1077410920
+      tab_inventory_8: 165593474
+      tab_inventory_9: 1653614156
   mipmapLimitGroupName: 
   pSDRemoveMatte: 0
   userData: 

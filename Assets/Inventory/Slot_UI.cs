@@ -2,27 +2,51 @@ using UnityEngine;
 using UnityEngine.UI;
 using TMPro;
 using static UnityEditor.Progress;
-
+using Unity.Burst.Intrinsics;
 
 public class Slot_UI : MonoBehaviour
 {
+    [Header("Genral")]
     public int slotID;
     public Image itemIcon;
     public TextMeshProUGUI quantityText;
     public Button DropButton;
+
+    [Space(10)]
+
+    [Header("RaritySettings")]
     public Image RarityBackLight;
-    public string slotItemsRarity;
-    public Inventory inventory;
-    public bool WantsArmorItem = false;
+    public Rarity slotItemsRarity;
+
+    [Space(10)]
+
+    [Header("ArmorSettings")]
+    public bool isArmorSlot = false;
     [SerializeField] public ArmorType WantsArmorType;
     public ArmorType SlothasArmorType;
-    [SerializeField] private GameObject highLight;
+    [SerializeField] private GameObject ArmorIcon;
 
+    [Space(10)]
+
+    [Header("Misc")]
+    public Inventory inventory;
+    [SerializeField] private GameObject highLight;
     public void SetItem(Inventory.Slot slot)
     {
         if (slot != null)
         {
-
+            if (ArmorIcon != null)
+            {
+                Debug.Log("imageObject is not null.");
+            }
+            else
+            {
+                Debug.LogError("imageObject is null.");
+            }
+            if (isArmorSlot)
+                ArmorIcon.SetActive(false);
+            //else
+                //print("i cant do this shit");
 
             itemIcon.sprite = slot.icon;
             itemIcon.color = new Color(1, 1, 1, 1);
@@ -48,6 +72,18 @@ public class Slot_UI : MonoBehaviour
 
     public void setEmpty()
     {
+        if (ArmorIcon != null)
+        {
+            Debug.Log("imageObject is not null.");
+        }
+        else
+        {
+            Debug.LogError("imageObject is null.");
+        }
+        if (isArmorSlot)
+            ArmorIcon.SetActive(true);
+        //else
+            //print("i cant do this shit2");
         if (RarityBackLight != null)
             RarityBackLight.color = new Color(0, 0, 0, 0);
 
@@ -62,6 +98,9 @@ public class Slot_UI : MonoBehaviour
 
         if (DropButton != null)
             DropButton.gameObject.SetActive(false);
+
+        slotItemsRarity = Rarity.None;
+        SlothasArmorType = ArmorType.None;
       
     }
 
@@ -74,19 +113,19 @@ public class Slot_UI : MonoBehaviour
     {
         if (RarityBackLight != null)
         {
-            if (slotItemsRarity == "Ledgendairy")
+            if (slotItemsRarity == Rarity.Ledgendairy)
             {
                 RarityBackLight.color = new Color(255, 190, 0, 1f);
             }
-            else if (slotItemsRarity == "Epic")
+            else if (slotItemsRarity == Rarity.Epic)
             {
                 RarityBackLight.color = new Color(252, 0, 255, 1f);
             }
-            else if (slotItemsRarity == "Rare")
+            else if (slotItemsRarity == Rarity.Rare)
             {
                 RarityBackLight.color = new Color(0, 137, 255, 1f);
             }
-            else if (slotItemsRarity == "Uncommon")
+            else if (slotItemsRarity == Rarity.Uncommon)
             {
                 RarityBackLight.color = new Color(0, 1, 0, 1f);
             }

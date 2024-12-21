@@ -1,4 +1,6 @@
 using System.Collections;
+using System.Runtime.ExceptionServices;
+using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.Rendering.Universal;
 
@@ -21,21 +23,25 @@ public class Collectibal : MonoBehaviour
 
     [Header("LightFxSettings")]
     public float fadeDuration = 1;
-    private SpriteRenderer RaySpriterenderer; 
+    private SpriteRenderer RaySpriterenderer;
     private Light2D LightSource;
 
     [Space(10)]
 
     [Header("RaritySettings")]
-    public bool isResource = false;
-    public RarityLevel Rarity;
-    public ArmorType ArmorType = ArmorType.None;
+    private bool isResource = false;
+    private Rarity Rarity;
     public GameObject[] RarityKit;
     public GameObject[] ResourceRarityKit;
 
     private GameObject createdParent;
+
+    [Header("ItemData")]
+    private ItemData ItemData;
     void Start()
     {
+        TuneSettings();
+
         if (transform.parent == null)
         {
             CreateParent(this.gameObject);
@@ -63,7 +69,7 @@ public class Collectibal : MonoBehaviour
             StartCoroutine(ExitMusicForAFilm(player));
         }
     }
-    
+
     IEnumerator ExitMusicForAFilm(Player player)
     {
         GetComponent<SpriteRenderer>().sprite = null;
@@ -167,22 +173,22 @@ public class Collectibal : MonoBehaviour
         if (!isResource)
         {
 
-            if (Rarity == RarityLevel.Ledgendairy)
+            if (Rarity == Rarity.Ledgendairy)
             {
                 GameObject RarityKitInstance = Instantiate(RarityKit[4], transform.position, Quaternion.identity);
                 RarityKitInstance.transform.SetParent(this.transform.parent);
             }
-            else if (Rarity == RarityLevel.Epic)
+            else if (Rarity == Rarity.Epic)
             {
                 GameObject RarityKitInstance = Instantiate(RarityKit[3], transform.position, Quaternion.identity);
                 RarityKitInstance.transform.SetParent(this.transform.parent);
             }
-            else if (Rarity == RarityLevel.Rare)
+            else if (Rarity == Rarity.Rare)
             {
                 GameObject RarityKitInstance = Instantiate(RarityKit[2], transform.position, Quaternion.identity);
                 RarityKitInstance.transform.SetParent(this.transform.parent);
             }
-            else if (Rarity == RarityLevel.Uncommon)
+            else if (Rarity == Rarity.Uncommon)
             {
                 GameObject RarityKitInstance = Instantiate(RarityKit[1], transform.position, Quaternion.identity);
                 RarityKitInstance.transform.SetParent(this.transform.parent);
@@ -195,22 +201,22 @@ public class Collectibal : MonoBehaviour
         }
         else
         {
-            if (Rarity == RarityLevel.Ledgendairy)
+            if (Rarity == Rarity.Ledgendairy)
             {
                 GameObject RarityKitInstance = Instantiate(ResourceRarityKit[4], transform.position, Quaternion.identity);
                 RarityKitInstance.transform.SetParent(this.transform.parent);
             }
-            else if (Rarity == RarityLevel.Epic)
+            else if (Rarity == Rarity.Epic)
             {
                 GameObject RarityKitInstance = Instantiate(ResourceRarityKit[3], transform.position, Quaternion.identity);
                 RarityKitInstance.transform.SetParent(this.transform.parent);
             }
-            else if (Rarity == RarityLevel.Rare)
+            else if (Rarity == Rarity.Rare)
             {
                 GameObject RarityKitInstance = Instantiate(ResourceRarityKit[2], transform.position, Quaternion.identity);
                 RarityKitInstance.transform.SetParent(this.transform.parent);
             }
-            else if (Rarity == RarityLevel.Uncommon)
+            else if (Rarity == Rarity.Uncommon)
             {
                 GameObject RarityKitInstance = Instantiate(ResourceRarityKit[1], transform.position, Quaternion.identity);
                 RarityKitInstance.transform.SetParent(this.transform.parent);
@@ -235,9 +241,26 @@ public class Collectibal : MonoBehaviour
 
         createdParent = parent;
     }
-}
 
-public enum RarityLevel
-{
-    Common, Uncommon, Rare, Epic, Ledgendairy
+    private void TuneSettings()
+    {
+        ItemData = GetComponent<Item>().data;
+        //standard settings applyed for all data
+        Rarity = ItemData.Rarity;
+        GetComponent<SpriteRenderer>().sprite = ItemData.icon;
+
+        //specific settings
+        if (ItemData is ArmorData armorData)
+        {
+            //nothing to do yet
+        }
+        else if (ItemData is WeapondData weapondData)
+        {
+            //nothing to do yet
+        }
+        else if (ItemData is CollectableData)
+        {
+            isResource = true;
+        }
+    }
 }
