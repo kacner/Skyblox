@@ -128,6 +128,7 @@ public class InventoryUI : MonoBehaviour
             slot.itemIcon.enabled = false;
             slot.quantityText.enabled = false;
             slot.DropButton.gameObject.SetActive(false);
+            if (slot.isArmorSlot)
             slot.ArmorIcon.enabled = true;
         }
     }
@@ -164,8 +165,13 @@ public class InventoryUI : MonoBehaviour
                 UI_Manager.draggedSlot.inventory.MoveSlot(UI_Manager.draggedSlot.slotID, slot.slotID, slot.inventory, slot, UI_Manager.draggedSlot.inventory.slots[UI_Manager.draggedSlot.slotID].count);
 
             }
+
+            RefreshHotBarWeapond();
         }
-        GameManager.instance.ui_Manager.RefreshAll();
+    }
+
+    public void RefreshHotBarWeapond()
+    {
         canvas.GetComponentInChildren<ToolBar_UI>().selectSlot(canvas.GetComponentInChildren<ToolBar_UI>().selectedSlotNumber);
     }
 

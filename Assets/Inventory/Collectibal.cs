@@ -1,6 +1,4 @@
 using System.Collections;
-using System.Runtime.ExceptionServices;
-using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.Rendering.Universal;
 
@@ -10,7 +8,7 @@ public class Collectibal : MonoBehaviour
     [Header("Main PickupSettings")]
     private InventoryUI inventoryUI;
     private Player player;
-
+    private SpriteRenderer CollectableSpriterenderer;
     [Space(10)]
 
     [Header("Bob-Settings")]
@@ -52,11 +50,11 @@ public class Collectibal : MonoBehaviour
 
         startPos = transform.position;
 
-        SpriteRenderer collectibalSpriterenderer = GetComponent<SpriteRenderer>();
+        CollectableSpriterenderer = GetComponent<SpriteRenderer>();
 
         FixRarityKit();
 
-        RaySpriterenderer = GetRaySpriterenderer(collectibalSpriterenderer);
+        RaySpriterenderer = GetRaySpriterenderer(CollectableSpriterenderer);
 
         player = GameManager.instance.player;
     }
@@ -72,14 +70,21 @@ public class Collectibal : MonoBehaviour
 
     IEnumerator ExitMusicForAFilm(Player player)
     {
-        GetComponent<SpriteRenderer>().sprite = null;
 
         Item item = GetComponent<Item>();
         if (item != null)
         {
-            player.inventory.Add("Backpack", item);
+            StartCoroutine(PickUpAnimation());
+
+            if (ItemData is WeapondData)
+            {
+                player.inventory.Add("Toolbar", item);
+                GameManager.instance.ui_Manager.RefreshInventoryUI("Toolbar");
+            }
+            else //om item är nått annat än en tool
+                player.inventory.Add("Backpack", item);
+
             Destroy(GetComponent<BoxCollider2D>()); //removes collition detec
-            inventoryUI.Refresh();
         }
         else
         {
@@ -120,6 +125,34 @@ public class Collectibal : MonoBehaviour
 
         yield return new WaitForSeconds(4.5f);
         Destroy(createdParent); //suicide
+    }
+
+    private IEnumerator PickUpAnimation()
+    {
+        shouldbob = false;
+        CollectableSpriterenderer.sortingLayerName = "Walk in Front of";
+
+        float timer = 0;
+        float Duration = 0.15f;
+
+        Vector3 startpos = transform.position;
+
+        while (timer < Duration)
+        {
+            timer += Time.deltaTime;
+
+            transform.position = Vector3.Lerp(startpos, player.transform.position, timer / Duration);
+
+            yield return null;
+        }
+        transform.position = player.transform.position;
+
+        GetComponent<SpriteRenderer>().sprite = null;
+
+        inventoryUI.Refresh();
+
+        if (ItemData is WeapondData)
+            inventoryUI.RefreshHotBarWeapond();
     }
 
     private SpriteRenderer GetRaySpriterenderer(SpriteRenderer CollectableSpriterendere)

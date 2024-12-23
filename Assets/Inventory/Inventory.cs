@@ -1,5 +1,6 @@
+using System;
+using System.Collections;
 using System.Collections.Generic;
-using Unity.VisualScripting.FullSerializer;
 using UnityEngine;
 using static Inventory;
 using static UnityEditor.Progress;
@@ -191,13 +192,12 @@ public class Inventory
         return slots[index].itemRarity;
     }
 
-    public void MoveSlot(int fromIndex, int ToIndex, Inventory toInventory, Slot_UI Toslot_UI, int numToMove = 1)
+    public void MoveSlot(int fromIndex, int ToIndex, Inventory toInventory, Slot_UI toSlot_UI, int numToMove = 1)
     {
         Slot fromslot = slots[fromIndex];
         Slot Toslot = toInventory.slots[ToIndex];
 
-            Debug.Log(Toslot.CanAddItem(fromslot.itemName, Toslot_UI, Toslot));
-        if (Toslot.CanAddItem(fromslot.itemName, Toslot_UI, Toslot))
+        if (Toslot.CanAddItem(fromslot.itemName, toSlot_UI, Toslot))
         {
             for (int i = 0; i < numToMove; i++)
             {   
@@ -206,7 +206,6 @@ public class Inventory
             }
         }
     }
-
     public string FindItemNameInSlot(int index)
     {
         Slot slot = slots[index];

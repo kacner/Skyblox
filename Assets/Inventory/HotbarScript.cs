@@ -39,7 +39,6 @@ public class HotbarScript : MonoBehaviour
             else
             {
                 InstantiateNewWeapond(EmptyWHands);
-                print("Diddy0");
                 playerHp.changeHandMat();
             }
 

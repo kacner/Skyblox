@@ -44,7 +44,6 @@ public class UI_Manager : MonoBehaviour
 
     private void Update()
     {
-        Debug.Log(draggedSlot);
         if (Input.GetKey(KeyCode.LeftShift)) //multiple draging in inventory
         {
             dragSingle = false;
