@@ -77,12 +77,33 @@ public class InventoryUI : MonoBehaviour
                     GameManager.instance.player.dropItem(itemToDrop, inventory.slots[UI_Manager.draggedSlot.slotID].count);
                     inventory.Remove(UI_Manager.draggedSlot.slotID, inventory.slots[UI_Manager.draggedSlot.slotID].count);
                 }
-                Refresh();
+                GameManager.instance.ui_Manager.RefreshAll();
                 canvas.GetComponentInChildren<ToolBar_UI>().selectSlot(canvas.GetComponentInChildren<ToolBar_UI>().selectedSlotNumber);
             }
 
             UI_Manager.draggedSlot = null;
         }
+    }
+
+    public void DropItem(int Index)
+    {
+        if (!UI_Manager.dragSingle)
+        {
+            Item itemToDrop = GameManager.instance.itemManager.GetItemByName(inventory.slots[Index].itemName);
+            GameManager.instance.player.dropItem(itemToDrop);
+            inventory.Remove(Index);
+        }
+        else
+        {
+            Item itemToDrop = GameManager.instance.itemManager.GetItemByName(inventory.slots[Index].itemName);
+
+            for (int i = 0; i < inventory.slots[Index].count; i++)
+            {
+                GameManager.instance.player.dropItem(itemToDrop);
+                inventory.Remove(Index);
+            }
+        }
+        GameManager.instance.ui_Manager.RefreshInventoryUI(inventoryName);
     }
 
     public void SlotsBeginDrag(Slot_UI slot) //starting drag and creating the draggedslot 
@@ -98,11 +119,16 @@ public class InventoryUI : MonoBehaviour
         Int32.TryParse(slot.quantityText.text, out int number);
         if (number < 1 || !UI_Manager.dragSingle)
         {
-            slot.itemIcon.enabled = false;
-            Color TempColor = slot.RarityBackLight.color;
+            /*Color TempColor = slot.RarityBackLight.color;
             TempColor.a = 0;
-            slot.RarityBackLight.color = TempColor;
-            slot.quantityText.enabled = false; 
+            slot.RarityBackLight.color = TempColor;*/
+
+            slot.RarityBackLight.enabled = false;
+
+            slot.itemIcon.enabled = false;
+            slot.quantityText.enabled = false;
+            slot.DropButton.gameObject.SetActive(false);
+            slot.ArmorIcon.enabled = true;
         }
     }
     public void slotDrag() //currently dragging

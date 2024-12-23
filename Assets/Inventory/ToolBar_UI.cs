@@ -116,7 +116,7 @@ public class ToolBar_UI : MonoBehaviour
     public void updateHotbarContent(int index, GameObject[] weapondsArray)
     {
         Inventory inventory = GameManager.instance.player.inventory.GetInventoryByName("Toolbar");
-        hotbarScript.UpdateWeapond(index, FindGameObjectContaining(inventory.FindItemInSlot(index).ToString(), weapondsArray));
+        hotbarScript.UpdateWeapond(index, FindGameObjectContaining(inventory.FindItemNameInSlot(index).ToString(), weapondsArray));
     }
 
     GameObject FindGameObjectContaining(string WeapondPrefabName, GameObject[] array)

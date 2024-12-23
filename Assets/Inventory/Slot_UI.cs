@@ -22,9 +22,9 @@ public class Slot_UI : MonoBehaviour
 
     [Header("ArmorSettings")]
     public bool isArmorSlot = false;
-    [SerializeField] public ArmorType WantsArmorType;
+    public ArmorType WantsArmorType;
     public ArmorType SlothasArmorType;
-    [SerializeField] private GameObject ArmorIcon;
+    public Image ArmorIcon;
 
     [Space(10)]
 
@@ -35,18 +35,14 @@ public class Slot_UI : MonoBehaviour
     {
         if (slot != null)
         {
-            if (ArmorIcon != null)
-            {
-                Debug.Log("imageObject is not null.");
-            }
-            else
-            {
-                Debug.LogError("imageObject is null.");
-            }
+            if (DropButton)
+                DropButton.gameObject.SetActive(true);
+
             if (isArmorSlot)
-                ArmorIcon.SetActive(false);
-            //else
-                //print("i cant do this shit");
+                ArmorIcon.enabled = false;
+
+            if (RarityBackLight != null)
+            RarityBackLight.enabled = true;
 
             itemIcon.sprite = slot.icon;
             itemIcon.color = new Color(1, 1, 1, 1);
@@ -72,18 +68,12 @@ public class Slot_UI : MonoBehaviour
 
     public void setEmpty()
     {
-        if (ArmorIcon != null)
-        {
-            Debug.Log("imageObject is not null.");
-        }
-        else
-        {
-            Debug.LogError("imageObject is null.");
-        }
+        if (DropButton)
+            DropButton.gameObject.SetActive(false);
+
         if (isArmorSlot)
-            ArmorIcon.SetActive(true);
-        //else
-            //print("i cant do this shit2");
+            ArmorIcon.enabled = true;
+
         if (RarityBackLight != null)
             RarityBackLight.color = new Color(0, 0, 0, 0);
 

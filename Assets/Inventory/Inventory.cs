@@ -17,6 +17,7 @@ public class Inventory
         public int maxAllowed = 64;
         public Rarity itemRarity;
         public ArmorType HasArmorType;
+        public ItemData itemData;
 
 
         public Slot()
@@ -84,10 +85,12 @@ public class Inventory
             if (item.data is ArmorData armorData)
             HasArmorType = armorData.armorType;
 
+            itemData = item.data;
+
             count++;
         }
 
-        public void AddItem(string itemName, Sprite icon, int maxAllowed, Rarity Rarity, ArmorType ArmorType)
+        public void AddItem(string itemName, Sprite icon, int maxAllowed, Rarity Rarity, ArmorType ArmorType, ItemData itemData)
         {
             this.itemName = itemName;
             this.icon = icon;
@@ -95,6 +98,7 @@ public class Inventory
             this.HasArmorType = ArmorType;
             count++;
             this.maxAllowed = maxAllowed;
+            this.itemData = itemData;
         }
 
         public void RemoveItem()
@@ -109,6 +113,7 @@ public class Inventory
                     itemName = "";
                     itemRarity = Rarity.None;
                     HasArmorType = ArmorType.None;
+                    itemData = null;
                 }
             }
         }
@@ -196,16 +201,20 @@ public class Inventory
         {
             for (int i = 0; i < numToMove; i++)
             {   
-                Toslot.AddItem(fromslot.itemName, fromslot.icon, fromslot.maxAllowed, fromslot.itemRarity, fromslot.HasArmorType);
+                Toslot.AddItem(fromslot.itemName, fromslot.icon, fromslot.maxAllowed, fromslot.itemRarity, fromslot.HasArmorType, fromslot.itemData);
                 fromslot.RemoveItem();
             }
         }
     }
 
-    public string FindItemInSlot(int index)
+    public string FindItemNameInSlot(int index)
     {
         Slot slot = slots[index];
         return slot.itemName.ToString();
-        
+    }
+    public ItemData FindItemDataInSlot(int index)
+    {
+        Slot slot = slots[index];
+        return slot.itemData;
     }
 }
