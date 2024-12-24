@@ -1,9 +1,12 @@
 using System.Collections;
 using UnityEngine;
-
-public class EnemyHp : MonoBehaviour
+public interface IEnemy
 {
-    
+    int ID { get; set; }
+}
+
+public class EnemyHp : MonoBehaviour, IEnemy
+{
     [SerializeField] private float current_HP;
     public float Max_HP = 10;
     private Rigidbody2D rb;
@@ -27,9 +30,13 @@ public class EnemyHp : MonoBehaviour
     [SerializeField] private GameObject DamagePopUpPrefab;
 
     [HideInInspector] public bool isDead = false;
+    //[Header("Quests")]
+    public int ID { get; set; }
 
     void Start()
     {
+        ID = 0;
+
         protectedObjects = new Transform[transform.childCount];
 
         for (int i = 0; i < transform.childCount; i++)
@@ -57,42 +64,12 @@ public class EnemyHp : MonoBehaviour
         CurrentInvincibilityTimer = Mathf.Clamp(CurrentInvincibilityTimer, 0, invincibilityTimer);
     }
 
-    public void TakeDmg(float dmg, Vector3 AttackerPos, float KnockBackAmount) //sword
+    public void TakeDmg(float dmg, Vector3 AttackerPos, float KnockBackAmount, GameObject Arrow = null) //sword
     {
         if (CurrentInvincibilityTimer <= 0)
         {
-            dmgSystem.Play();
-
-            applyKnockback(AttackerPos, KnockBackAmount);
-            StartCoroutine(flashDMGcolor());
-            SpawnDmgPopUp(dmg);
-
-            if ((current_HP - dmg) <= 0)
-            {
-                DisableCollider();
-
-                StartCoroutine(RollDeathCGI());
-
-                isDead = true;
-            }
-            else
-            {
-                current_HP -= dmg;
-            }
-
-
-            CurrentInvincibilityTimer = invincibilityTimer;
-        }
-        else
-        {
-            DisableCollider();
-        }
-    }
-    public void TakeDmg(float dmg, Vector3 AttackerPos, float KnockBackAmount, GameObject Arrow) //bow
-    {
-        if (CurrentInvincibilityTimer <= 0)
-        {
-            Arrow.GetComponent<SpriteRenderer>().material = deathDMGmat;
+            if (Arrow)
+                Arrow.GetComponent<SpriteRenderer>().material = deathDMGmat;
 
             dmgSystem.Play();
 
@@ -107,6 +84,8 @@ public class EnemyHp : MonoBehaviour
                 StartCoroutine(RollDeathCGI());
 
                 isDead = true;
+
+                CombatEvents.EnemyDied(this); //säger till eventsystem att denhär har dött
             }
             else
             {

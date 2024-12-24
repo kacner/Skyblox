@@ -87,7 +87,7 @@ public class InventoryUI : MonoBehaviour
 
     public void DropItem(int Index)
     {
-        if (!UI_Manager.dragSingle)
+        if (UI_Manager.dragSingle)
         {
             Item itemToDrop = GameManager.instance.itemManager.GetItemByName(inventory.slots[Index].itemName);
             GameManager.instance.player.dropItem(itemToDrop);
@@ -97,7 +97,7 @@ public class InventoryUI : MonoBehaviour
         {
             Item itemToDrop = GameManager.instance.itemManager.GetItemByName(inventory.slots[Index].itemName);
 
-            for (int i = 0; i < inventory.slots[Index].count; i++)
+            for (int i = inventory.slots[Index].count; i > 0; i--)
             {
                 GameManager.instance.player.dropItem(itemToDrop);
                 inventory.Remove(Index);

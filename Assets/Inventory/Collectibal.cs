@@ -133,18 +133,21 @@ public class Collectibal : MonoBehaviour
         CollectableSpriterenderer.sortingLayerName = "Walk in Front of";
 
         float timer = 0;
-        float Duration = 0.15f;
+        float Duration = 0.25f;
 
         Vector3 startpos = transform.position;
+        Vector3 startScale = transform.localScale;
 
         while (timer < Duration)
         {
             timer += Time.deltaTime;
 
             transform.position = Vector3.Lerp(startpos, player.transform.position, timer / Duration);
+            transform.localScale = Vector3.Lerp(startScale, startScale / 2, timer / Duration);
 
             yield return null;
         }
+        transform.localScale = startScale / 2;
         transform.position = player.transform.position;
 
         GetComponent<SpriteRenderer>().sprite = null;
