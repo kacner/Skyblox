@@ -3,6 +3,7 @@ using UnityEngine;
 using System.Collections;
 using UnityEngine.UI;
 using System.Collections.Generic;
+using System.Collections.Specialized;
 
 public class DialougueManager : MonoBehaviour
 {
@@ -19,6 +20,8 @@ public class DialougueManager : MonoBehaviour
     private List<GameObject> buttons;
     private AdvancedNPCInteract advancedNpc;
     private Coroutine typeEffect;
+
+    private AdvancedNPCInteract LastKnownNpcReference;
 
     private void Awake()
     {
@@ -41,6 +44,7 @@ public class DialougueManager : MonoBehaviour
 
     public void StartDialogue(string title, DialougueNode node, Dialougue dialouge, AdvancedNPCInteract advancedNpc)
     {
+        LastKnownNpcReference = advancedNpc;
         this.advancedNpc = advancedNpc;
         advancedNpc.ChangeState(node.Emotion);
         Dialouge = dialouge;
@@ -63,14 +67,19 @@ public class DialougueManager : MonoBehaviour
             GameObject buttonObj = Instantiate(responseButtonPrefab, responseButtonContainer);
             buttonObj.GetComponentInChildren<TextMeshProUGUI>().text = response.responseText;
 
-            buttonObj.GetComponent<Button>().onClick.AddListener(() => SelectResponse(response, title, advancedNpc));
+            buttonObj.GetComponent<Button>().onClick.AddListener(() => SelectResponse(response, title, advancedNpc, node));
             buttons.Add(buttonObj);
         }
         hideButtons();
     }
 
-    public void SelectResponse(DialougueResponse response, string title, AdvancedNPCInteract advancedNpc)
+    public void SelectResponse(DialougueResponse response, string title, AdvancedNPCInteract advancedNpc, DialougueNode node)
     {
+        if (LastKnownNpcReference != null && LastKnownNpcReference.questType != "")
+        {
+            AtemptToAssignQuest();
+        }
+
         if (!response.nextNode.IsLastNode())
         {
             StartDialogue(title, response.nextNode, Dialouge, advancedNpc);
@@ -170,4 +179,35 @@ public class DialougueManager : MonoBehaviour
         if (buttons.Count > 0)
             ShowButtons();
     }
+
+    private void AtemptToAssignQuest()
+    {
+        if (!LastKnownNpcReference.AssignedQuest && !LastKnownNpcReference.Healped)
+        {
+            AssignQuest();
+        }
+        else if (LastKnownNpcReference.AssignedQuest && !LastKnownNpcReference.Healped)
+        {
+            CheckQuest();
+        }
+        else
+        {
+
+        }
+    }
+    private void AssignQuest()
+    {
+        LastKnownNpcReference.Quest = (Quest)GameManager.instance.QuestObject.AddComponent(System.Type.GetType(LastKnownNpcReference.questType));
+        LastKnownNpcReference.AssignedQuest = true;
+    }
+
+    private void CheckQuest()
+    {
+        if (LastKnownNpcReference.Quest.Completed)
+        {
+            LastKnownNpcReference.Quest.GiveReward();
+            LastKnownNpcReference.Healped = true;
+            LastKnownNpcReference.AssignedQuest = false;
+        }
+    } 
 }

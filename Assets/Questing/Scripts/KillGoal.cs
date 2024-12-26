@@ -6,11 +6,12 @@ public class KillGoal : Goal
 {
     public int EnemyID { get; set; }
     
-    public KillGoal(int enemyID, string description, bool completed, int currentAmount, int requiredAmount)
+    public KillGoal(Quest quest, int enemyID, string description, bool completed, int currentAmount, int requiredAmount)
     {
+        this.Quest = quest;
         this.EnemyID = enemyID;
         this.description = description;
-        this.completed = completed;
+        this.Completed = completed;
         this.currentAmount = currentAmount;
         this.requiredAmount = requiredAmount;
     }

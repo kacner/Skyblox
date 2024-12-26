@@ -14,6 +14,7 @@ public class GameManager : MonoBehaviour
     public DialougueManager DialougeManager;
     public InteractionManager InteractionManager;
     public Player player;
+    public GameObject QuestObject;
 
     private void Awake()
     {

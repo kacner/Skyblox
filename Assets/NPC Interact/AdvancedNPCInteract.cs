@@ -1,6 +1,7 @@
 using JetBrains.Annotations;
 using System.Collections;
 using UnityEngine;
+using UnityEngine.Timeline;
 
 public class AdvancedNPCInteract : MonoBehaviour
 {
@@ -42,6 +43,12 @@ public class AdvancedNPCInteract : MonoBehaviour
     [HideInInspector] public bool hasFinishedTypeOut = false;
     [HideInInspector] public bool wantToSkip = false;
     private Interactable interactable;
+
+    [Header("Quests")]
+    public string questType;
+    public bool AssignedQuest = false, Healped = false;
+    [HideInInspector] public Quest Quest;
+
     [System.Serializable]
     public enum AnimationState
     {

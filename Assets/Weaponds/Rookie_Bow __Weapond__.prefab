@@ -58,7 +58,7 @@ MonoBehaviour:
   inventoryUI: {fileID: 0}
   ArrowSlotID: 0
   inventoryName: Backpack
-  ThisBowsItemDataSheet: {fileID: 11400000, guid: 5fa6bae62a1e8404182dbc7ffb2765ea, type: 2}
+  ThisBowsWeapondDataSheet: {fileID: 11400000, guid: 3173d4af93be1f14fad8bedb094db496, type: 2}
   maxArrowVelocity: 80
 --- !u!1 &1744474015409572517
 GameObject:
@@ -131,7 +131,7 @@ SpriteRenderer:
   m_AutoUVMaxAngle: 89
   m_LightmapParameters: {fileID: 0}
   m_SortingLayerID: 394587859
-  m_SortingLayer: 4
+  m_SortingLayer: 5
   m_SortingOrder: 2
   m_Sprite: {fileID: 21300000, guid: 017a589bc70c16c47be01a6337e2e2b0, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
@@ -247,7 +247,7 @@ SpriteRenderer:
   m_AutoUVMaxAngle: 89
   m_LightmapParameters: {fileID: 0}
   m_SortingLayerID: 394587859
-  m_SortingLayer: 4
+  m_SortingLayer: 5
   m_SortingOrder: 2
   m_Sprite: {fileID: 21300000, guid: 017a589bc70c16c47be01a6337e2e2b0, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
@@ -363,7 +363,7 @@ SpriteRenderer:
   m_AutoUVMaxAngle: 89
   m_LightmapParameters: {fileID: 0}
   m_SortingLayerID: 394587859
-  m_SortingLayer: 4
+  m_SortingLayer: 5
   m_SortingOrder: 0
   m_Sprite: {fileID: 21300000, guid: ff495f54321ea15419fc4c3d1e94ef0d, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
@@ -451,7 +451,7 @@ SpriteRenderer:
   m_AutoUVMaxAngle: 89
   m_LightmapParameters: {fileID: 0}
   m_SortingLayerID: 394587859
-  m_SortingLayer: 4
+  m_SortingLayer: 5
   m_SortingOrder: 1
   m_Sprite: {fileID: 21300000, guid: 8702a4557da00b84bacd28aa6801dd6e, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}

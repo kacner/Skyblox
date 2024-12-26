@@ -5,8 +5,9 @@ using UnityEngine;
 
 public class Goal
 {
+    public Quest Quest { get; set; }
     public string description { get; set; }
-    public bool completed { get; set; }
+    public bool Completed { get; set; }
     public int currentAmount { get; set; }
     public int requiredAmount { get; set; }
 
@@ -24,6 +25,7 @@ public class Goal
 
     public void Complete()
     {
-        completed = true;
+        Quest.CheckGoals();
+        Completed = true;
     }
 }
