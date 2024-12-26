@@ -1,8 +1,6 @@
 using UnityEngine;
 using UnityEngine.UI;
 using TMPro;
-using static UnityEditor.Progress;
-using Unity.Burst.Intrinsics;
 
 public class Slot_UI : MonoBehaviour
 {

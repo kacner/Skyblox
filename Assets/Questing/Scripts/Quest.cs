@@ -1,9 +1,6 @@
-using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using System.Linq;
-using static UnityEditor.Progress;
-using Unity.VisualScripting;
 
 public class Quest : MonoBehaviour
 {
