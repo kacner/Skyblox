@@ -6,11 +6,11 @@ using UnityEngine;
 
 public class Player : MonoBehaviour
 {
-    public InventoryManager inventory;
+    public InventoryManager inventoryManager;
 
     private void Awake()
     {
-        inventory = GetComponent<InventoryManager>();
+        inventoryManager = GetComponent<InventoryManager>();
     }
 
     public void dropItem(Item item)

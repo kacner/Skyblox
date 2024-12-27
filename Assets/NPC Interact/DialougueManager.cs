@@ -47,12 +47,23 @@ public class DialougueManager : MonoBehaviour
         advancedNpc.ChangeState(node.Emotion);
         Dialouge = dialouge;
 
+        /*if (node.nextNode.ApplyQuestTrigger && LastKnownNpcReference != null && LastKnownNpcReference.questType != "")
+        {
+            print(node.DialougueText);
+            StopCoroutine(typeEffect);
+            typeEffect = StartCoroutine(TypeEffect(LastKnownNpcReference.Quest.Description, dialouge.TalkSpeed));
+
+
+            AtemptToAssignQuest();
+        }
+        else
+            typeEffect = StartCoroutine(TypeEffect(node.DialougueText, dialouge.TalkSpeed));*/
 
         GameManager.instance.ui_Manager.ChangeState(UI_Manager.UIState.DialougeManager); // same as showdialouge
 
         DialogTitleText.text = title;
-        typeEffect = StartCoroutine(TypeEffect(node.DialougueText, dialouge.TalkSpeed));
 
+        typeEffect = StartCoroutine(TypeEffect(node.DialougueText, dialouge.TalkSpeed));
 
         foreach (Transform child in responseButtonContainer)
         {
@@ -76,7 +87,8 @@ public class DialougueManager : MonoBehaviour
     {
         if (response.nextNode.ApplyQuestTrigger && LastKnownNpcReference != null && LastKnownNpcReference.questType != "")
         {
-            Debug.Log("Quest Trigger Active for Node: " + node.DialougueText);
+            print(node.DialougueText);
+
             AtemptToAssignQuest();
         }
 
@@ -208,6 +220,9 @@ public class DialougueManager : MonoBehaviour
             LastKnownNpcReference.Quest.GiveReward();
             LastKnownNpcReference.Healped = true;
             LastKnownNpcReference.AssignedQuest = false;
+            print("Yippie du gjorde det");
         }
-    } 
+        else
+            print("du har inte gjort klart questen än");
+    }
 }

@@ -21,7 +21,7 @@ MonoBehaviour:
         Responses:
         - responseText: Yes!
           nextNode:
-            DialougueText: Great You Need to this this -
+            DialougueText: Great You Need to do this -
             Responses:
             - responseText: Okay bye
               nextNode:

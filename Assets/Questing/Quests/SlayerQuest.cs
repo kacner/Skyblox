@@ -9,7 +9,7 @@ public class SlayerQuest : Quest
     {
         QuestName = "Slayer Quest";
         Description = "Slay all the slimes!";
-        ItemReward = GameManager.instance.itemManager.GetItemByName("Arrow");
+        ItemReward = GameManager.instance.itemManager.GetItemByName("Rookie_Bow");
 
         Goals.Add(new KillGoal(this, 0, "Kill 3 Slimes", false, 0, 3));
 

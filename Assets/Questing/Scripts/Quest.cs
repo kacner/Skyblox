@@ -32,14 +32,17 @@ public class Quest : MonoBehaviour
     {
         if (ItemReward != null)
         {
-            ItemData itemData = ItemReward.data;
-            if (itemData is WeapondData)
+            if (player != null)
             {
-                player.inventory.Add("Toolbar", ItemReward);
-                GameManager.instance.ui_Manager.RefreshInventoryUI("Toolbar");
+                player.inventoryManager.AddBasedOnItem(ItemReward);
+                print("Added " + ItemReward.data.itemName);
             }
             else
-                player.inventory.Add("Backpack", ItemReward);
+            {
+                player = GameManager.instance.player;
+                addItem();
+                Debug.Log("atempted to fix player nullreference");
+            }
         }
     }
 }

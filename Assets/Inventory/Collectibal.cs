@@ -76,13 +76,7 @@ public class Collectibal : MonoBehaviour
         {
             StartCoroutine(PickUpAnimation());
 
-            if (ItemData is WeapondData)
-            {
-                player.inventory.Add("Toolbar", item);
-                GameManager.instance.ui_Manager.RefreshInventoryUI("Toolbar");
-            }
-            else //om item är nått annat än en tool
-                player.inventory.Add("Backpack", item);
+            player.inventoryManager.AddBasedOnItem(item);
 
             Destroy(GetComponent<BoxCollider2D>()); //removes collition detec
         }

@@ -15,4 +15,5 @@ MonoBehaviour:
   itemName: Chestplate
   icon: {fileID: 750316040, guid: 1ce750b9edbcd3548873929a38a114db, type: 3}
   Rarity: 4
+  StackAmount: 1
   armorType: 2

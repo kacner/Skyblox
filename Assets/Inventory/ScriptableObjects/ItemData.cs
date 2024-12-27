@@ -18,4 +18,5 @@ public class ItemData : ScriptableObject
     public string itemName = "Item Name";
     public Sprite icon;
     public Rarity Rarity;
+    public int StackAmount = 64;
 }

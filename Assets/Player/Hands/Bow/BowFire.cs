@@ -64,8 +64,8 @@ public class BowFire : MonoBehaviour
 
         UpdateSortingLayers();
 
-        inventory = GameManager.instance.player.inventory.GetInventoryByName("Backpack");
-        HotbarInventory = GameManager.instance.player.inventory.GetInventoryByName("Toolbar");
+        inventory = GameManager.instance.player.inventoryManager.GetInventoryByName("Backpack");
+        HotbarInventory = GameManager.instance.player.inventoryManager.GetInventoryByName("Toolbar");
         ui_manager = GameManager.instance.ui_Manager;
     }
 

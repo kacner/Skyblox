@@ -15,3 +15,4 @@ MonoBehaviour:
   itemName: Arrow
   icon: {fileID: 988290006, guid: 1ce750b9edbcd3548873929a38a114db, type: 3}
   Rarity: 1
+  StackAmount: 64

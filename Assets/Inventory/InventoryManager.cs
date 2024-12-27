@@ -37,14 +37,26 @@ public class InventoryManager : MonoBehaviour
         }
     }
 
+    public void AddBasedOnItem(Item item)
+    {
+        if (item.data is WeapondData)
+        {
+            toolbar.Add(item);
+
+            GameManager.instance.ui_Manager.RefreshInventoryUI("Toolbar");
+        }
+        else
+        {
+            backpack.Add(item);
+        }
+    }
+
     public Inventory GetInventoryByName(string inventoryName)
     {
         if (inventoryByName.ContainsKey(inventoryName))
         {
-            //Debug.Log(inventoryName.ToString() + "was found!!");
             return inventoryByName[inventoryName];
         }
-        //Debug.Log(inventoryName.ToString() + "wasent found");
         return null;
     }
 }

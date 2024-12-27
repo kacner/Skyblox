@@ -1,5 +1,9 @@
 using System.Collections.Generic;
+using System.Runtime.CompilerServices;
+using Unity.VisualScripting.FullSerializer;
 using UnityEngine;
+using UnityEngine.Rendering.Universal;
+using static UnityEditor.Progress;
 
 [System.Serializable]
 public class Inventory
@@ -78,6 +82,7 @@ public class Inventory
             this.itemName = item.data.itemName;
             this.icon = item.data.icon;
             itemRarity = item.data.Rarity;
+            this.maxAllowed = item.data.StackAmount;
 
             if (item.data is ArmorData armorData)
             HasArmorType = armorData.armorType;
@@ -96,6 +101,7 @@ public class Inventory
             count++;
             this.maxAllowed = maxAllowed;
             this.itemData = itemData;
+            this.maxAllowed = itemData.StackAmount;
         }
 
         public void RemoveItem()

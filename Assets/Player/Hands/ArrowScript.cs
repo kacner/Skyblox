@@ -78,10 +78,6 @@ public class ArrowScript : MonoBehaviour
         {
             hasHitEnemy = true;
 
-            Debug.Log("Hit detected on enemy!");
-
-            print(ChargedTime + "      " + MaxChargeTime);
-
             float finalDmg = TheBowsWeapondDataSheet.Damage * (ChargedTime / MaxChargeTime);
 
             enemyHP.TakeDmg(finalDmg, latePlayerPos, 20f, this.gameObject);
