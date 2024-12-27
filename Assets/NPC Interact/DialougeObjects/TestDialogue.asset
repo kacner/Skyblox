@@ -14,37 +14,37 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   RootNode:
     DialougueText: buenos dias beatch
-    responses:
-    - responseText: Erhmm... Hi
+    Responses:
+    - responseText: Hola!
       nextNode:
-        DialougueText: vould you like quest?
-        responses:
+        DialougueText: vould you like a Quest?
+        Responses:
         - responseText: Yes!
           nextNode:
-            DialougueText: 'Herer you go '
-            responses:
-            - responseText: Asume Quest
+            DialougueText: Great You Need to this this -
+            Responses:
+            - responseText: Okay bye
               nextNode:
                 DialougueText: 
-                responses: []
-                Emotion: 0
-                Quest: 
-            Emotion: 2
-            Quest: SlayerQuest
-        - responseText: NO!
+                Responses: []
+                Emotion: 3
+                ApplyQuestTrigger: 1
+            Emotion: 1
+            ApplyQuestTrigger: 0
+        - responseText: Hell nav..
           nextNode:
-            DialougueText: Bye Cracker!
-            responses: []
+            DialougueText: Why the rude tone sir?
+            Responses: []
             Emotion: 0
-            Quest: 
-        Emotion: 3
-        Quest: 
-    - responseText: Hasta luego
+            ApplyQuestTrigger: 0
+        Emotion: 2
+        ApplyQuestTrigger: 0
+    - responseText: Hasta Luego
       nextNode:
-        DialougueText: Hasta luego
-        responses: []
+        DialougueText: 
+        Responses: []
         Emotion: 0
-        Quest: 
+        ApplyQuestTrigger: 0
     Emotion: 0
-    Quest: 
+    ApplyQuestTrigger: 0
   TalkSpeed: 0.05

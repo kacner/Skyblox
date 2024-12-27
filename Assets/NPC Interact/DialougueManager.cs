@@ -3,8 +3,6 @@ using UnityEngine;
 using System.Collections;
 using UnityEngine.UI;
 using System.Collections.Generic;
-using System.Collections.Specialized;
-
 public class DialougueManager : MonoBehaviour
 {
     private Dialougue Dialouge;
@@ -55,6 +53,7 @@ public class DialougueManager : MonoBehaviour
         DialogTitleText.text = title;
         typeEffect = StartCoroutine(TypeEffect(node.DialougueText, dialouge.TalkSpeed));
 
+
         foreach (Transform child in responseButtonContainer)
         {
             Destroy(child.gameObject);
@@ -62,7 +61,7 @@ public class DialougueManager : MonoBehaviour
 
         buttons.Clear();
 
-        foreach (DialougueResponse response in node.responses)
+        foreach (DialougueResponse response in node.Responses)
         {
             GameObject buttonObj = Instantiate(responseButtonPrefab, responseButtonContainer);
             buttonObj.GetComponentInChildren<TextMeshProUGUI>().text = response.responseText;
@@ -75,8 +74,9 @@ public class DialougueManager : MonoBehaviour
 
     public void SelectResponse(DialougueResponse response, string title, AdvancedNPCInteract advancedNpc, DialougueNode node)
     {
-        if (LastKnownNpcReference != null && LastKnownNpcReference.questType != "")
+        if (response.nextNode.ApplyQuestTrigger && LastKnownNpcReference != null && LastKnownNpcReference.questType != "")
         {
+            Debug.Log("Quest Trigger Active for Node: " + node.DialougueText);
             AtemptToAssignQuest();
         }
 

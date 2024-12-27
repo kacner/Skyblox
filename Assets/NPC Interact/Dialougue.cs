@@ -1,3 +1,4 @@
+using UnityEditor;
 using UnityEngine;
 [CreateAssetMenu(fileName = "New Dialouhgue", menuName = "Dialougue/Dialougue Asset")]
 public class Dialougue : ScriptableObject

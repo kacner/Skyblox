@@ -5,11 +5,12 @@ using UnityEngine;
 public class DialougueNode
 {
     public string DialougueText;
-    public List<DialougueResponse> responses;
+    public List<DialougueResponse> Responses;
     [SerializeField] public AdvancedNPCInteract.AnimationState Emotion;
+    public bool ApplyQuestTrigger = false;
 
     internal bool IsLastNode()
     {
-        return responses.Count <= 0;
+        return Responses.Count <= 0;
     }
 }
