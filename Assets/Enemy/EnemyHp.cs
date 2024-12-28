@@ -155,6 +155,7 @@ public class EnemyHp : MonoBehaviour, IEnemy
                     deathParticle.Play();
                 }
                 particlesPlayed = true;
+                    GetComponent<LootTable>()?.GenerateDrop();
             }
 
             deathDMGmat.SetFloat("_DisolveAmount", Mathf.Lerp(0, 1, ElapsedTime / Duration));

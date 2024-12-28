@@ -313,11 +313,6 @@ public class PlayerMovement : MonoBehaviour
             cursorspriteRectTransform.anchoredPosition = localPoint;
         }
 
-        if (Input.GetKeyDown(KeyCode.M))
-            SlowMotion = !SlowMotion;
-
-        Time.timeScale = SlowMotion ? 0.1f : 1f;
-
         if (Input.GetKey(KeyCode.N))
             Debug.Break();
     }

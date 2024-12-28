@@ -150,6 +150,8 @@ public class UI_Manager : MonoBehaviour
             case UIState.PauseMenu:
                 PauseMenu.SetActive(false);
                 CursorSprite.SetActive(true);
+                Time.timeScale = 1;
+                print("Resumed");
                 break;
 
             case UIState.DialougeManager:
@@ -176,6 +178,8 @@ public class UI_Manager : MonoBehaviour
                 PauseMenu.SetActive(true);
                 CursorSprite.SetActive(false);
                 Cursor.visible = true;
+                Time.timeScale = 0;
+                print("Paused");
                 break;
 
             case UIState.DialougeManager:

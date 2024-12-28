@@ -43,7 +43,7 @@ public class Inventory
         public bool CanAddItem(string itemName, Slot_UI ToSlot_UI = null, Slot ToSlot = null)
         {
            // Debug.Log(ToSlot_UI.WantsArmorType == GetSlotArmorType(UI_Manager.draggedSlot.slotID, ToSlot_UI.inventory));
-            if ((this.itemName == itemName && count < maxAllowed) || ToSlot.IsEmpty)
+            if ((this.itemName == itemName && count < maxAllowed) || (ToSlot != null && ToSlot.IsEmpty))
             { // om man kan stacka items
                 if (ToSlot_UI != null && ToSlot_UI.isArmorSlot)
                 {

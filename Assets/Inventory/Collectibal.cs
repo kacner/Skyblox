@@ -76,6 +76,7 @@ public class Collectibal : MonoBehaviour
         {
             StartCoroutine(PickUpAnimation());
 
+            print(player.inventoryManager);
             player.inventoryManager.AddBasedOnItem(item);
 
             Destroy(GetComponent<BoxCollider2D>()); //removes collition detec

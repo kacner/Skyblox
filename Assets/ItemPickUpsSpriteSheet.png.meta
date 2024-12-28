@@ -269,6 +269,48 @@ TextureImporter:
       indices: 
       edges: []
       weights: []
+    - serializedVersion: 2
+      name: ItemPickUpsSpriteSheet_7
+      rect:
+        serializedVersion: 2
+        x: 112
+        y: 112
+        width: 16
+        height: 16
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 1ef4937c2ece7de4fa2d2584180145ba
+      internalID: -1897649795
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: ItemPickUpsSpriteSheet_8
+      rect:
+        serializedVersion: 2
+        x: 0
+        y: 96
+        width: 16
+        height: 16
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: b2ac81032e37a4341acc0a614b8f59ad
+      internalID: 1272304796
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
     outline: []
     physicsShape: []
     bones: []
@@ -287,6 +329,8 @@ TextureImporter:
       ItemPickUpsSpriteSheet_4: 1833251877
       ItemPickUpsSpriteSheet_5: 1715059390
       ItemPickUpsSpriteSheet_6: -1381525095
+      ItemPickUpsSpriteSheet_7: -1897649795
+      ItemPickUpsSpriteSheet_8: 1272304796
   mipmapLimitGroupName: 
   pSDRemoveMatte: 0
   userData: 

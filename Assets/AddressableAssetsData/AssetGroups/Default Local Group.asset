@@ -52,6 +52,11 @@ MonoBehaviour:
     m_ReadOnly: 0
     m_SerializedLabels: []
     FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: b52aa7bfcfdc9cd4e896986838040827
+    m_Address: Assets/Inventory/Prefabs/Slime_Chunk--Pickup--.prefab
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    FlaggedDuringContentUpdateRestriction: 0
   m_ReadOnly: 0
   m_Settings: {fileID: 11400000, guid: 331b7f8ec97411b4f8ff2d7b86c2f29c, type: 2}
   m_SchemaSet:
