@@ -12,7 +12,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 1387ad9f155f394478439aa26d1b8fb2, type: 3}
   m_Name: Slime_Chunk
   m_EditorClassIdentifier: 
-  itemName: SlimeChunk
+  itemName: Slime_Chunk
   icon: {fileID: 1272304796, guid: 1ce750b9edbcd3548873929a38a114db, type: 3}
   Rarity: 1
   StackAmount: 64

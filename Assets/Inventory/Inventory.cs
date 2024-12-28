@@ -90,6 +90,8 @@ public class Inventory
             itemData = item.data;
 
             count++;
+
+            ItemEvents.ItemPickedUp(item.data.itemName);
         }
 
         public void AddItem(string itemName, Sprite icon, int maxAllowed, Rarity Rarity, ArmorType ArmorType, ItemData itemData)

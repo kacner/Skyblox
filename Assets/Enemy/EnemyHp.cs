@@ -30,7 +30,6 @@ public class EnemyHp : MonoBehaviour, IEnemy
     [SerializeField] private GameObject DamagePopUpPrefab;
 
     [HideInInspector] public bool isDead = false;
-    //[Header("Quests")]
     public int ID { get; set; }
 
     void Start()

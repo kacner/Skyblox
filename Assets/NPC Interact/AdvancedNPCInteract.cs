@@ -24,21 +24,13 @@ public class AdvancedNPCInteract : MonoBehaviour
     [SerializeField] private float interactCooldown = 0.5f;
     private float interactCooldownTimer = 0f;
     [SerializeField] private bool isInteracting = false;
-    
-    [Space(10)]
 
-    [Header("Dialouge")]
-    [SerializeField] private string[] DialougeArr;
-    [SerializeField] private AnimationState[] Emotion;
-
-    public Animator E_Animator;
+    [HideInInspector] public Animator E_Animator;
 
     private bool DistanceOverload = false;
 
-    private Transform playerTransform;
-
     public AnimationState currentState = AnimationState.Idle;
-    private Animator animator;
+    [HideInInspector] public Animator animator;
     private UI_Manager UI_manager;
     [HideInInspector] public bool hasFinishedTypeOut = false;
     [HideInInspector] public bool wantToSkip = false;
@@ -47,7 +39,7 @@ public class AdvancedNPCInteract : MonoBehaviour
     [Header("Quests")]
     public string questType;
     public bool AssignedQuest = false, Healped = false;
-    [HideInInspector] public Quest Quest;
+    public Quest Quest;
 
     [System.Serializable]
     public enum AnimationState
@@ -67,7 +59,6 @@ public class AdvancedNPCInteract : MonoBehaviour
     {
         interactable = GetComponent<Interactable>();
         CurrentInteractTime = MinKeyPressTime;
-        Invoke("ConnectReferences", 0.25f);
         InvokeRepeating("UpdateDistance", 1, 0.3f);
 
         animator = GetComponent<Animator>();
@@ -176,20 +167,6 @@ public class AdvancedNPCInteract : MonoBehaviour
         E_Animator.SetTrigger("ButtonOff");
         yield return new WaitForSeconds(2f);
         E_Animator.SetTrigger("ButtonOn");
-    }
-
-    private IEnumerator Disable_EforTime(float time)
-    {
-        DistanceOverload = true;
-        interactButton.enabled = false;
-        yield return new WaitForSeconds(time);
-        interactButton.enabled = true;
-        DistanceOverload = false;
-    }
-
-    private void ConnectReferences()
-    {
-        playerTransform = GameManager.instance.player.transform;
     }
 
     public void ChangeState(AnimationState newState)

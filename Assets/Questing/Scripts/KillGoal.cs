@@ -30,5 +30,4 @@ public class KillGoal : Goal
             evaluate();
         }
     }
-
 }

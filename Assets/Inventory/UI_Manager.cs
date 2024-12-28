@@ -151,12 +151,12 @@ public class UI_Manager : MonoBehaviour
                 PauseMenu.SetActive(false);
                 CursorSprite.SetActive(true);
                 Time.timeScale = 1;
-                print("Resumed");
                 break;
 
             case UIState.DialougeManager:
                 GameManager.instance.DialougeManager.HideDialogue();
                 CursorSprite.SetActive(true);
+                Time.timeScale = 1;
                 break;
 
             case UIState.None:
@@ -179,13 +179,13 @@ public class UI_Manager : MonoBehaviour
                 CursorSprite.SetActive(false);
                 Cursor.visible = true;
                 Time.timeScale = 0;
-                print("Paused");
                 break;
 
             case UIState.DialougeManager:
                 GameManager.instance.DialougeManager.ShowDialogue();
                 CursorSprite.SetActive(false);
                 Cursor.visible = true;
+                Time.timeScale = 0;
                 break;
 
             case UIState.None:

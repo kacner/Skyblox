@@ -21,7 +21,9 @@ public class Quest : MonoBehaviour
         Completed = Goals.All(g => g.Completed);
 
         if (Completed)
+        {
             GiveReward();
+        }
     }
     public void GiveReward()
     {

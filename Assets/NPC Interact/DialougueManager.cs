@@ -20,6 +20,8 @@ public class DialougueManager : MonoBehaviour
     private Coroutine typeEffect;
 
     private AdvancedNPCInteract LastKnownNpcReference;
+    private Animator skipTextAnimator;
+
 
     private void Awake()
     {
@@ -38,6 +40,8 @@ public class DialougueManager : MonoBehaviour
     private void Start()
     {
         GameManager.instance.ui_Manager?.exitState(); //same as hideDialouge
+
+        skipTextAnimator = SkipText.GetComponent<Animator>();
     }
 
     public void StartDialogue(string title, DialougueNode node, Dialougue dialouge, AdvancedNPCInteract advancedNpc)
@@ -59,11 +63,22 @@ public class DialougueManager : MonoBehaviour
         else
             typeEffect = StartCoroutine(TypeEffect(node.DialougueText, dialouge.TalkSpeed));*/
 
+        LastKnownNpcReference.animator.updateMode = AnimatorUpdateMode.UnscaledTime;
+        skipTextAnimator.updateMode = AnimatorUpdateMode.UnscaledTime;
+
         GameManager.instance.ui_Manager.ChangeState(UI_Manager.UIState.DialougeManager); // same as showdialouge
 
         DialogTitleText.text = title;
 
-        typeEffect = StartCoroutine(TypeEffect(node.DialougueText, dialouge.TalkSpeed));
+        if (!CheckForQuestOverride(node.DialougueText))
+        {
+            typeEffect = StartCoroutine(TypeEffect(node.DialougueText, dialouge.TalkSpeed));
+        }
+        else
+            typeEffect = StartCoroutine(TypeEffect(ReturnQuestOverride(node.DialougueText), dialouge.TalkSpeed));
+
+        
+
 
         foreach (Transform child in responseButtonContainer)
         {
@@ -87,7 +102,6 @@ public class DialougueManager : MonoBehaviour
     {
         if (response.nextNode.ApplyQuestTrigger && LastKnownNpcReference != null && LastKnownNpcReference.questType != "")
         {
-            print(node.DialougueText);
 
             AtemptToAssignQuest();
         }
@@ -98,6 +112,7 @@ public class DialougueManager : MonoBehaviour
         }
         else
         {
+            LastKnownNpcReference.animator.updateMode = AnimatorUpdateMode.Normal;
             GameManager.instance.ui_Manager.exitState(); //same as hideDialouge
         }
     }
@@ -111,6 +126,7 @@ public class DialougueManager : MonoBehaviour
         if (advancedNpc != null)
         {
             advancedNpc.ChangeState(AdvancedNPCInteract.AnimationState.Idle);
+            skipTextAnimator.updateMode = AnimatorUpdateMode.Normal;
             advancedNpc.totalReset();
         }
     }
@@ -129,7 +145,6 @@ public class DialougueManager : MonoBehaviour
         foreach (GameObject button in buttons)
             button?.SetActive(true);
     }
-
     public bool IsDialogueActive()
     {
         return DialogueParent.activeSelf;
@@ -148,7 +163,7 @@ public class DialougueManager : MonoBehaviour
 
         Animator skipTextAnimator = SkipText.GetComponent<Animator>();
 
-        if ((text.Length * talkspeed) > 1.5f)
+        if ((text.Length * talkspeed) > 1.5f) //handle skip button
         {
             shouldShowSkip = true;
             SkipText.enabled = true;
@@ -161,6 +176,12 @@ public class DialougueManager : MonoBehaviour
         {
             char letter = text[i];
             DialogBodyText.text += letter;
+
+            if (letter != ' ')
+            {
+                yield return new WaitForSecondsRealtime(talkspeed);
+            }
+
 
             if (wantToSkip)
             {
@@ -176,10 +197,12 @@ public class DialougueManager : MonoBehaviour
                 skipTextAnimator.SetTrigger("FadeOut");
             }
 
-            yield return new WaitForSeconds(talkspeed);
-
-            
+            if (letter != ' ')
+            {
+                yield return new WaitForSecondsRealtime(talkspeed);
+            }
         }
+
         wantToSkip = false;
         hasFinnishedTypeOut = true;
 
@@ -224,5 +247,24 @@ public class DialougueManager : MonoBehaviour
         }
         else
             print("du har inte gjort klart questen än");
+    }
+
+    private bool CheckForQuestOverride(string text)
+    {
+        if (text.Contains("{"))
+            return true;
+        else
+            return false;
+    }
+    private string ReturnQuestOverride(string text)
+    {
+        AtemptToAssignQuest();
+
+        if (text.Contains("{QuestName}"))
+            text = text.Replace("{QuestName}", LastKnownNpcReference.Quest.QuestName);
+        if (text.Contains("{QuestDescription}"))
+            text = text.Replace("{QuestDescription}", LastKnownNpcReference.Quest.Description);
+
+        return text;
     }
 }

@@ -21,15 +21,16 @@ MonoBehaviour:
         Responses:
         - responseText: Yes!
           nextNode:
-            DialougueText: Great You Need to do this -
+            DialougueText: 'Great! This is a {QuestName}:                                               
+              {QuestDescription} good luck.'
             Responses:
-            - responseText: Okay bye
+            - responseText: Asume Quest
               nextNode:
                 DialougueText: 
                 Responses: []
                 Emotion: 3
                 ApplyQuestTrigger: 1
-            Emotion: 1
+            Emotion: 2
             ApplyQuestTrigger: 0
         - responseText: Hell nav..
           nextNode:
