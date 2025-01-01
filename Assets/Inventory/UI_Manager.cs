@@ -15,7 +15,14 @@ public class UI_Manager : MonoBehaviour
 
     public PlayerMovement playerMovement;
 
+    [Space]
+
+    [Header("Inventories")]
     public GameObject PauseMenu;
+    public GameObject QuestMenu;
+
+    [Space]
+
     public GameObject CursorSprite;
 
     public static Slot_UI draggedSlot;
@@ -24,6 +31,8 @@ public class UI_Manager : MonoBehaviour
 
     public bool isInventoryToggled = false;
     public bool isDialougeWindowToggled = false;
+
+    private List<GameObject> OtherUi;
 
     public enum UIState
     {
@@ -81,6 +90,7 @@ public class UI_Manager : MonoBehaviour
         {
             inventorypanel.SetActive(false);
             Cursor.visible = false;
+
         }
     }
     public void openInventory()
@@ -102,7 +112,7 @@ public class UI_Manager : MonoBehaviour
 
     public void RefreshAll()
     {
-        foreach(KeyValuePair<string, InventoryUI> keyValuePair in inventoryUIByName)
+        foreach (KeyValuePair<string, InventoryUI> keyValuePair in inventoryUIByName)
         {
             keyValuePair.Value.Refresh();
         }
@@ -119,9 +129,9 @@ public class UI_Manager : MonoBehaviour
 
     void Initialize()
     {
-        foreach(InventoryUI ui in inventoryUIs)
+        foreach (InventoryUI ui in inventoryUIs)
         {
-            if(!inventoryUIByName.ContainsKey(ui.inventoryName))
+            if (!inventoryUIByName.ContainsKey(ui.inventoryName))
             {
                 inventoryUIByName.Add(ui.inventoryName, ui);
             }
@@ -202,11 +212,26 @@ public class UI_Manager : MonoBehaviour
 
         CursorSprite.SetActive(true);
         inventoryUIs[0].slotEndDrag();
+        QuestMenu.SetActive(false);
     }
 
     public void exitState()
     {
         ChangeState(UIState.None);
         Cursor.visible = false;
+    }
+
+    public void TryOpenQuestMenu()
+    {
+        if (currentState == UIState.Inventory)
+        {
+            QuestMenu.SetActive(true);
+        }
+    }
+
+    public void TryClouseQuestMenu()
+    {
+        if (QuestMenu.activeSelf)
+            QuestMenu.SetActive(false);
     }
 }
