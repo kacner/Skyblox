@@ -1,3 +1,4 @@
+using System.Collections.Generic;
 using TMPro;
 using Unity.VisualScripting;
 using UnityEngine;
@@ -5,12 +6,15 @@ public class TextArray : MonoBehaviour
 {
     [Header("Text Array Settings")]
     [SerializeField] private GameObject textPrefab; 
+    [SerializeField] private GameObject textPrefab2; 
     [SerializeField] private Transform initialSpawnPoint;
     [SerializeField] private Transform EndPoint;
     [SerializeField] private float spawnOffset = 7.5f;
 
     private RectTransform lastSpawnedText;
-    private int currentIndex = 0;
+    public List<Quest> AllQuests;
+
+    int currentItteration = 0;
 
     void Update()
     {
@@ -23,6 +27,12 @@ public class TextArray : MonoBehaviour
     {
         // Determine spawn pos
         Vector3 instantiatePos;
+
+        if (currentItteration >= AllQuests.Count)
+        {
+            Debug.LogWarning("No more quests to display.");
+            return;
+        }
         if (lastSpawnedText == null)
         {
             instantiatePos = initialSpawnPoint.position;
@@ -39,10 +49,23 @@ public class TextArray : MonoBehaviour
         }
 
         GameObject newTextObject = Instantiate(textPrefab, transform);
+
         RectTransform rectTransform = newTextObject.GetComponent<RectTransform>();
         rectTransform.position = instantiatePos;
 
+        Quest currentQuest = AllQuests[currentItteration];
+        if (currentQuest != null)
+        {
+            rectTransform.GetComponentInChildren<TextMeshProUGUI>().text = currentQuest.Description;
+        }
+        else
+        {
+            Debug.LogWarning($"Quest at index {currentItteration} is null.");
+        }
+
         lastSpawnedText = rectTransform;
+
+        currentItteration++;
     }
     private float GetRenderedTextHeight(TextMeshProUGUI tmp)
     {
@@ -121,5 +144,9 @@ public class TextArray : MonoBehaviour
             Vector3 offsetEnd = offsetStart + new Vector3(0, -spawnOffset, 0);
             Gizmos.DrawLine(offsetStart, offsetEnd);
         }
+    }
+    public void QuestDisplayRefresh()
+    {
+        SpawnText();
     }
 }

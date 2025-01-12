@@ -3,6 +3,8 @@ using UnityEngine;
 using System.Collections;
 using UnityEngine.UI;
 using System.Collections.Generic;
+using Unity.VisualScripting;
+
 public class DialougueManager : MonoBehaviour
 {
     private Dialougue Dialouge;
@@ -50,18 +52,6 @@ public class DialougueManager : MonoBehaviour
         this.advancedNpc = advancedNpc;
         advancedNpc.ChangeState(node.Emotion);
         Dialouge = dialouge;
-
-        /*if (node.nextNode.ApplyQuestTrigger && LastKnownNpcReference != null && LastKnownNpcReference.questType != "")
-        {
-            print(node.DialougueText);
-            StopCoroutine(typeEffect);
-            typeEffect = StartCoroutine(TypeEffect(LastKnownNpcReference.Quest.Description, dialouge.TalkSpeed));
-
-
-            AtemptToAssignQuest();
-        }
-        else
-            typeEffect = StartCoroutine(TypeEffect(node.DialougueText, dialouge.TalkSpeed));*/
 
         LastKnownNpcReference.animator.updateMode = AnimatorUpdateMode.UnscaledTime;
         skipTextAnimator.updateMode = AnimatorUpdateMode.UnscaledTime;
@@ -232,7 +222,10 @@ public class DialougueManager : MonoBehaviour
     }
     private void AssignQuest()
     {
-        LastKnownNpcReference.Quest = (Quest)GameManager.instance.QuestObject.AddComponent(System.Type.GetType(LastKnownNpcReference.questType));
+        Quest QuestToAdd = (Quest)GameManager.instance.QuestObject.AddComponent(System.Type.GetType(LastKnownNpcReference.questType));
+        LastKnownNpcReference.Quest = QuestToAdd;
+        GameManager.instance.Notebook.AllQuests.Add(QuestToAdd);
+        GameManager.instance.Notebook.QuestDisplayRefresh();
         LastKnownNpcReference.AssignedQuest = true;
     }
 
