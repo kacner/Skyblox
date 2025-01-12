@@ -1,7 +1,6 @@
 using TMPro;
 using Unity.VisualScripting;
 using UnityEngine;
-
 public class TextArray : MonoBehaviour
 {
     [Header("Text Array Settings")]
@@ -22,7 +21,7 @@ public class TextArray : MonoBehaviour
     }
     void SpawnText()
     {
-        // Determine spawn position
+        // Determine spawn pos
         Vector3 instantiatePos;
         if (lastSpawnedText == null)
         {
@@ -33,19 +32,16 @@ public class TextArray : MonoBehaviour
             instantiatePos = CalculateNextPos(lastSpawnedText);
         }
 
-        // Check if the text would spawn below the EndPoint
         if (instantiatePos.y < EndPoint.position.y)
         {
             Debug.LogWarning("Cannot spawn more text objects: position below EndPoint.");
             return;
         }
 
-        // Instantiate the new text object
         GameObject newTextObject = Instantiate(textPrefab, transform);
         RectTransform rectTransform = newTextObject.GetComponent<RectTransform>();
         rectTransform.position = instantiatePos;
 
-        // Store reference to the last spawned text
         lastSpawnedText = rectTransform;
     }
     private float GetRenderedTextHeight(TextMeshProUGUI tmp)
@@ -53,12 +49,77 @@ public class TextArray : MonoBehaviour
         if (tmp == null) return 0;
 
         tmp.ForceMeshUpdate();
-        return tmp.preferredHeight * tmp.rectTransform.lossyScale.y;
+
+        int lineCount = tmp.textInfo.lineCount;
+
+        float fontSize = tmp.fontSize;
+        float lineSpacing = tmp.lineSpacing;
+
+        float renderedHeight = (fontSize + (lineSpacing * fontSize / 100)) * lineCount;
+
+        return renderedHeight * tmp.rectTransform.lossyScale.y;
     }
 
     private Vector3 CalculateNextPos(RectTransform previousText)
     {
-        float previousTextHeight = GetRenderedTextHeight(previousText.GetComponentInChildren<TextMeshProUGUI>());
+        TextMeshProUGUI tmp = previousText.GetComponentInChildren<TextMeshProUGUI>();
+        float previousTextHeight = GetRenderedTextHeight(tmp);
+
         return previousText.position + new Vector3(0, -(previousTextHeight + spawnOffset), 0);
+    }
+    private void OnValidate()
+    {
+        UpdateGizmos();
+    }
+
+    private void UpdateGizmos()
+    {
+        if (!Application.isPlaying)
+        {
+            UnityEditor.SceneView.RepaintAll();
+        }
+    }
+
+    private void OnDrawGizmos()
+    {
+        if (initialSpawnPoint == null || EndPoint == null)
+            return;
+
+        Gizmos.color = Color.green;
+
+        if (lastSpawnedText != null)
+        {
+            TextMeshProUGUI tmp = lastSpawnedText.GetComponentInChildren<TextMeshProUGUI>();
+            float currentHeight = GetRenderedTextHeight(tmp);
+            Gizmos.DrawWireCube(
+                lastSpawnedText.position,
+                new Vector3(lastSpawnedText.rect.width, currentHeight, 0)
+            );
+        }
+
+        Vector3 nextPosition;
+        float nextHeight;
+        if (lastSpawnedText != null)
+        {
+            nextPosition = CalculateNextPos(lastSpawnedText);
+            TextMeshProUGUI tmp = lastSpawnedText.GetComponentInChildren<TextMeshProUGUI>();
+            nextHeight = GetRenderedTextHeight(tmp);
+        }
+        else
+        {
+            nextPosition = initialSpawnPoint.position;
+            nextHeight = 1f;
+        }
+
+        Gizmos.color = Color.blue;
+        Gizmos.DrawWireCube(nextPosition, new Vector3(1, nextHeight, 0)); 
+
+        Gizmos.color = Color.green;
+        if (lastSpawnedText != null)
+        {
+            Vector3 offsetStart = lastSpawnedText.position;
+            Vector3 offsetEnd = offsetStart + new Vector3(0, -spawnOffset, 0);
+            Gizmos.DrawLine(offsetStart, offsetEnd);
+        }
     }
 }
