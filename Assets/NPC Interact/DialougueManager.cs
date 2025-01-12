@@ -225,7 +225,7 @@ public class DialougueManager : MonoBehaviour
         Quest QuestToAdd = (Quest)GameManager.instance.QuestObject.AddComponent(System.Type.GetType(LastKnownNpcReference.questType));
         LastKnownNpcReference.Quest = QuestToAdd;
         GameManager.instance.Notebook.AllQuests.Add(QuestToAdd);
-        GameManager.instance.Notebook.QuestDisplayRefresh();
+        GameManager.instance.Notebook.AddQuestToDo();
         LastKnownNpcReference.AssignedQuest = true;
     }
 

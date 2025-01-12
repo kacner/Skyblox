@@ -1,6 +1,5 @@
 using System.Collections.Generic;
 using TMPro;
-using Unity.VisualScripting;
 using UnityEngine;
 public class TextArray : MonoBehaviour
 {
@@ -145,7 +144,7 @@ public class TextArray : MonoBehaviour
             Gizmos.DrawLine(offsetStart, offsetEnd);
         }
     }
-    public void QuestDisplayRefresh()
+    public void AddQuestToDo()
     {
         SpawnText();
     }
