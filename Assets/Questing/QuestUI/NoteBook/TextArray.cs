@@ -89,61 +89,6 @@ public class TextArray : MonoBehaviour
 
         return previousText.position + new Vector3(0, -(previousTextHeight + spawnOffset), 0);
     }
-    private void OnValidate()
-    {
-        UpdateGizmos();
-    }
-
-    private void UpdateGizmos()
-    {
-        if (!Application.isPlaying)
-        {
-            UnityEditor.SceneView.RepaintAll();
-        }
-    }
-
-    private void OnDrawGizmos()
-    {
-        if (initialSpawnPoint == null || EndPoint == null)
-            return;
-
-        Gizmos.color = Color.green;
-
-        if (lastSpawnedText != null)
-        {
-            TextMeshProUGUI tmp = lastSpawnedText.GetComponentInChildren<TextMeshProUGUI>();
-            float currentHeight = GetRenderedTextHeight(tmp);
-            Gizmos.DrawWireCube(
-                lastSpawnedText.position,
-                new Vector3(lastSpawnedText.rect.width, currentHeight, 0)
-            );
-        }
-
-        Vector3 nextPosition;
-        float nextHeight;
-        if (lastSpawnedText != null)
-        {
-            nextPosition = CalculateNextPos(lastSpawnedText);
-            TextMeshProUGUI tmp = lastSpawnedText.GetComponentInChildren<TextMeshProUGUI>();
-            nextHeight = GetRenderedTextHeight(tmp);
-        }
-        else
-        {
-            nextPosition = initialSpawnPoint.position;
-            nextHeight = 1f;
-        }
-
-        Gizmos.color = Color.blue;
-        Gizmos.DrawWireCube(nextPosition, new Vector3(1, nextHeight, 0)); 
-
-        Gizmos.color = Color.green;
-        if (lastSpawnedText != null)
-        {
-            Vector3 offsetStart = lastSpawnedText.position;
-            Vector3 offsetEnd = offsetStart + new Vector3(0, -spawnOffset, 0);
-            Gizmos.DrawLine(offsetStart, offsetEnd);
-        }
-    }
     public void AddQuestToDo()
     {
         SpawnText();

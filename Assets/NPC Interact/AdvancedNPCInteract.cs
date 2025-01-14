@@ -99,6 +99,8 @@ public class AdvancedNPCInteract : MonoBehaviour
             canInteract = true;
 
 
+
+
         if (canInteract && GameManager.instance.ui_Manager.currentState == UI_Manager.UIState.None)
         {
 

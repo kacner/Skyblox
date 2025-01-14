@@ -17,6 +17,7 @@ public class ToolBar_UI : MonoBehaviour
 
     private void Start()
     {
+        playerMovement = GameManager.instance.GetComponent<PlayerMovement>();
         hotbarScript = GameManager.instance.player.GetComponent<HotbarScript>();
         UI_manager = GameManager.instance.ui_Manager;
         StartCoroutine(WaitForSeconds(0.1f));

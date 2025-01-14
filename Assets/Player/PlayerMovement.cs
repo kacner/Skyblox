@@ -22,7 +22,6 @@ public class PlayerMovement : MonoBehaviour
     public Vector2 lookDirVector;
     private Animator animator;
     private Vector2 facingDirection = Vector2.down; //vector2 storing lookdir
-    private bool SlowMotion = false;
     [HideInInspector]
     public Rigidbody2D rb;
     private SpriteRenderer spriterenderer;

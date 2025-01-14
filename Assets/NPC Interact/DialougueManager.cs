@@ -24,7 +24,7 @@ public class DialougueManager : MonoBehaviour
     private AdvancedNPCInteract LastKnownNpcReference;
     private Animator skipTextAnimator;
 
-
+    private Camera NPCcamera;
     private void Awake()
     {
         if (Instance == null)
@@ -143,6 +143,8 @@ public class DialougueManager : MonoBehaviour
     {
         if (Input.GetKeyDown(KeyCode.Space) && !hasFinnishedTypeOut)
             wantToSkip = true;
+
+        NPCcamera.transform.position = new Vector3(LastKnownNpcReference.transform.position.x, LastKnownNpcReference.transform.position.y, -10);
     }
 
     IEnumerator TypeEffect(string text, float talkspeed)
