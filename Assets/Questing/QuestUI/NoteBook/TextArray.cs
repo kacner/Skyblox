@@ -7,7 +7,6 @@ public class TextArray : MonoBehaviour
 {
     [Header("Text Array Settings")]
     [SerializeField] private GameObject textPrefab;
-    [SerializeField] private GameObject textPrefab2;
     [SerializeField] private Transform initialSpawnPoint;
     [SerializeField] private Transform EndPoint;
     [SerializeField] private float spawnOffset = 7.5f;
@@ -58,7 +57,10 @@ public class TextArray : MonoBehaviour
         Quest currentQuest = AllQuests[currentItteration];
         if (currentQuest != null)
         {
-            rectTransform.GetComponentInChildren<TextMeshProUGUI>().text = currentQuest.Description;
+            TextMeshProUGUI tmp = rectTransform.GetComponentInChildren<TextMeshProUGUI>();
+            tmp.text = currentQuest.Description;
+
+            tmp.ForceMeshUpdate();
         }
         else
         {
@@ -69,27 +71,15 @@ public class TextArray : MonoBehaviour
 
         currentItteration++;
     }
+
     private float GetRenderedTextHeight(TextMeshProUGUI tmp)
     {
-        if (tmp == null)
-        {
-            Debug.LogWarning("TextMeshProUGUI is null. Returning height as 0.");
-            return 0;
-        }
+        if (tmp == null) return 0;
 
         tmp.ForceMeshUpdate();
 
-        int lineCount;
-        if (tmp != null && tmp.textInfo != null)
-        {
-
-            lineCount = tmp.textInfo.lineCount;
-        }
-        else
-        {
-            lineCount = 1;
-            Debug.Log($"Line Count: {lineCount}, Text: {tmp.text}");
-        }
+        //int lineCount = tmp.textInfo.lineCount;
+        int lineCount = 1;
 
         float fontSize = tmp.fontSize;
         float lineSpacing = tmp.lineSpacing;
