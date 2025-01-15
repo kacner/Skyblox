@@ -1,17 +1,20 @@
+using System.Collections;
 using System.Collections.Generic;
 using TMPro;
+using UnityEditor;
 using UnityEngine;
 public class TextArray : MonoBehaviour
 {
     [Header("Text Array Settings")]
-    [SerializeField] private GameObject textPrefab; 
-    [SerializeField] private GameObject textPrefab2; 
+    [SerializeField] private GameObject textPrefab;
+    [SerializeField] private GameObject textPrefab2;
     [SerializeField] private Transform initialSpawnPoint;
     [SerializeField] private Transform EndPoint;
     [SerializeField] private float spawnOffset = 7.5f;
 
     private RectTransform lastSpawnedText;
     public List<Quest> AllQuests;
+    public List<GameObject> SpawnedTextObjects;
 
     int currentItteration = 0;
 
@@ -24,7 +27,6 @@ public class TextArray : MonoBehaviour
     }
     void SpawnText()
     {
-        // Determine spawn pos
         Vector3 instantiatePos;
 
         if (currentItteration >= AllQuests.Count)
@@ -48,6 +50,7 @@ public class TextArray : MonoBehaviour
         }
 
         GameObject newTextObject = Instantiate(textPrefab, transform);
+        SpawnedTextObjects.Add(newTextObject);
 
         RectTransform rectTransform = newTextObject.GetComponent<RectTransform>();
         rectTransform.position = instantiatePos;
@@ -68,29 +71,70 @@ public class TextArray : MonoBehaviour
     }
     private float GetRenderedTextHeight(TextMeshProUGUI tmp)
     {
-        if (tmp == null) return 0;
+        if (tmp == null)
+        {
+            Debug.LogWarning("TextMeshProUGUI is null. Returning height as 0.");
+            return 0;
+        }
 
         tmp.ForceMeshUpdate();
 
-        int lineCount = tmp.textInfo.lineCount;
+        int lineCount;
+        if (tmp != null && tmp.textInfo != null)
+        {
+
+            lineCount = tmp.textInfo.lineCount;
+        }
+        else
+        {
+            lineCount = 1;
+            Debug.Log($"Line Count: {lineCount}, Text: {tmp.text}");
+        }
 
         float fontSize = tmp.fontSize;
         float lineSpacing = tmp.lineSpacing;
 
         float renderedHeight = (fontSize + (lineSpacing * fontSize / 100)) * lineCount;
-
         return renderedHeight * tmp.rectTransform.lossyScale.y;
     }
 
     private Vector3 CalculateNextPos(RectTransform previousText)
     {
-        TextMeshProUGUI tmp = previousText.GetComponentInChildren<TextMeshProUGUI>();
-        float previousTextHeight = GetRenderedTextHeight(tmp);
+        if (previousText == null)
+        {
+            Debug.LogWarning("Previous text is null during position calculation.");
+            return initialSpawnPoint.position;
+        }
 
+        TextMeshProUGUI tmp = previousText.GetComponentInChildren<TextMeshProUGUI>();
+        if (tmp == null)
+        {
+            Debug.LogWarning("No TextMeshProUGUI found in the previous text object.");
+            return previousText.position + new Vector3(0, -spawnOffset, 0);
+        }
+
+        float previousTextHeight = GetRenderedTextHeight(tmp);
         return previousText.position + new Vector3(0, -(previousTextHeight + spawnOffset), 0);
     }
+
     public void AddQuestToDo()
     {
-        SpawnText();
+        foreach (GameObject item in SpawnedTextObjects)
+        {
+            Destroy(item);
+        }
+        SpawnedTextObjects.Clear();
+        lastSpawnedText = null;
+        currentItteration = 0;
+
+        ReconstructTexts();
+    }
+
+    private void ReconstructTexts()
+    {
+        while (currentItteration < AllQuests.Count)
+        {
+            SpawnText();
+        }
     }
 }

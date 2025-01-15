@@ -1,6 +1,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 using System.Linq;
+using Unity.VisualScripting;
 
 public class Quest : MonoBehaviour
 {
@@ -28,6 +29,15 @@ public class Quest : MonoBehaviour
     public void GiveReward()
     {
         addItem();
+        for (int i = 0; i < GameManager.instance.NotebookScript.AllQuests.Count; i++)
+        {
+            if (GameManager.instance.NotebookScript.AllQuests[i] == this)
+            {
+                GameManager.instance.NotebookScript.SpawnedTextObjects[i].GetComponent<QuestCheckmark>().Check();
+            }
+        }
+        //GameManager.instance.NotebookScript.AllQuests.Remove(this);
+        Destroy(this);
     }
 
     void addItem()

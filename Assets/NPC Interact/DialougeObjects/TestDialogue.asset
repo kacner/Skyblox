@@ -34,8 +34,14 @@ MonoBehaviour:
             ApplyQuestTrigger: 0
         - responseText: Hell nav..
           nextNode:
-            DialougueText: Why the rude tone sir?
-            Responses: []
+            DialougueText: vhy the rude tone sir?
+            Responses:
+            - responseText: my bad
+              nextNode:
+                DialougueText: 
+                Responses: []
+                Emotion: 0
+                ApplyQuestTrigger: 0
             Emotion: 0
             ApplyQuestTrigger: 0
         Emotion: 2

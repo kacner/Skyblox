@@ -4,6 +4,7 @@ using System.Collections;
 using UnityEngine.UI;
 using System.Collections.Generic;
 using Unity.VisualScripting;
+using System.Net.Sockets;
 
 public class DialougueManager : MonoBehaviour
 {
@@ -24,7 +25,7 @@ public class DialougueManager : MonoBehaviour
     private AdvancedNPCInteract LastKnownNpcReference;
     private Animator skipTextAnimator;
 
-    private Camera NPCcamera;
+    [SerializeField] private Transform NPCcamera;
     private void Awake()
     {
         if (Instance == null)
@@ -144,7 +145,8 @@ public class DialougueManager : MonoBehaviour
         if (Input.GetKeyDown(KeyCode.Space) && !hasFinnishedTypeOut)
             wantToSkip = true;
 
-        NPCcamera.transform.position = new Vector3(LastKnownNpcReference.transform.position.x, LastKnownNpcReference.transform.position.y, -10);
+        if (LastKnownNpcReference != null)
+            NPCcamera.position = LastKnownNpcReference.transform.position; 
     }
 
     IEnumerator TypeEffect(string text, float talkspeed)
@@ -226,8 +228,8 @@ public class DialougueManager : MonoBehaviour
     {
         Quest QuestToAdd = (Quest)GameManager.instance.QuestObject.AddComponent(System.Type.GetType(LastKnownNpcReference.questType));
         LastKnownNpcReference.Quest = QuestToAdd;
-        GameManager.instance.Notebook.AllQuests.Add(QuestToAdd);
-        GameManager.instance.Notebook.AddQuestToDo();
+        GameManager.instance.NotebookScript.AllQuests.Add(QuestToAdd);
+        GameManager.instance.NotebookScript.AddQuestToDo();
         LastKnownNpcReference.AssignedQuest = true;
     }
 

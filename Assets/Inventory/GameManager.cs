@@ -15,7 +15,7 @@ public class GameManager : MonoBehaviour
     public InteractionManager InteractionManager;
     public Player player;
     public GameObject QuestObject;
-    public TextArray Notebook;
+    public TextArray NotebookScript;
 
     private void Awake()
     {

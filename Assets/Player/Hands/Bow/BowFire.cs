@@ -25,8 +25,7 @@ public class BowFire : MonoBehaviour
     public Player player;
     public InventoryUI inventoryUI;
 
-    private bool IsNormalSpeed;
-    private bool IsSlowed;
+    [SerializeField] private bool IsSlowed;
 
     public int ArrowSlotID;
 
@@ -103,11 +102,10 @@ public class BowFire : MonoBehaviour
                 animator.SetBool("DrawingBow", true);
                 ArrowSprite.gameObject.SetActive(true);
 
-                if (!IsNormalSpeed)
+                if (!IsSlowed)
                 {
                     playermovement.maxSpeed /= 2; // Restore original speed
-                    IsNormalSpeed = true;
-                    IsSlowed = false;
+                    IsSlowed = true;
                 }
 
             }
@@ -117,11 +115,10 @@ public class BowFire : MonoBehaviour
                 {
                     playermovement.canRoll = true;
 
-                    if (!IsSlowed)
+                    if (IsSlowed)
                     {
                         playermovement.maxSpeed *= 2; // Slow down the player
-                        IsSlowed = true;
-                        IsNormalSpeed = false;
+                        IsSlowed = false;
                     }
 
                     GameObject Arrow = Instantiate(arrow, bulletTransform.position, Quaternion.identity);
@@ -180,5 +177,11 @@ public class BowFire : MonoBehaviour
     private void OnDestroy()
     {
         playermovement.useMousePos = false;
+
+        if (IsSlowed)
+        {
+            playermovement.maxSpeed *= 2; // Slow down the player
+            IsSlowed = false;
+        }
     }
 }
