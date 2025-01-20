@@ -11,7 +11,7 @@ public class SlayerQuest2 : Quest
         Description = "Collect slime!";
         ItemReward = GameManager.instance.itemManager.GetItemByName("Rookie_Sword");
 
-        Goals.Add(new CollectionGoal(this, "Slime_Chunk", "Collect 2 Slime", false, 0, 2));
+        Goals.Add(new CollectionGoal(this, "Slime_Chunk", "Collect 2 Slimechunks", false, 0, 2));
 
         Goals.ForEach(g => g.Init());
     }

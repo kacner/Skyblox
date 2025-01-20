@@ -1,8 +1,11 @@
 using System.Collections;
 using System.Collections.Generic;
 using TMPro;
+using Unity.VisualScripting;
 using UnityEditor;
 using UnityEngine;
+using UnityEngine.UI;
+
 public class TextArray : MonoBehaviour
 {
     [Header("Text Array Settings")]
@@ -13,15 +16,29 @@ public class TextArray : MonoBehaviour
 
     private RectTransform lastSpawnedText;
     public List<Quest> AllQuests;
-    public List<GameObject> SpawnedTextObjects;
+    public List<GameObject> CurrentlySpawnedTextObjects;
+
+    public List<List<GameObject>> pages = new List<List<GameObject>>();
+    public int CurrentPage = 0;
 
     int currentItteration = 0;
+
+    public Image NextButton;
 
     void Update()
     {
         if (Input.GetKeyDown(KeyCode.L))
         {
             SpawnText();
+        }
+
+        if (Input.GetKeyDown(KeyCode.RightArrow))
+        {
+            NextPage();
+        }
+        else if (Input.GetKeyDown(KeyCode.LeftArrow))
+        {
+            PreviousPage();
         }
     }
     void SpawnText()
@@ -33,6 +50,7 @@ public class TextArray : MonoBehaviour
             Debug.LogWarning("No more quests to display.");
             return;
         }
+
         if (lastSpawnedText == null)
         {
             instantiatePos = initialSpawnPoint.position;
@@ -44,12 +62,13 @@ public class TextArray : MonoBehaviour
 
         if (instantiatePos.y < EndPoint.position.y)
         {
-            Debug.LogWarning("Cannot spawn more text objects: position below EndPoint.");
-            return;
+            Debug.Log("End of page reached, creating new page.");
+            CreateNewPage();
+            instantiatePos = initialSpawnPoint.position;
         }
 
         GameObject newTextObject = Instantiate(textPrefab, transform);
-        SpawnedTextObjects.Add(newTextObject);
+        CurrentlySpawnedTextObjects.Add(newTextObject);
 
         RectTransform rectTransform = newTextObject.GetComponent<RectTransform>();
         rectTransform.position = instantiatePos;
@@ -58,18 +77,19 @@ public class TextArray : MonoBehaviour
         if (currentQuest != null)
         {
             TextMeshProUGUI tmp = rectTransform.GetComponentInChildren<TextMeshProUGUI>();
-            tmp.text = currentQuest.Description;
-
+            tmp.text = currentQuest.Goals[0].description + " - " + currentQuest.Npc.Name;
             tmp.ForceMeshUpdate();
-        }
-        else
-        {
-            Debug.LogWarning($"Quest at index {currentItteration} is null.");
         }
 
         lastSpawnedText = rectTransform;
-
         currentItteration++;
+
+
+        Debug.Log($"Total pages: {pages.Count}");
+        for (int i = 0; i < pages.Count; i++)
+        {
+            Debug.Log($"Page {i + 1} contains {pages[i].Count} items.");
+        }
     }
 
     private float GetRenderedTextHeight(TextMeshProUGUI tmp)
@@ -79,7 +99,8 @@ public class TextArray : MonoBehaviour
         tmp.ForceMeshUpdate();
 
         //int lineCount = tmp.textInfo.lineCount;
-        int lineCount = 1;
+        int lineCount = 2;
+        //int lineCount = 3;
 
         float fontSize = tmp.fontSize;
         float lineSpacing = tmp.lineSpacing;
@@ -106,25 +127,82 @@ public class TextArray : MonoBehaviour
         float previousTextHeight = GetRenderedTextHeight(tmp);
         return previousText.position + new Vector3(0, -(previousTextHeight + spawnOffset), 0);
     }
-
-    public void AddQuestToDo()
+    private void CreateNewPage()
     {
-        foreach (GameObject item in SpawnedTextObjects)
+        if (CurrentlySpawnedTextObjects.Count > 0)
+        {
+            pages.Add(new List<GameObject>(CurrentlySpawnedTextObjects));
+        }
+        CurrentlySpawnedTextObjects.Clear();
+        lastSpawnedText = null;
+    }
+
+    public void RedrawNoteBook()
+    {
+
+        foreach (GameObject item in CurrentlySpawnedTextObjects) //destroy text
         {
             Destroy(item);
         }
-        SpawnedTextObjects.Clear();
+        CurrentlySpawnedTextObjects.Clear();
         lastSpawnedText = null;
         currentItteration = 0;
 
-        ReconstructTexts();
-    }
-
-    private void ReconstructTexts()
-    {
-        while (currentItteration < AllQuests.Count)
+        while (currentItteration < AllQuests.Count) //Reconstruct text
         {
             SpawnText();
+        }
+    }
+    private void DisplayPage(int pageIndex)
+    {
+        foreach (GameObject obj in CurrentlySpawnedTextObjects)
+        {
+            Destroy(obj);
+        }
+
+        CurrentlySpawnedTextObjects.Clear();
+
+        foreach (GameObject obj in pages[pageIndex])
+        {
+            GameObject newObj = Instantiate(obj, transform);
+            CurrentlySpawnedTextObjects.Add(newObj);
+        }
+
+        lastSpawnedText = CurrentlySpawnedTextObjects[^1].GetComponent<RectTransform>();
+
+        if (CurrentPage < pages.Count - 1)
+        {
+            NextButton.enabled = true;
+        }
+        else
+            NextButton.enabled = false;
+    }
+    public void NextPage()
+    {
+        print(pages.Count);
+        if (CurrentPage + 1 < pages.Count)
+        {
+            print("nextpage");
+            CurrentPage++;
+            DisplayPage(CurrentPage);
+        }
+        else
+        {
+            Debug.LogWarning("Already on the last page.");
+        }
+    }
+
+    public void PreviousPage()
+    {
+        if (CurrentPage > 0)
+        {
+            print("Prevouspage");
+            CurrentPage--;
+            DisplayPage(CurrentPage);
+        }
+        else
+        {
+            Debug.LogWarning("Already on the first page.");
         }
     }
 }

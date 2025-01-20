@@ -10,17 +10,17 @@ public class Goal
     {
         // default init 
     }
-    public void evaluate()
+    public void evaluate(bool npcCalled = false)
     {
         if (currentAmount >= requiredAmount)
         {
-            Complete();
+            Complete(npcCalled);
         }
     }
 
-    public void Complete()
+    public void Complete(bool npcCalled)
     {
-        Quest.CheckGoals();
+        Quest.CheckGoals(npcCalled);
         Completed = true;
     }
 }

@@ -6,7 +6,7 @@ using UnityEngine.Timeline;
 public class AdvancedNPCInteract : MonoBehaviour
 {
     public Dialougue Dialouge;
-    [SerializeField] private string Name;
+    public string Name;
 
     [Space(10)]
 

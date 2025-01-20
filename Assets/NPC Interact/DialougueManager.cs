@@ -218,6 +218,7 @@ public class DialougueManager : MonoBehaviour
         else if (LastKnownNpcReference.AssignedQuest && !LastKnownNpcReference.Healped)
         {
             CheckQuest();
+            LastKnownNpcReference.Quest.Goals[0].evaluate(true);
         }
         else
         {
@@ -228,8 +229,9 @@ public class DialougueManager : MonoBehaviour
     {
         Quest QuestToAdd = (Quest)GameManager.instance.QuestObject.AddComponent(System.Type.GetType(LastKnownNpcReference.questType));
         LastKnownNpcReference.Quest = QuestToAdd;
+            LastKnownNpcReference.Quest.Npc = LastKnownNpcReference;
         GameManager.instance.NotebookScript.AllQuests.Add(QuestToAdd);
-        GameManager.instance.NotebookScript.AddQuestToDo();
+        GameManager.instance.NotebookScript.RedrawNoteBook();
         LastKnownNpcReference.AssignedQuest = true;
     }
 
