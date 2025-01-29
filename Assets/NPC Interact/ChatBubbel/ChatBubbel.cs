@@ -1,5 +1,6 @@
 using System;
 using System.Collections;
+using System.Net.Sockets;
 using TMPro;
 using UnityEngine;
 
@@ -32,11 +33,11 @@ public class ChatBubbel : MonoBehaviour
             StopCoroutine(typingCoroutine);
         }
 
-        typingCoroutine = StartCoroutine(TypeEffect(text, talkspeed, InteractButton));
+        typingCoroutine = StartCoroutine(TypeEffect(text, talkspeed, InteractButton, npcInteract));
         StartCoroutine(DespawnTrigger(chatBubbleTransform, talkspeed, text, InteractButton, npcInteract, Idle));
     }
 
-    private IEnumerator TypeEffect(string text, float talkspeed, GameObject interactButton)
+    private IEnumerator TypeEffect(string text, float talkspeed, GameObject interactButton, SimpleNPCInteract npcInteract)
     {
         ChatTextTmp.text = "";
 
@@ -50,7 +51,9 @@ public class ChatBubbel : MonoBehaviour
             BackgroundSpriteRenderer.size = textSize + padding;
 
             BackgroundSpriteRenderer.transform.localPosition = new Vector3(BackgroundSpriteRenderer.size.x / 2f, 0f);
-            
+
+            transform.position = new Vector3(npcInteract.transform.position.x - BackgroundSpriteRenderer.size.x/2f, transform.position.y); 
+
             UpdateRightSideObjectPosition(E_transformPos, interactButton);
 
             yield return new WaitForSeconds(talkspeed);
@@ -63,7 +66,7 @@ public class ChatBubbel : MonoBehaviour
                 textSize = ChatTextTmp.GetRenderedValues(false);
 
                 BackgroundSpriteRenderer.size = textSize + padding;
-                BackgroundSpriteRenderer.transform.localPosition = new Vector3(BackgroundSpriteRenderer.size.x / 2f, 0f);
+               // BackgroundSpriteRenderer.transform.localPosition = new Vector3(BackgroundSpriteRenderer.size.x / 2f, 0f);
                 UpdateRightSideObjectPosition(E_transformPos, interactButton);
                 break;
             }

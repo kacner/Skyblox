@@ -25,6 +25,8 @@ public class Quest : MonoBehaviour
         if (npcCalled && Completed && this.isActiveAndEnabled)
         {
             GiveReward();
+            GameManager.instance.NotebookScript.RemoveQuest(this);
+            print("Tryed");
         }
         else if (!npcCalled && Completed)
         {
@@ -39,7 +41,6 @@ public class Quest : MonoBehaviour
     }
     public void GiveReward()
     {
-        //addItem();
         Dropitem();
         Destroy(this);
     }

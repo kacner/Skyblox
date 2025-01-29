@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 using TMPro;
 using Unity.VisualScripting;
 using UnityEditor;
@@ -85,11 +86,11 @@ public class TextArray : MonoBehaviour
         currentItteration++;
 
 
-        Debug.Log($"Total pages: {pages.Count}");
+        /*Debug.Log($"Total pages: {pages.Count}");
         for (int i = 0; i < pages.Count; i++)
         {
             Debug.Log($"Page {i + 1} contains {pages[i].Count} items.");
-        }
+        }*/
     }
 
     private float GetRenderedTextHeight(TextMeshProUGUI tmp)
@@ -139,7 +140,6 @@ public class TextArray : MonoBehaviour
 
     public void RedrawNoteBook()
     {
-
         foreach (GameObject item in CurrentlySpawnedTextObjects) //destroy text
         {
             Destroy(item);
@@ -203,6 +203,26 @@ public class TextArray : MonoBehaviour
         else
         {
             Debug.LogWarning("Already on the first page.");
+        }
+    }
+    public static void RemoveEmptySlots<T>(ref List<T> list)
+    {
+        list = list.Where(item => item != null).ToList();
+    }
+
+    public void RemoveQuest(Quest QuestToRemove)
+    {
+        if (AllQuests.Contains(QuestToRemove))
+        {
+            AllQuests.Remove(QuestToRemove);
+
+            RedrawNoteBook();
+            RemoveEmptySlots(ref AllQuests);
+            print("Didd everythings");
+        }
+        else
+        {
+            Debug.LogWarning("Quest not found in the list.");
         }
     }
 }

@@ -30,7 +30,7 @@ MonoBehaviour:
                 Responses: []
                 Emotion: 3
                 ApplyQuestTrigger: 1
-            Emotion: 2
+            Emotion: 1
             ApplyQuestTrigger: 0
         - responseText: Hell nav..
           nextNode:

@@ -1,7 +1,5 @@
-using JetBrains.Annotations;
 using System.Collections;
 using UnityEngine;
-using UnityEngine.Timeline;
 
 public class AdvancedNPCInteract : MonoBehaviour
 {
@@ -52,6 +50,7 @@ public class AdvancedNPCInteract : MonoBehaviour
     }
     public void totalReset()
     {
+        //ChangeState(AnimationState.Idle);
         interactCooldownTimer = interactCooldown / 2;
         CurrentInteractTime = MinKeyPressTime;
     }
@@ -152,6 +151,7 @@ public class AdvancedNPCInteract : MonoBehaviour
 
     void resetInteract()
     {
+        ChangeState(AnimationState.Idle);
         interactButton.sprite = unclicked;
     }
     void playDialouge()

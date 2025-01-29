@@ -116,8 +116,8 @@ public class DialougueManager : MonoBehaviour
 
         if (advancedNpc != null)
         {
-            advancedNpc.ChangeState(AdvancedNPCInteract.AnimationState.Idle);
-            skipTextAnimator.updateMode = AnimatorUpdateMode.Normal;
+            //advancedNpc.ChangeState(AdvancedNPCInteract.AnimationState.Idle);
+            //skipTextAnimator.updateMode = AnimatorUpdateMode.Normal;
             advancedNpc.totalReset();
         }
     }
@@ -244,8 +244,6 @@ public class DialougueManager : MonoBehaviour
             LastKnownNpcReference.AssignedQuest = false;
             print("Yippie du gjorde det");
         }
-        else
-            print("du har inte gjort klart questen än");
     }
 
     private bool CheckForQuestOverride(string text)
