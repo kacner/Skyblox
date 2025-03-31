@@ -10,6 +10,7 @@ public class EnemyHp : MonoBehaviour, IEnemy
     [SerializeField] private float current_HP;
     public float Max_HP = 10;
     private Rigidbody2D rb;
+    public float knockBackReduction = 1;
 
     [Header("Dmg Color Settings")]
     [SerializeField] private int speed = 3;

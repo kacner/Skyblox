@@ -80,7 +80,7 @@ public class ArrowScript : MonoBehaviour
 
             float finalDmg = TheBowsWeapondDataSheet.Damage * (ChargedTime / MaxChargeTime);
 
-            enemyHP.TakeDmg(finalDmg, latePlayerPos, 20f, this.gameObject);
+            enemyHP.TakeDmg(finalDmg, latePlayerPos, 20f / enemyHP.knockBackReduction, this.gameObject);
 
             StartCoroutine(attachArrow(collision));
         }

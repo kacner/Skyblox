@@ -212,7 +212,7 @@ public class UI_Manager : MonoBehaviour
 
         CursorSprite.SetActive(true);
         inventoryUIs[0].slotEndDrag();
-        QuestMenu.SetActive(false);
+        QuestMenu?.SetActive(false);
     }
 
     public void exitState()
