@@ -14818,7 +14818,6 @@ GameObject:
   m_Component:
   - component: {fileID: 1142280307000970940}
   - component: {fileID: 6673332435678750137}
-  - component: {fileID: 5720613546794734914}
   m_Layer: 3
   m_Name: Pivot
   m_TagString: Untagged
@@ -14879,58 +14878,8 @@ MonoBehaviour:
   RotatingSword: {fileID: 2072423652993296910}
   rotationSpeed: 400
   IsAttacking: 0
-  hitbox: {fileID: 5720613546794734914}
+  hitbox: {fileID: 7678071580475896026}
   ThisSwordsWeapondDataSheet: {fileID: 11400000, guid: 70609f48367b420469730a542b99fd43, type: 2}
---- !u!60 &5720613546794734914
-PolygonCollider2D:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 2471173648774404582}
-  m_Enabled: 1
-  m_Density: 1
-  m_Material: {fileID: 0}
-  m_IncludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_ExcludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_LayerOverridePriority: 0
-  m_ForceSendLayers:
-    serializedVersion: 2
-    m_Bits: 4294967295
-  m_ForceReceiveLayers:
-    serializedVersion: 2
-    m_Bits: 4294967295
-  m_ContactCaptureLayers:
-    serializedVersion: 2
-    m_Bits: 4294967295
-  m_CallbackLayers:
-    serializedVersion: 2
-    m_Bits: 4294967295
-  m_IsTrigger: 1
-  m_UsedByEffector: 0
-  m_UsedByComposite: 0
-  m_Offset: {x: 0, y: 0}
-  m_SpriteTilingProperty:
-    border: {x: 0, y: 0, z: 0, w: 0}
-    pivot: {x: 0, y: 0}
-    oldSize: {x: 0, y: 0}
-    newSize: {x: 0, y: 0}
-    adaptiveTilingThreshold: 0
-    drawMode: 0
-    adaptiveTiling: 0
-  m_AutoTiling: 0
-  m_Points:
-    m_Paths:
-    - - {x: 0.9627675, y: 0.59193957}
-      - {x: 0.54729015, y: 0.47479156}
-      - {x: -0.17972481, y: -0.27981377}
-      - {x: 0.12234143, y: -0.5603552}
-      - {x: 0.8426655, y: 0.16874638}
-  m_UseDelaunayMesh: 0
 --- !u!1 &2697629646303539563
 GameObject:
   m_ObjectHideFlags: 0
@@ -49202,6 +49151,8 @@ GameObject:
   m_Component:
   - component: {fileID: 2072423652993296910}
   - component: {fileID: 3357066497870533151}
+  - component: {fileID: 7678071580475896026}
+  - component: {fileID: 2775927959212686116}
   m_Layer: 3
   m_Name: RotatingSword
   m_TagString: Untagged
@@ -49285,6 +49236,69 @@ SpriteRenderer:
   m_WasSpriteAssigned: 1
   m_MaskInteraction: 0
   m_SpriteSortPoint: 0
+--- !u!60 &7678071580475896026
+PolygonCollider2D:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5555565334714291998}
+  m_Enabled: 1
+  m_Density: 1
+  m_Material: {fileID: 0}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_LayerOverridePriority: 0
+  m_ForceSendLayers:
+    serializedVersion: 2
+    m_Bits: 4294967295
+  m_ForceReceiveLayers:
+    serializedVersion: 2
+    m_Bits: 4294967295
+  m_ContactCaptureLayers:
+    serializedVersion: 2
+    m_Bits: 4294967295
+  m_CallbackLayers:
+    serializedVersion: 2
+    m_Bits: 4294967295
+  m_IsTrigger: 1
+  m_UsedByEffector: 0
+  m_UsedByComposite: 0
+  m_Offset: {x: 0, y: 0}
+  m_SpriteTilingProperty:
+    border: {x: 0, y: 0, z: 0, w: 0}
+    pivot: {x: 0.5, y: 0.5}
+    oldSize: {x: 0.9375, y: 0.9375}
+    newSize: {x: 0.9375, y: 0.9375}
+    adaptiveTilingThreshold: 0.5
+    drawMode: 0
+    adaptiveTiling: 0
+  m_AutoTiling: 0
+  m_Points:
+    m_Paths:
+    - - {x: 0.22658122, y: 0.60903645}
+      - {x: -0.412393, y: -0.13160953}
+      - {x: -0.47691453, y: -0.48704943}
+      - {x: -0.11403558, y: -0.3977036}
+      - {x: 0.6040201, y: 0.24922071}
+      - {x: 0.68766165, y: 0.69207346}
+  m_UseDelaunayMesh: 0
+--- !u!114 &2775927959212686116
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5555565334714291998}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: da327fba553788a4692d228153bbfb0e, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &5593900652285724599
 GameObject:
   m_ObjectHideFlags: 0

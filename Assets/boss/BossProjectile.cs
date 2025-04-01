@@ -14,7 +14,7 @@ public class BossProjectile : MonoBehaviour
     {
         Destroy(gameObject, 20f);
     }
-    private void Update()//
+    private void Update()
     {
         MoveProjectile();
     }

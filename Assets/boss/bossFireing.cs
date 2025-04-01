@@ -1,5 +1,4 @@
 using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 
 public class bossFireing : MonoBehaviour
@@ -13,6 +12,12 @@ public class bossFireing : MonoBehaviour
     [SerializeField] private float restTime;
     private bool isShooting = false;
     [SerializeField, Range(0, 10)] private float randomAngleRange;
+    private BossHealth bossHealth;
+
+    private void Start()
+    {
+        bossHealth = GetComponent<BossHealth>();
+    }
     private void Attack()
     {
         if (!isShooting)
@@ -48,6 +53,9 @@ public class bossFireing : MonoBehaviour
             for (int j = 0; j < projectilesPerBurst; j++)
             {
                 GameObject newBullet = Instantiate(bulletPrefab, transform.position, Quaternion.identity);
+
+                if (bossHealth.hasTriggerdSecondPhase)
+                    newBullet.GetComponent<SpriteRenderer>().color = new Color(1, 0.4f, 1);
 
                 float baseAngle = startAngle + j * angleStep;
 

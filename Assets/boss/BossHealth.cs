@@ -4,9 +4,10 @@ using UnityEngine.UI;
 public class BossHealth : EnemyHp
 {
     [SerializeField] private Image bossBar;
+    [SerializeField] private GameObject healthbarSeprator;
 
     private BossMovement bossMovement;
-    private bool hasTriggerdSecondPhase = false;
+    [HideInInspector] public bool hasTriggerdSecondPhase = false;
     public override void Start()
     {
         base.Start();
@@ -48,6 +49,9 @@ public class BossHealth : EnemyHp
             {
                 StartCoroutine(bossMovement.SecondPhase());
                 hasTriggerdSecondPhase = true;
+                current_HP = Max_HP;
+                healthbarSeprator.SetActive(false);
+                bossBar.color = new Color(0.69f, 0.27f, 0.5f);
             }
 
             CurrentInvincibilityTimer = invincibilityTimer;

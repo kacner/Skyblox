@@ -21,6 +21,7 @@ public class BossMovement : MonoBehaviour
     private bool hasBeenActivated = false;
     private SpriteRenderer E_spriteRenderer;
     private EnemyHp enemyhp;
+    private SpriteRenderer spriteRenderer;
     private enum FireingStates
     {
         Circle, Burst, Barrier
@@ -31,6 +32,7 @@ public class BossMovement : MonoBehaviour
     }
     private void Start()
     {
+        spriteRenderer = GetComponent<SpriteRenderer>();
         enemyhp = GetComponent<EnemyHp>();
         enemyhp.enabled = false;
         rb = GetComponent<Rigidbody2D>();
@@ -56,9 +58,37 @@ public class BossMovement : MonoBehaviour
     }
     void EnableBoss()
     {
+        StartCoroutine(StartBlinkin());
         Invoke("EnableHp", 5);
         InvokeRepeating("RerollMovementState", 5, 10);
         InvokeRepeating("HandleFireingStates", 5, Random.RandomRange((float)3, 4));
+    }
+    IEnumerator StartBlinkin()
+    {
+        spriteRenderer.material.SetFloat("_FlashAmount", 1);
+        float MainTimer = 0;
+        float Timer = 0.8f;
+        float nextToggleTime = Timer;
+
+        while (MainTimer < 5)
+        {
+            MainTimer += Time.deltaTime;
+
+            if (MainTimer >= nextToggleTime)
+            {
+                Timer *= 0.8f;  // adjust next wait interval
+                nextToggleTime += Timer;
+
+                if (spriteRenderer.material.GetFloat("_FlashAmount") == 0)
+                    spriteRenderer.material.SetFloat("_FlashAmount", 1);
+                else
+                    spriteRenderer.material.SetFloat("_FlashAmount", 0);
+            }
+
+            yield return null;  // update every frame
+        }
+
+        spriteRenderer.material.SetFloat("_FlashAmount", 0);
     }
     void EnableHp()
     {

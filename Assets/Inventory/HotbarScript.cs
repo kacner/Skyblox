@@ -25,7 +25,7 @@ public class HotbarScript : MonoBehaviour
     {
         if (canChangeSlot)
         {
-            GameObject currentWeapond = GetCurrentWeapond();
+            GameObject currentWeapond = GetCurrentWeapond()?.gameObject;
 
             if (currentWeapond != null && AreWeaponsSame(currentWeapond, newWeapond))
             {
@@ -49,21 +49,20 @@ public class HotbarScript : MonoBehaviour
 
     public void destroyCurrentWeapond()
     {
-        GameObject[] allObjects = FindObjectsOfType<GameObject>();
-        foreach (GameObject obj in allObjects)
+        Transform[] allObjects = GetComponentsInChildren<Transform>();
+        foreach (Transform obj in allObjects)
         {
             if (obj.name.Contains("__Weapond__"))
             {
-                Destroy(obj);
-                break;
+                Destroy(obj.gameObject);
             }
         }
     }
 
-    private GameObject GetCurrentWeapond()
+    private Transform GetCurrentWeapond()
     {
-        GameObject[] allObjects = FindObjectsOfType<GameObject>();
-        foreach (GameObject obj in allObjects)
+        Transform[] allObjects = GetComponentsInChildren<Transform>();
+        foreach (Transform obj in allObjects)
         {
             if (obj.name.Contains("__Weapond__"))
             {

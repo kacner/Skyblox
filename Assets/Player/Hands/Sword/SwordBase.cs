@@ -42,8 +42,6 @@ public class SwordBase : MonoBehaviour
     [Header("Collition")]
     public PolygonCollider2D hitbox;
 
-    private bool hasHitTheFirstWay = false;
-
     [Header("Statistics")]
     public WeapondData ThisSwordsWeapondDataSheet;
     private UI_Manager ui_manager;
@@ -200,60 +198,6 @@ public class SwordBase : MonoBehaviour
             yield return null;
         }
 
-        /*float currentRotation = 0f;
-
-        float neededRotation = 120f;
-        if (hasHitTheFirstWay)
-        {
-
-            while (currentRotation < neededRotation) //waits for x seconds                              ////&/// attack 1
-            {
-                float rotationThisFrame = rotationSpeed * Time.fixedDeltaTime;
-
-                // Apply the rotation
-                RotatingSword.RotateAround(transform.position, Vector3.forward, rotationThisFrame);
-
-                // Update the current rotation
-                currentRotation += rotationThisFrame;
-
-                // Check if we've completed a full rotation
-                if (currentRotation >= neededRotation)
-                {
-                    RotatingSword.RotateAround(transform.position, Vector3.forward, neededRotation - (currentRotation - rotationThisFrame));
-                    break;
-                }
-                yield return null;
-            }
-
-            hasHitTheFirstWay = false;
-            RotatingSword.transform.eulerAngles = new Vector3(0, 0, RotatingSword.transform.eulerAngles.z - 120);
-
-        }
-        else
-        {
-
-            while (currentRotation < neededRotation)                                                                ////&/// attack 2
-            {
-                    float rotationThisFrame = rotationSpeed * Time.fixedDeltaTime;
-
-                // Apply the rotation
-
-                    RotatingSword.RotateAround(transform.position, Vector3.back, rotationThisFrame);
-
-                    // Update the current rotation
-                    currentRotation += rotationThisFrame;
-
-                    // Check if we've completed a full rotation
-                    if (currentRotation >= neededRotation)
-                    {
-                        RotatingSword.RotateAround(transform.position, Vector3.back, neededRotation - (currentRotation - rotationThisFrame));
-                        break;
-                    }
-                    yield return null;
-            }
-            hasHitTheFirstWay = true;
-        }*/
-
 
         yield return new WaitForSeconds(0.1f); //Break here
 
@@ -391,17 +335,6 @@ public class SwordBase : MonoBehaviour
             HolsterFromBackSpriteRenderer.enabled = false;
             HolsterUpRightSpriteRenderer.enabled = false;
             HolsterUpLeftSpriteRenderer.enabled = true;
-        }
-    }
-    private void OnTriggerEnter2D(Collider2D collision)
-    {
-        EnemyHp enemyHP = collision.GetComponent<EnemyHp>();
-
-        if (enemyHP != null)
-        {
-            Debug.Log("Hit detected on enemy!");
-
-            enemyHP.TakeDmg(ThisSwordsWeapondDataSheet.Damage, transform.position, 20f);
         }
     }
 }
