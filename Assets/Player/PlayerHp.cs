@@ -85,7 +85,7 @@ public class PlayerHp : MonoBehaviour
             isInvincible = false;
     }
 
-    public void TakeDmg(float dmg, Vector3 AttackerPos, float KnockBackAmount) //meelee
+    public void PlayerTakeDmg(float dmg, Vector3 AttackerPos, float KnockBackAmount) //meelee
     {
         if (CurrentInvincibilityTimer <= 0 && !isInvincible)
         {

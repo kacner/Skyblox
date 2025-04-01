@@ -76,8 +76,7 @@ public class SlimeAi : MonoBehaviour
 
         if (PlayerHP != null)
         {
-
-            PlayerHP.TakeDmg(Damage, transform.position, KnockbackAmount);
+            PlayerHP.PlayerTakeDmg(Damage, transform.position, KnockbackAmount);
         }
     }
 

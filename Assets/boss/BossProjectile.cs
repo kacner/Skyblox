@@ -29,7 +29,7 @@ public class BossProjectile : MonoBehaviour
         {
             if (playerHp.isInvincible == false)
             {
-                playerHp.TakeDmg(damage, transform.position, knockbackAmount);
+                playerHp.PlayerTakeDmg(damage, transform.position, knockbackAmount);
                 Destroy(gameObject);
             }
         }

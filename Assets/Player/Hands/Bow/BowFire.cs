@@ -1,6 +1,3 @@
-using JetBrains.Annotations;
-using Unity.Mathematics;
-using Unity.VisualScripting;
 using UnityEngine;
 
 public class BowFire : MonoBehaviour

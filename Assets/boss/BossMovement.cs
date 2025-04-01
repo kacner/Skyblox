@@ -20,6 +20,7 @@ public class BossMovement : MonoBehaviour
     [SerializeField] private float range = 4;
     private bool hasBeenActivated = false;
     private SpriteRenderer E_spriteRenderer;
+    private EnemyHp enemyhp;
     private enum FireingStates
     {
         Circle, Burst, Barrier
@@ -30,6 +31,8 @@ public class BossMovement : MonoBehaviour
     }
     private void Start()
     {
+        enemyhp = GetComponent<EnemyHp>();
+        enemyhp.enabled = false;
         rb = GetComponent<Rigidbody2D>();
         playerTransform = GameManager.instance.player.transform;
         bossFireing = GetComponent<bossFireing>();
@@ -53,14 +56,26 @@ public class BossMovement : MonoBehaviour
     }
     void EnableBoss()
     {
+        Invoke("EnableHp", 5);
         InvokeRepeating("RerollMovementState", 5, 10);
         InvokeRepeating("HandleFireingStates", 5, Random.RandomRange((float)3, 4));
     }
+    void EnableHp()
+    {
+        enemyhp.enabled = true;
+    }
     private void Update()
     {
-        if (Input.GetKeyDown(KeyCode.J))
+        if (enemyhp.isDead)
+            return;
+
+        if (rb.velocity.x > 20f)
         {
-            StartCoroutine(SecondPhase());
+            rb.velocity = new Vector2(20f,rb.velocity.y);
+        }
+        if (rb.velocity.y > 20f)
+        {
+            rb.velocity = new Vector2(rb.velocity.x, 20f);
         }
 
         bool isWithinRange = (player.position - transform.position).magnitude < range;
@@ -100,6 +115,9 @@ public class BossMovement : MonoBehaviour
 
     void HandleFireingStates()
     {
+        if (enemyhp.isDead)
+            return;
+
         if (CurrentFireingState == FireingStates.Circle)
         {
             bossFireing.Circle();

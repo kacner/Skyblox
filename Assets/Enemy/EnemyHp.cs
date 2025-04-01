@@ -74,8 +74,8 @@ public class EnemyHp : MonoBehaviour, IEnemy
 
             dmgSystem.Play();
 
-            applyKnockback(AttackerPos, KnockBackAmount);
-            StartCoroutine(flashDMGcolor());
+            ApplyKnockback(AttackerPos, KnockBackAmount);
+            StartCoroutine(FlashDMGcolor());
             SpawnDmgPopUp(dmg);
 
             if ((current_HP - dmg) <= 0)
@@ -122,15 +122,13 @@ public class EnemyHp : MonoBehaviour, IEnemy
         Destroy(gameObject); //commit suicide
     }
 
-    protected void applyKnockback(Vector3 attackerPos, float knockbackAmount)
+    protected void ApplyKnockback(Vector3 attackerPos, float knockbackAmount)
     {
         Vector3 transformPos = transform.position;
         Vector2 KBdir = (transformPos - attackerPos).normalized;
-        if (rb == null)
-            Debug.LogError("EEEOROE");
-        rb.AddForce(KBdir * knockbackAmount, ForceMode2D.Impulse);
+        rb?.AddForce(KBdir * knockbackAmount / knockBackReduction, ForceMode2D.Impulse);
     }
-    protected IEnumerator flashDMGcolor()
+    protected IEnumerator FlashDMGcolor()
     {
         float ElapsedTime = 0f;
 
@@ -146,6 +144,8 @@ public class EnemyHp : MonoBehaviour, IEnemy
 
     protected IEnumerator RollDeathCGI()
     {
+        rb.velocity = Vector2.zero;
+
         float ElapsedTime = 0.5f;
         bool particlesPlayed = false;
         float Duration = 3f;

@@ -1,5 +1,3 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -8,6 +6,7 @@ public class BossHealth : EnemyHp
     [SerializeField] private Image bossBar;
 
     private BossMovement bossMovement;
+    private bool hasTriggerdSecondPhase = false;
     public override void Start()
     {
         base.Start();
@@ -15,6 +14,9 @@ public class BossHealth : EnemyHp
     }
     public override void TakeDmg(float dmg, Vector3 AttackerPos, float KnockBackAmount, GameObject Arrow = null)
     {
+        if (this.isActiveAndEnabled == false)
+            return;
+
         if (CurrentInvincibilityTimer <= 0)
         {
             if (Arrow)
@@ -22,8 +24,8 @@ public class BossHealth : EnemyHp
 
             dmgSystem.Play();
 
-            applyKnockback(AttackerPos, KnockBackAmount);
-            StartCoroutine(flashDMGcolor());
+            ApplyKnockback(AttackerPos, KnockBackAmount);
+            StartCoroutine(FlashDMGcolor());
             SpawnDmgPopUp(dmg);
 
             bossBar.fillAmount = (current_HP - dmg)/ Max_HP;
@@ -42,8 +44,11 @@ public class BossHealth : EnemyHp
                 current_HP -= dmg;
             }
 
-            if (current_HP <= Max_HP / 2)
-               StartCoroutine(bossMovement.SecondPhase());
+            if (current_HP <= Max_HP / 2 && !hasTriggerdSecondPhase)
+            {
+                StartCoroutine(bossMovement.SecondPhase());
+                hasTriggerdSecondPhase = true;
+            }
 
             CurrentInvincibilityTimer = invincibilityTimer;
         }
