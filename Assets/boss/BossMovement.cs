@@ -113,7 +113,7 @@ public class BossMovement : MonoBehaviour
             bossFireing.Barrier();
         }
     }
-    IEnumerator SecondPhase()
+    public IEnumerator SecondPhase()
     {
         Transform[] arrows = GetComponentsInChildren<Transform>();
         List<Transform> ActualArrows = new List<Transform>();

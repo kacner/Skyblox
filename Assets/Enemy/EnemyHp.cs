@@ -1,4 +1,5 @@
 using System.Collections;
+using UnityEditor.MemoryProfiler;
 using UnityEngine;
 public interface IEnemy
 {
@@ -7,7 +8,7 @@ public interface IEnemy
 
 public class EnemyHp : MonoBehaviour, IEnemy
 {
-    [SerializeField] private float current_HP;
+    [HideInInspector] public float current_HP;
     public float Max_HP = 10;
     private Rigidbody2D rb;
     public float knockBackReduction = 1;
@@ -17,11 +18,11 @@ public class EnemyHp : MonoBehaviour, IEnemy
     [SerializeField] private float duration = 1;
     public AnimationCurve animationCurve;
     [SerializeField] private Material originalDeathMat;
-    private Material deathDMGmat;
+    protected Material deathDMGmat;
     public ParticleSystem dmgSystem;
 
-    [SerializeField] private float invincibilityTimer = 0.25f;
-    private float CurrentInvincibilityTimer;
+    [SerializeField] protected float invincibilityTimer = 0.25f;
+    protected float CurrentInvincibilityTimer;
 
     [Header("Death")]
     public ParticleSystem[] ActivatingDeathParticles;
@@ -33,7 +34,7 @@ public class EnemyHp : MonoBehaviour, IEnemy
     [HideInInspector] public bool isDead = false;
     public int ID { get; set; }
 
-    void Start()
+    public virtual void Start()
     {
         ID = 0;
 
@@ -46,7 +47,7 @@ public class EnemyHp : MonoBehaviour, IEnemy
 
 
         CurrentInvincibilityTimer = invincibilityTimer;
-
+        if (rb == null)
         rb = GetComponent<Rigidbody2D>();
         current_HP = Max_HP;
 
@@ -64,7 +65,7 @@ public class EnemyHp : MonoBehaviour, IEnemy
         CurrentInvincibilityTimer = Mathf.Clamp(CurrentInvincibilityTimer, 0, invincibilityTimer);
     }
 
-    public void TakeDmg(float dmg, Vector3 AttackerPos, float KnockBackAmount, GameObject Arrow = null) //sword
+    public virtual void TakeDmg(float dmg, Vector3 AttackerPos, float KnockBackAmount, GameObject Arrow = null)
     {
         if (CurrentInvincibilityTimer <= 0)
         {
@@ -108,25 +109,28 @@ public class EnemyHp : MonoBehaviour, IEnemy
             child.SetParent(null); //make every children an orphan
         }
     }
-    private IEnumerator suicide()
+    protected IEnumerator suicide()
     {
         yield return null;
 
         for (int i = 0; i < protectedObjects.Length; i++)
         {
+            GetComponent<Rigidbody2D>().velocity = Vector2.zero;
             Destroy(protectedObjects[i].gameObject);
         }
 
         Destroy(gameObject); //commit suicide
     }
 
-    private void applyKnockback(Vector3 attackerPos, float knockbackAmount)
+    protected void applyKnockback(Vector3 attackerPos, float knockbackAmount)
     {
-        Vector3 transformPos = new Vector3(transform.position.x, transform.position.y, transform.position.z);
+        Vector3 transformPos = transform.position;
         Vector2 KBdir = (transformPos - attackerPos).normalized;
+        if (rb == null)
+            Debug.LogError("EEEOROE");
         rb.AddForce(KBdir * knockbackAmount, ForceMode2D.Impulse);
     }
-    private IEnumerator flashDMGcolor()
+    protected IEnumerator flashDMGcolor()
     {
         float ElapsedTime = 0f;
 
@@ -140,7 +144,7 @@ public class EnemyHp : MonoBehaviour, IEnemy
         deathDMGmat.SetFloat("_FlashAmount", 0f);
     }
 
-    private IEnumerator RollDeathCGI()
+    protected IEnumerator RollDeathCGI()
     {
         float ElapsedTime = 0.5f;
         bool particlesPlayed = false;
@@ -168,7 +172,7 @@ public class EnemyHp : MonoBehaviour, IEnemy
         HandleChildren();
     }
 
-    private void DisableCollider()
+    protected void DisableCollider()
     {
         PolygonCollider2D polygoncolider = GetComponent<PolygonCollider2D>();
         if (polygoncolider != null)
@@ -179,7 +183,7 @@ public class EnemyHp : MonoBehaviour, IEnemy
             boxCollider.enabled = false;
     }
 
-    private void SpawnDmgPopUp(float damage)
+    protected void SpawnDmgPopUp(float damage)
     {
         GameObject damagepopupObject = Instantiate(DamagePopUpPrefab, transform.position, Quaternion.identity);
         DamagePopUpScript damagePopUpScript = damagepopupObject.GetComponent<DamagePopUpScript>();
