@@ -56,7 +56,7 @@ public class bossFireing : MonoBehaviour
 
                 float radianAngle = modifiedAngle * Mathf.Deg2Rad;
                 Vector2 shootDirection = new Vector2(Mathf.Cos(radianAngle), Mathf.Sin(radianAngle));
-                newBullet.transform.right = shootDirection;
+                //newBullet.transform.right = shootDirection;
 
                 newBullet.GetComponent<BossProjectile>().moveSpeed = bulletSpeed;
                 newBullet.GetComponent<BossProjectile>().moveDir = shootDirection.normalized;

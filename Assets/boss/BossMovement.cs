@@ -1,3 +1,5 @@
+using System.Collections;
+using System.Collections.Generic;
 using UnityEngine;
 [RequireComponent(typeof(Rigidbody2D))]
 public class BossMovement : MonoBehaviour
@@ -11,6 +13,13 @@ public class BossMovement : MonoBehaviour
     private Transform playerTransform;
     private Transform FurthestTransform = null;
     private bossFireing bossFireing;
+    private Transform player;
+    [SerializeField] private GameObject E;
+    [SerializeField] private Sprite buttonDown;
+    [SerializeField] private Sprite buttonUp;
+    [SerializeField] private float range = 4;
+    private bool hasBeenActivated = false;
+    private SpriteRenderer E_spriteRenderer;
     private enum FireingStates
     {
         Circle, Burst, Barrier
@@ -22,10 +31,10 @@ public class BossMovement : MonoBehaviour
     private void Start()
     {
         rb = GetComponent<Rigidbody2D>();
-        InvokeRepeating("RerollMovementState", 10, 10);
-        InvokeRepeating("HandleFireingStates", 10, Random.RandomRange((float)3, 4));
         playerTransform = GameManager.instance.player.transform;
         bossFireing = GetComponent<bossFireing>();
+        player = GameManager.instance.player.transform;
+        E_spriteRenderer = E.GetComponent<SpriteRenderer>();
     }
 
     void RerollMovementState()
@@ -42,9 +51,36 @@ public class BossMovement : MonoBehaviour
         else
             CurrentState = MovementStates.Following;
     }
-
+    void EnableBoss()
+    {
+        InvokeRepeating("RerollMovementState", 5, 10);
+        InvokeRepeating("HandleFireingStates", 5, Random.RandomRange((float)3, 4));
+    }
     private void Update()
     {
+        if (Input.GetKeyDown(KeyCode.J))
+        {
+            StartCoroutine(SecondPhase());
+        }
+
+        bool isWithinRange = (player.position - transform.position).magnitude < range;
+        if (isWithinRange && !hasBeenActivated)
+        {
+            E.SetActive(true);
+            if (Input.GetKey(KeyCode.E))
+            {
+                hasBeenActivated = true;
+                EnableBoss();
+                E_spriteRenderer.sprite = buttonDown;
+            }
+            else
+            {
+                E_spriteRenderer.sprite = buttonUp;
+            }
+        }
+        else
+            E.SetActive(false);
+
         if (CurrentState == MovementStates.Standby)
         {
             CurrentFireingState = FireingStates.Circle;
@@ -77,7 +113,23 @@ public class BossMovement : MonoBehaviour
             bossFireing.Barrier();
         }
     }
+    IEnumerator SecondPhase()
+    {
+        Transform[] arrows = GetComponentsInChildren<Transform>();
+        List<Transform> ActualArrows = new List<Transform>();
 
+        foreach (Transform arrow in arrows)
+            if (arrow.name.Contains("Arrow"))
+                ActualArrows.Add(arrow);
+        
+        for (int i = 0; i < ActualArrows.Count; i++)
+        {
+            rb.velocity = Vector2.zero;
+            GameManager.instance.player.dropItem(GameManager.instance.itemManager.GetItemByName("Arrow"), transform.position);
+            Destroy(ActualArrows[i].gameObject);
+            yield return new WaitForSeconds(0.1f);
+        }
+    }
     void Retreting()
     {
         if (FurthestTransform == null)
@@ -98,6 +150,7 @@ public class BossMovement : MonoBehaviour
         if ((FurthestTransform.position - transform.position).sqrMagnitude < 1f)
         {
             FurthestTransform = null;
+            rb.velocity = new Vector2(rb.velocity.x / 2, rb.velocity.y / 2);
             CurrentState = MovementStates.Standby;
         }
     }

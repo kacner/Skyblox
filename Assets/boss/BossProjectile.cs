@@ -8,13 +8,13 @@ public class BossProjectile : MonoBehaviour
     public float moveSpeed = 3;
     [SerializeField] private float damage = 1f;
     [SerializeField] private float knockbackAmount = 10f;
-    private Rigidbody2D rb;
     public Vector2 moveDir;
+    [SerializeField] private float rotationSpeed = 2;
     private void Start()
     {
-        rb = GetComponent<Rigidbody2D>();
+        Destroy(gameObject, 20f);
     }
-    private void Update()
+    private void Update()//
     {
         MoveProjectile();
     }
@@ -24,7 +24,14 @@ public class BossProjectile : MonoBehaviour
     }
     private void OnTriggerEnter2D(Collider2D collision)
     {
-        if (collision.gameObject.TryGetComponent(out PlayerHp playerHP) != null)
-            playerHP.TakeDmg(damage, transform.position, knockbackAmount);
+        PlayerHp playerHp = collision.gameObject.GetComponent<PlayerHp>();
+        if (playerHp != null)
+        {
+            if (playerHp.isInvincible == false)
+            {
+                playerHp.TakeDmg(damage, transform.position, knockbackAmount);
+                Destroy(gameObject);
+            }
+        }
     }
 }

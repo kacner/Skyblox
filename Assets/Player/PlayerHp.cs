@@ -87,7 +87,7 @@ public class PlayerHp : MonoBehaviour
 
     public void TakeDmg(float dmg, Vector3 AttackerPos, float KnockBackAmount) //meelee
     {
-        if (CurrentInvincibilityTimer <= 0)
+        if (CurrentInvincibilityTimer <= 0 && !isInvincible)
         {
             dmgSystem.Play();
 
@@ -111,7 +111,7 @@ public class PlayerHp : MonoBehaviour
 
     public void TakeDmg(float dmg, Vector3 AttackerPos, float KnockBackAmount, GameObject Arrow) //bow
     {
-        if (CurrentInvincibilityTimer <= 0)
+        if (CurrentInvincibilityTimer <= 0 && !isInvincible)
         {
             Arrow.GetComponent<SpriteRenderer>().material = deathDMGmat;
 

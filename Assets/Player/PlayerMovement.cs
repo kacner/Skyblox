@@ -368,16 +368,16 @@ public class PlayerMovement : MonoBehaviour
         {
             if (moveDirection == Vector2.zero) //initiate roll when still
             {
-                rb.AddForce(lookDirVector.normalized * StillBoostFactor * Time.deltaTime, ForceMode2D.Force);
-                StillBoostFactor -= StillBoostFactor * 0.2f * Time.deltaTime;
+                rb.AddForce(lookDirVector.normalized * StillBoostFactor * Time.fixedDeltaTime, ForceMode2D.Force);
+                StillBoostFactor -= StillBoostFactor * 0.2f * Time.fixedDeltaTime;
             }
             else //ini roll when moving
             {
-                rb.AddForce(lookDirVector.normalized * RollForce * Time.deltaTime, ForceMode2D.Force);
-                RollForce -= RollForce * 0.2f * Time.deltaTime;
+                rb.AddForce(lookDirVector.normalized * RollForce * Time.fixedDeltaTime, ForceMode2D.Force);
+                RollForce -= RollForce * 0.2f * Time.fixedDeltaTime;
             }
-            elapsedTime += Time.deltaTime;
-            yield return null;
+            elapsedTime += Time.fixedDeltaTime;
+            yield return new WaitForFixedUpdate();
         }
 
         StartCoroutine(GameManager.instance.camerScript.ShakeScreenForTime(RollDuration));
@@ -391,7 +391,6 @@ public class PlayerMovement : MonoBehaviour
         RollingPFX.enableEmission = false;
         spriterenderer.color = initialColor;
 
-        playerHp.isInvincible = false;
 
         playerHp.changeHandMat();
 
@@ -403,8 +402,9 @@ public class PlayerMovement : MonoBehaviour
             }
         }
 
-        if (GameManager.instance.playerObstructor != null)
-        GameManager.instance.playerObstructor.CreateData(); //refeshes obstructor
+        playerHp.isInvincible = false;
+        //if (GameManager.instance.playerObstructor != null)
+        //GameManager.instance.playerObstructor.CreateData(); //refeshes obstructor
 
         yield return new WaitForSeconds(RollCooldown - emitParticleAfterInitialRoll);
         IsRolling = false;

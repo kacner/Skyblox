@@ -42,13 +42,9 @@ public class CameraScript : MonoBehaviour
 
     private void CameraFollowTarget(Transform Target)
     {
-        Vector3 currentPosition = transform.position;
         Vector3 targetPosition = new Vector3(Target.position.x, Target.position.y, -10);
 
-        if (Vector3.Distance(currentPosition, targetPosition) > updateTolerance)
-        {
-            transform.position = Vector3.Lerp(currentPosition, targetPosition, Time.fixedDeltaTime * CameraFollowSpeed);
-        }
+        transform.position = targetPosition;
 
         transform.position += shakeOffset;
     }
