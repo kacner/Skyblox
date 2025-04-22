@@ -1,5 +1,5 @@
 fileFormatVersion: 2
-guid: a06bc96feb627d94aa6d028a3e25c7a7
+guid: 5436ce74520a30343a97b7f530d80271
 TextureImporter:
   internalIDToNameTable: []
   externalObjects: {}
@@ -123,7 +123,7 @@ TextureImporter:
     serializedVersion: 2
     sprites:
     - serializedVersion: 2
-      name: BluBluBlu_0
+      name: idle-Sheet_0
       rect:
         serializedVersion: 2
         x: 0
@@ -137,14 +137,14 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: e5206afc47a96484991aa1e79865bfa3
-      internalID: 2001765758
+      spriteID: 5bdaa552199685d4dbf5a6f3e93bf257
+      internalID: 1530104167
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: BluBluBlu_1
+      name: idle-Sheet_1
       rect:
         serializedVersion: 2
         x: 64
@@ -158,14 +158,14 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: a2e3d8fe013b7624ea9169c377deab49
-      internalID: -1795460445
+      spriteID: cf2fed70a0b0065469c63fb5a403b23b
+      internalID: 1071096306
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: BluBluBlu_2
+      name: idle-Sheet_2
       rect:
         serializedVersion: 2
         x: 128
@@ -179,14 +179,14 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: 700231870f22aa746abd6d39a5a35fca
-      internalID: -1912475473
+      spriteID: 245cf7ad659b81b48a83cb5dffe372ba
+      internalID: -357593509
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: BluBluBlu_3
+      name: idle-Sheet_3
       rect:
         serializedVersion: 2
         x: 192
@@ -200,14 +200,14 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: c6822de0fbd192a42b3b0082ea6aa20a
-      internalID: 100171775
+      spriteID: 6a15b03660a785c4d9380c692743a354
+      internalID: -1119306717
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: BluBluBlu_4
+      name: idle-Sheet_4
       rect:
         serializedVersion: 2
         x: 256
@@ -221,14 +221,14 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: 04eda80dc4a55e34d8a966d11fd0ab4a
-      internalID: 975273132
+      spriteID: e996c12196f1e37489d628afea3c39d9
+      internalID: -1611484591
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: BluBluBlu_5
+      name: idle-Sheet_5
       rect:
         serializedVersion: 2
         x: 320
@@ -242,14 +242,14 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: 4e3782e2066401e4fb30826c343aeba6
-      internalID: -1615169060
+      spriteID: 47221a1c9efdbf94590ed86752806f93
+      internalID: -700907095
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: BluBluBlu_6
+      name: idle-Sheet_6
       rect:
         serializedVersion: 2
         x: 384
@@ -263,14 +263,14 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: 6188f6573d2a2364c8a2bbbd8bfb71ce
-      internalID: 131760153
+      spriteID: ab47de94bacad544883d3f89315b073e
+      internalID: 997496378
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: BluBluBlu_7
+      name: idle-Sheet_7
       rect:
         serializedVersion: 2
         x: 448
@@ -284,8 +284,92 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: 395cd2564ce3b34478b72b0110f4930f
-      internalID: -2144469423
+      spriteID: 787230d385ce0d141952e9ace5424935
+      internalID: -1651522336
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: idle-Sheet_8
+      rect:
+        serializedVersion: 2
+        x: 512
+        y: 0
+        width: 64
+        height: 64
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: c1fa7bb20dfd68c42ad069ce7e89e6cd
+      internalID: -1364940623
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: idle-Sheet_9
+      rect:
+        serializedVersion: 2
+        x: 576
+        y: 0
+        width: 64
+        height: 64
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: fab088a060570424c83b2b37437dca28
+      internalID: 1633012477
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: idle-Sheet_10
+      rect:
+        serializedVersion: 2
+        x: 640
+        y: 0
+        width: 64
+        height: 64
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 15d2abdd11895c3488d6363e9eb5ad34
+      internalID: 1066726509
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: idle-Sheet_11
+      rect:
+        serializedVersion: 2
+        x: 704
+        y: 0
+        width: 64
+        height: 64
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 6ed6c9a7c58acc446ba622a7becb470f
+      internalID: 1944407079
       vertices: []
       indices: 
       edges: []
@@ -301,14 +385,18 @@ TextureImporter:
     weights: []
     secondaryTextures: []
     nameFileIdTable:
-      BluBluBlu_0: 2001765758
-      BluBluBlu_1: -1795460445
-      BluBluBlu_2: -1912475473
-      BluBluBlu_3: 100171775
-      BluBluBlu_4: 975273132
-      BluBluBlu_5: -1615169060
-      BluBluBlu_6: 131760153
-      BluBluBlu_7: -2144469423
+      idle-Sheet_0: 1530104167
+      idle-Sheet_1: 1071096306
+      idle-Sheet_10: 1066726509
+      idle-Sheet_11: 1944407079
+      idle-Sheet_2: -357593509
+      idle-Sheet_3: -1119306717
+      idle-Sheet_4: -1611484591
+      idle-Sheet_5: -700907095
+      idle-Sheet_6: 997496378
+      idle-Sheet_7: -1651522336
+      idle-Sheet_8: -1364940623
+      idle-Sheet_9: 1633012477
   mipmapLimitGroupName: 
   pSDRemoveMatte: 0
   userData: 

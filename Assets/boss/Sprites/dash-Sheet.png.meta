@@ -1,5 +1,5 @@
 fileFormatVersion: 2
-guid: a06bc96feb627d94aa6d028a3e25c7a7
+guid: dc235a4021e6cb141b02831542d36c4f
 TextureImporter:
   internalIDToNameTable: []
   externalObjects: {}
@@ -123,7 +123,7 @@ TextureImporter:
     serializedVersion: 2
     sprites:
     - serializedVersion: 2
-      name: BluBluBlu_0
+      name: dash-Sheet_0
       rect:
         serializedVersion: 2
         x: 0
@@ -137,14 +137,14 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: e5206afc47a96484991aa1e79865bfa3
-      internalID: 2001765758
+      spriteID: fc435052809c4aa418b92774de2dde48
+      internalID: -409900837
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: BluBluBlu_1
+      name: dash-Sheet_1
       rect:
         serializedVersion: 2
         x: 64
@@ -158,14 +158,14 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: a2e3d8fe013b7624ea9169c377deab49
-      internalID: -1795460445
+      spriteID: a2712cfec6289444f80594c2d8d8fe8d
+      internalID: 177146920
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: BluBluBlu_2
+      name: dash-Sheet_2
       rect:
         serializedVersion: 2
         x: 128
@@ -179,14 +179,14 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: 700231870f22aa746abd6d39a5a35fca
-      internalID: -1912475473
+      spriteID: 9ae64b06e9b3cba459646853d9ed8c3d
+      internalID: -1462144305
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: BluBluBlu_3
+      name: dash-Sheet_3
       rect:
         serializedVersion: 2
         x: 192
@@ -200,14 +200,14 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: c6822de0fbd192a42b3b0082ea6aa20a
-      internalID: 100171775
+      spriteID: 7d6989ef441a46243af4b14753e6a514
+      internalID: 626264693
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: BluBluBlu_4
+      name: dash-Sheet_4
       rect:
         serializedVersion: 2
         x: 256
@@ -221,14 +221,14 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: 04eda80dc4a55e34d8a966d11fd0ab4a
-      internalID: 975273132
+      spriteID: 7fae7b95015cdc444870811137e70b83
+      internalID: -185220756
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: BluBluBlu_5
+      name: dash-Sheet_5
       rect:
         serializedVersion: 2
         x: 320
@@ -242,14 +242,14 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: 4e3782e2066401e4fb30826c343aeba6
-      internalID: -1615169060
+      spriteID: de9d3dfc907a2c84ca8ce8170a68cb7f
+      internalID: -641895524
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: BluBluBlu_6
+      name: dash-Sheet_6
       rect:
         serializedVersion: 2
         x: 384
@@ -263,14 +263,14 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: 6188f6573d2a2364c8a2bbbd8bfb71ce
-      internalID: 131760153
+      spriteID: 1edecd2848b66a042a70a0c5080ac571
+      internalID: 1477585675
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: BluBluBlu_7
+      name: dash-Sheet_7
       rect:
         serializedVersion: 2
         x: 448
@@ -284,8 +284,155 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: 395cd2564ce3b34478b72b0110f4930f
-      internalID: -2144469423
+      spriteID: bbec88309a3d65a46bc568b15ea0bd13
+      internalID: 552419885
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: dash-Sheet_8
+      rect:
+        serializedVersion: 2
+        x: 512
+        y: 0
+        width: 64
+        height: 64
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: c1dc49196ab025a4e80b6b12bbb1f668
+      internalID: 1102844903
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: dash-Sheet_9
+      rect:
+        serializedVersion: 2
+        x: 576
+        y: 0
+        width: 64
+        height: 64
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: c8de4e4c163ae4a4b96b9807298fd730
+      internalID: 262489800
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: dash-Sheet_10
+      rect:
+        serializedVersion: 2
+        x: 640
+        y: 0
+        width: 64
+        height: 64
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 28309272e0c4df344bc42c73d6d08279
+      internalID: 169831965
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: dash-Sheet_11
+      rect:
+        serializedVersion: 2
+        x: 704
+        y: 0
+        width: 64
+        height: 64
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 67efa124c2bcc8d4d90ad01bce63b709
+      internalID: 1586205607
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: dash-Sheet_12
+      rect:
+        serializedVersion: 2
+        x: 768
+        y: 0
+        width: 64
+        height: 64
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 84fd85254baa1cf4d92a9a418b3bfe49
+      internalID: 199598341
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: dash-Sheet_13
+      rect:
+        serializedVersion: 2
+        x: 832
+        y: 0
+        width: 64
+        height: 64
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 4b84aaf770d079e47be5548024db636a
+      internalID: -1496758414
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: dash-Sheet_14
+      rect:
+        serializedVersion: 2
+        x: 896
+        y: 0
+        width: 64
+        height: 64
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 18a1e1eb73e145a42bea7e3cbc48ae5c
+      internalID: 1721380491
       vertices: []
       indices: 
       edges: []
@@ -301,14 +448,21 @@ TextureImporter:
     weights: []
     secondaryTextures: []
     nameFileIdTable:
-      BluBluBlu_0: 2001765758
-      BluBluBlu_1: -1795460445
-      BluBluBlu_2: -1912475473
-      BluBluBlu_3: 100171775
-      BluBluBlu_4: 975273132
-      BluBluBlu_5: -1615169060
-      BluBluBlu_6: 131760153
-      BluBluBlu_7: -2144469423
+      dash-Sheet_0: -409900837
+      dash-Sheet_1: 177146920
+      dash-Sheet_10: 169831965
+      dash-Sheet_11: 1586205607
+      dash-Sheet_12: 199598341
+      dash-Sheet_13: -1496758414
+      dash-Sheet_14: 1721380491
+      dash-Sheet_2: -1462144305
+      dash-Sheet_3: 626264693
+      dash-Sheet_4: -185220756
+      dash-Sheet_5: -641895524
+      dash-Sheet_6: 1477585675
+      dash-Sheet_7: 552419885
+      dash-Sheet_8: 1102844903
+      dash-Sheet_9: 262489800
   mipmapLimitGroupName: 
   pSDRemoveMatte: 0
   userData: 

@@ -18,10 +18,13 @@ public class BossMovement : MonoBehaviour
     [SerializeField] private Sprite buttonDown;
     [SerializeField] private Sprite buttonUp;
     [SerializeField] private float range = 4;
+    [SerializeField] private GameObject Shadow;
     private bool hasBeenActivated = false;
     private SpriteRenderer E_spriteRenderer;
     private EnemyHp enemyhp;
     private SpriteRenderer spriteRenderer;
+    private Animator animator;
+    private bool isSecondPhase = false;
     private enum FireingStates
     {
         Circle, Burst, Barrier
@@ -32,6 +35,7 @@ public class BossMovement : MonoBehaviour
     }
     private void Start()
     {
+        animator = GetComponent<Animator>();
         spriteRenderer = GetComponent<SpriteRenderer>();
         enemyhp = GetComponent<EnemyHp>();
         enemyhp.enabled = false;
@@ -58,6 +62,7 @@ public class BossMovement : MonoBehaviour
     }
     void EnableBoss()
     {
+        Shadow.SetActive(true);
         StartCoroutine(StartBlinkin());
         Invoke("EnableHp", 5);
         InvokeRepeating("RerollMovementState", 5, 10);
@@ -86,9 +91,11 @@ public class BossMovement : MonoBehaviour
             }
 
             yield return null;  // update every frame
+            animator.SetTrigger("Activate");
         }
 
         spriteRenderer.material.SetFloat("_FlashAmount", 0);
+
     }
     void EnableHp()
     {
@@ -96,6 +103,7 @@ public class BossMovement : MonoBehaviour
     }
     private void Update()
     {
+        animator.SetFloat("Speed", rb.velocity.magnitude);
         if (enemyhp.isDead)
             return;
 
@@ -142,27 +150,47 @@ public class BossMovement : MonoBehaviour
             Retreting();
         }
     }
-
     void HandleFireingStates()
     {
         if (enemyhp.isDead)
             return;
 
-        if (CurrentFireingState == FireingStates.Circle)
+        //if (!isSecondPhase)
+        //{
+            if (CurrentFireingState == FireingStates.Circle)
+            {
+                bossFireing.Circle();
+            }
+            else if (CurrentFireingState == FireingStates.Burst)
+            {
+                bossFireing.Burst();
+            }
+            else if (CurrentFireingState == FireingStates.Barrier)
+            {
+                bossFireing.Barrier();
+            }
+        /*}
+        else
         {
-            bossFireing.Circle();
-        }
-        else if (CurrentFireingState == FireingStates.Burst)
-        {
-            bossFireing.Burst();
-        }
-        else if (CurrentFireingState == FireingStates.Barrier)
-        {
-            bossFireing.Barrier();
-        }
+            if (CurrentFireingState == FireingStates.Circle)
+            {
+                bossFireing.Circle();
+            }
+            else if (CurrentFireingState == FireingStates.Burst)
+            {
+                bossFireing.Burst();
+            }
+            else if (CurrentFireingState == FireingStates.Barrier)
+            {
+                bossFireing.Dashing();
+            }
+        }*/
     }
     public IEnumerator SecondPhase()
     {
+        isSecondPhase = true;
+        animator.SetTrigger("SecondStage");
+
         Transform[] arrows = GetComponentsInChildren<Transform>();
         List<Transform> ActualArrows = new List<Transform>();
 

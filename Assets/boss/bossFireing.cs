@@ -55,7 +55,7 @@ public class bossFireing : MonoBehaviour
                 GameObject newBullet = Instantiate(bulletPrefab, transform.position, Quaternion.identity);
 
                 if (bossHealth.hasTriggerdSecondPhase)
-                    newBullet.GetComponent<SpriteRenderer>().color = new Color(1, 0.4f, 1);
+                    newBullet.GetComponent<SpriteRenderer>().color = new Color(0, 1f, 0);
 
                 float baseAngle = startAngle + j * angleStep;
 
