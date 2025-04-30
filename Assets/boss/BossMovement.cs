@@ -1,13 +1,13 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+
 [RequireComponent(typeof(Rigidbody2D))]
 public class BossMovement : MonoBehaviour
 {
-
     [SerializeField] private MovementStates CurrentState = MovementStates.Standby;
     [SerializeField] private FireingStates CurrentFireingState = FireingStates.Circle;
-    [SerializeField] private Rigidbody2D rb;
+    private Rigidbody2D rb;
     [SerializeField] private float MovementSpeed = 10f;
     [SerializeField] private Transform[] retreetpositions;
     private Transform playerTransform;
@@ -25,13 +25,21 @@ public class BossMovement : MonoBehaviour
     private SpriteRenderer spriteRenderer;
     private Animator animator;
     private bool isSecondPhase = false;
+    private bool isDashing = false;
+    private Rigidbody2D playerRb;
+    [SerializeField] private float maxDashingDistance = 10;
+    [SerializeField] private GameObject light;
+    [SerializeField] private BoxCollider2D normalCollider;
+    [SerializeField] private BoxCollider2D isTriggerCollider;
+    [SerializeField] private BoxCollider2D beforeActivatedCollider;
+
     private enum FireingStates
     {
-        Circle, Burst, Barrier
+        Circle, Burst, Barrier, None
     }
     private enum MovementStates
     {
-        Following, Retreting, Standby
+        Following, Retreting, Standby, Dashing
     }
     private void Start()
     {
@@ -44,24 +52,47 @@ public class BossMovement : MonoBehaviour
         bossFireing = GetComponent<bossFireing>();
         player = GameManager.instance.player.transform;
         E_spriteRenderer = E.GetComponent<SpriteRenderer>();
+        playerRb = player.gameObject.GetComponent<Rigidbody2D>();
     }
 
     void RerollMovementState()
     {
-        int rnd = Random.RandomRange(1, 4);
+        if (!isSecondPhase)
+        {
+            int rnd = Random.RandomRange(1, 4);
 
-
-        if (rnd == 1 && CurrentState != MovementStates.Standby)
-            CurrentState = MovementStates.Standby;
-        else if (rnd == 2 && CurrentState != MovementStates.Following)
-            CurrentState = MovementStates.Following;
-        else if (rnd == 3 && CurrentState != MovementStates.Retreting)
-            CurrentState = MovementStates.Retreting;
+            if (rnd == 1 && CurrentState != MovementStates.Standby)
+                CurrentState = MovementStates.Standby;
+            else if (rnd == 2 && CurrentState != MovementStates.Following)
+                CurrentState = MovementStates.Following;
+            else if (rnd == 3 && CurrentState != MovementStates.Retreting)
+                CurrentState = MovementStates.Retreting;
+            else
+                CurrentState = MovementStates.Following;
+        }
         else
-            CurrentState = MovementStates.Following;
+        {
+            int rnd = Random.RandomRange(1, 4);
+
+            if (rnd == 1 && CurrentState != MovementStates.Standby)
+                CurrentState = MovementStates.Standby;
+            else if (rnd == 2 && CurrentState != MovementStates.Following)
+                CurrentState = MovementStates.Following;
+            else if (rnd == 3 && CurrentState != MovementStates.Dashing)
+                CurrentState = MovementStates.Dashing;
+            else
+                CurrentState = MovementStates.Dashing;
+        }
+
     }
     void EnableBoss()
     {
+        beforeActivatedCollider.enabled = true;
+        isTriggerCollider.enabled = true;
+        normalCollider.enabled = true;
+        rb.constraints = RigidbodyConstraints2D.None;
+        rb.freezeRotation = true;
+        light.SetActive(false);
         Shadow.SetActive(true);
         StartCoroutine(StartBlinkin());
         Invoke("EnableHp", 5);
@@ -134,6 +165,8 @@ public class BossMovement : MonoBehaviour
         else
             E.SetActive(false);
 
+
+
         if (CurrentState == MovementStates.Standby)
         {
             CurrentFireingState = FireingStates.Circle;
@@ -149,42 +182,74 @@ public class BossMovement : MonoBehaviour
             CurrentFireingState = FireingStates.Barrier;
             Retreting();
         }
+        else if (CurrentState == MovementStates.Dashing && !isDashing)
+        {
+            StartCoroutine(StartDash());
+            CurrentFireingState = FireingStates.None;
+        }
+    }
+
+    IEnumerator StartDash()
+    {
+        isDashing = true;
+        for (int i = 0; i < 4; i++)
+        {
+            float posX = player.position.x + playerRb.velocity.x;
+            float posY = player.position.y + playerRb.velocity.y;
+            Vector2 pos = new Vector2(posX, posY) + new Vector2(Random.RandomRange(-0.5f, 0.5f), Random.RandomRange(-0.5f, 0.5f));
+
+            Vector2 offsetVector = pos - (Vector2)transform.position;
+            float dist = offsetVector.magnitude;
+            if (dist > maxDashingDistance)
+            {
+                Vector2 v = (maxDashingDistance / dist) * offsetVector;
+                pos = (Vector2)transform.position + v;
+            }
+
+            GetComponent<SpriteRenderer>().color = new Color(1, 0.52f, 0.56f);
+            yield return new WaitForSeconds(0.3f);
+            StartCoroutine(Dash(pos));
+            yield return new WaitForSeconds(0.3f);
+            GetComponent<SpriteRenderer>().color = Color.white;
+            yield return new WaitForSeconds(2f);
+            if (CurrentState != MovementStates.Dashing)
+                break;
+        }
+        isDashing = false;
+    }
+
+    IEnumerator Dash(Vector2 pos)
+    {
+        float timer = 0;
+        float duration = 1f;
+        while (timer < duration)
+        {
+            timer += Time.deltaTime;
+
+            transform.position = Vector2.Lerp(transform.position, pos, timer / duration);
+
+            yield return null;
+        }
+
+        transform.position = pos;
     }
     void HandleFireingStates()
     {
         if (enemyhp.isDead)
             return;
 
-        //if (!isSecondPhase)
-        //{
-            if (CurrentFireingState == FireingStates.Circle)
-            {
-                bossFireing.Circle();
-            }
-            else if (CurrentFireingState == FireingStates.Burst)
-            {
-                bossFireing.Burst();
-            }
-            else if (CurrentFireingState == FireingStates.Barrier)
-            {
-                bossFireing.Barrier();
-            }
-        /*}
-        else
+        if (CurrentFireingState == FireingStates.Circle)
         {
-            if (CurrentFireingState == FireingStates.Circle)
-            {
-                bossFireing.Circle();
-            }
-            else if (CurrentFireingState == FireingStates.Burst)
-            {
-                bossFireing.Burst();
-            }
-            else if (CurrentFireingState == FireingStates.Barrier)
-            {
-                bossFireing.Dashing();
-            }
-        }*/
+            bossFireing.Circle();
+        }
+        else if (CurrentFireingState == FireingStates.Burst)
+        {
+            bossFireing.Burst();
+        }
+        else if (CurrentFireingState == FireingStates.Barrier)
+        {
+            bossFireing.Barrier();
+        }
     }
     public IEnumerator SecondPhase()
     {
@@ -229,5 +294,11 @@ public class BossMovement : MonoBehaviour
             rb.velocity = new Vector2(rb.velocity.x / 2, rb.velocity.y / 2);
             CurrentState = MovementStates.Standby;
         }
+    }
+
+    private void OnTriggerEnter2D(Collider2D collision)
+    {
+        if (collision.gameObject.tag == "Player")
+            collision.gameObject.GetComponent<PlayerHp>().PlayerTakeDmg(1f, transform.position, 10f);
     }
 }

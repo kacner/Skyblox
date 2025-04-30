@@ -27,8 +27,8 @@ public class PlayerHp : MonoBehaviour
     private Material deathDMGmat;
     public ParticleSystem dmgSystem;
 
-    [SerializeField] private float invincibilityTimer = 0.25f;
-    private float CurrentInvincibilityTimer;
+    public float invincibilityTimer = 0.25f;
+    [HideInInspector] public float CurrentInvincibilityTimer;
 
     [Header("DisplaySettings")]
     [SerializeField] private Image HPSlider;
@@ -96,8 +96,8 @@ public class PlayerHp : MonoBehaviour
 
             if ((current_HP - dmg) <= 0)
             {
-                StartCoroutine(RemoveRbNdie());
                 current_HP = 0;
+                StartCoroutine(RemoveRbNdie());
             }
             else
             {
@@ -126,8 +126,8 @@ public class PlayerHp : MonoBehaviour
                 else
                     Debug.Log("Obstructor is null or already destroyed.");
 
-                StartCoroutine(RemoveRbNdie());
                 current_HP = 0;
+                StartCoroutine(RemoveRbNdie());
             }
             else
             {

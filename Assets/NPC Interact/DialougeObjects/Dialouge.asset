@@ -1,0 +1,55 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e1ec783af43e64f4bbc6d2ee33d32157, type: 3}
+  m_Name: Dialouge
+  m_EditorClassIdentifier: 
+  RootNode:
+    DialougueText: For your ovn sake, avoid the gauntlet, the elder varns it steals
+      souls, making victims vander to their death beneath the rock. No one dares
+      approach.
+    Responses:
+    - responseText: vho touched it?
+      nextNode:
+        DialougueText: vell it vas some time ago, the only lead ve have is vord of
+          mouth. Its generally claimed to be a pilgrim from a nother land.
+        Responses:
+        - responseText: vhere from?
+          nextNode:
+            DialougueText: No clue. The only record ve have of him is vord of mouth,
+              the gauntlet, and that putrid stench it exudes. Judging the craftsmanship,
+              is almost certainly Griffintorian.
+            Responses:
+            - responseText: Thank you!
+              nextNode:
+                DialougueText: no worries
+                Responses: []
+                Emotion: 3
+                ApplyQuestTrigger: 0
+            Emotion: 2
+            ApplyQuestTrigger: 0
+        - responseText: Goodbye
+          nextNode:
+            DialougueText: Fare well
+            Responses: []
+            Emotion: 3
+            ApplyQuestTrigger: 0
+        Emotion: 2
+        ApplyQuestTrigger: 0
+    - responseText: Goodbye!
+      nextNode:
+        DialougueText: 
+        Responses: []
+        Emotion: 0
+        ApplyQuestTrigger: 0
+    Emotion: 1
+    ApplyQuestTrigger: 0
+  TalkSpeed: 0.05

@@ -1,0 +1,90 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e1ec783af43e64f4bbc6d2ee33d32157, type: 3}
+  m_Name: Dialouge2
+  m_EditorClassIdentifier: 
+  RootNode:
+    DialougueText: vho are you?
+    Responses:
+    - responseText: 'I.. vhere are ve? '
+      nextNode:
+        DialougueText: vere on a godforsaken island, forced to rot for all eternity.
+          All because of that bastard
+        Responses:
+        - responseText: Because of vho?
+          nextNode:
+            DialougueText: A man named Ishamon, the bastard vho betrayed us.
+            Responses:
+            - responseText: Tell me more.
+              nextNode:
+                DialougueText: He used to be one of us until we ended up on this
+                  island and he found that thing, he told us it was for the greater
+                  good, he told us it had to be done.. Regardless, were stuck here
+                  now and its his fault. Defeat Ishamon, save us.
+                Responses:
+                - responseText: Thanks!
+                  nextNode:
+                    DialougueText: 
+                    Responses: []
+                    Emotion: 0
+                    ApplyQuestTrigger: 0
+                Emotion: 0
+                ApplyQuestTrigger: 0
+            - responseText: Okay Bye!
+              nextNode:
+                DialougueText: "He used to be one of us until we ended up on this
+                  island and he found that thing, he told us it was for the greater
+                  good, he told us it had to be done\u2026 Regardless, were stuck
+                  here now and its his fault. Defeat Ishamon, save us."
+                Responses: []
+                Emotion: 0
+                ApplyQuestTrigger: 0
+            Emotion: 2
+            ApplyQuestTrigger: 0
+        - responseText: Goodbye
+          nextNode:
+            DialougueText: good luck out there!
+            Responses: []
+            Emotion: 2
+            ApplyQuestTrigger: 0
+        Emotion: 2
+        ApplyQuestTrigger: 0
+    - responseText: Leave me alone!
+      nextNode:
+        DialougueText: vait.. Please, before you go you must knov.. The gauntlet
+          in the middle of the island, dont go near it, at any cost.
+        Responses:
+        - responseText: 'Thanks I guess. '
+          nextNode:
+            DialougueText: 
+            Responses: []
+            Emotion: 0
+            ApplyQuestTrigger: 0
+        - responseText: vhy shouldnt I?
+          nextNode:
+            DialougueText: You may not recall arriving here, but ve do. Once a part
+              of an elite expedition, ve vere sent to this island vhen Ishamon got
+              a hold of that terrible thing.
+            Responses:
+            - responseText: See you around!
+              nextNode:
+                DialougueText: 
+                Responses: []
+                Emotion: 0
+                ApplyQuestTrigger: 0
+            Emotion: 2
+            ApplyQuestTrigger: 0
+        Emotion: 0
+        ApplyQuestTrigger: 0
+    Emotion: 1
+    ApplyQuestTrigger: 0
+  TalkSpeed: 0.05

@@ -20,12 +20,11 @@ public class SimpleNPCInteract : MonoBehaviour
 
     [Header("Writing Settings")]
     [SerializeField] private float TalkSpeed = 0.05f;
-    
+
     [Space(10)]
 
     [Header("Dialouge")]
-    [SerializeField] private string[] DialougeArr;
-    [SerializeField] private AnimationState[] Emotion;
+    public Dialouge[] dialougeArr;
     [SerializeField] private int CurrentDialouge = 0;
     [SerializeField] private float CurrentDialougeTime = 0;
     private ChatBubbel currentChatBubble;
@@ -52,6 +51,12 @@ public class SimpleNPCInteract : MonoBehaviour
         HandsOut,
         HandInPocket,
         Idle
+    }
+    [System.Serializable]
+    public struct Dialouge
+    {
+        public string[] Dialouges;
+        public AnimationState[] Emotion;
     }
     private void Start()
     {
@@ -176,9 +181,10 @@ public class SimpleNPCInteract : MonoBehaviour
     }
     void playDialouge()
     {
-        if (CurrentDialouge == DialougeArr.Length - 1) //lastDialougeDetection
+        int random = Random.RandomRange(0, dialougeArr.Length);
+        if (CurrentDialouge == dialougeArr[random].Dialouges.Length - 1) //lastDialougeDetection
         {
-            StartCoroutine(Disable_EforTime(TalkSpeed * DialougeArr[CurrentDialouge].Length + dialougeExtraTime + 0.5f));
+            StartCoroutine(Disable_EforTime(TalkSpeed * dialougeArr[random].Dialouges[CurrentDialouge].Length + dialougeExtraTime + 0.5f));
         }
 
         if (currentChatBubble != null)
@@ -186,25 +192,24 @@ public class SimpleNPCInteract : MonoBehaviour
             Destroy(currentChatBubble.gameObject);
         }
 
-        if (CurrentDialouge < DialougeArr.Length)
+        if (CurrentDialouge < dialougeArr[random].Dialouges.Length)
         {
-            currentChatBubble = ChatBubbel.Create(transform, new Vector3(-2f, 1.62f), DialougeArr[CurrentDialouge], TalkSpeed, interactButton.gameObject, this, AnimationState.Idle);
-            ChangeState(Emotion[CurrentDialouge]);
+            currentChatBubble = ChatBubbel.Create(transform, new Vector3(-2f, 1.62f), dialougeArr[random].Dialouges[CurrentDialouge], TalkSpeed, interactButton.gameObject, this, AnimationState.Idle);
+            ChangeState(dialougeArr[random].Emotion[CurrentDialouge]);
 
-            CurrentDialougeTime = DialougeArr[CurrentDialouge].Length * TalkSpeed + dialougeExtraTime;
+            CurrentDialougeTime = dialougeArr[random].Dialouges[CurrentDialouge].Length * TalkSpeed + dialougeExtraTime;
 
-            if (CurrentDialouge == DialougeArr.Length - 1)
+            if (CurrentDialouge == dialougeArr[random].Dialouges.Length - 1)
             {
-                StartCoroutine(HandleEndOfDialogue());
+                StartCoroutine(HandleEndOfDialogue(random));
             }
 
             CurrentDialouge++;
         }
     }
-
-    private IEnumerator HandleEndOfDialogue()
+    private IEnumerator HandleEndOfDialogue(int random)
     {
-        yield return new WaitForSeconds(DialougeArr[CurrentDialouge].Length * TalkSpeed + dialougeExtraTime); // Wait for dialogue to finish
+        yield return new WaitForSeconds(dialougeArr[random].Dialouges[CurrentDialouge].Length * TalkSpeed + dialougeExtraTime); // Wait for dialogue to finish
         CurrentDialouge = 0;
         canInteract = false;
         CanInteractTimer = 5;

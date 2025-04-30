@@ -64,3 +64,6 @@ TagManager:
   - name: Decour
     uniqueID: 3365237689
     locked: 0
+  - name: Gameobject UI
+    uniqueID: 3761294007
+    locked: 0

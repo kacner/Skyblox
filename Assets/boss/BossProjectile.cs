@@ -1,6 +1,3 @@
-using System;
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 
 public class BossProjectile : MonoBehaviour
@@ -27,7 +24,7 @@ public class BossProjectile : MonoBehaviour
         PlayerHp playerHp = collision.gameObject.GetComponent<PlayerHp>();
         if (playerHp != null)
         {
-            if (playerHp.isInvincible == false)
+            if (!playerHp.isInvincible)
             {
                 playerHp.PlayerTakeDmg(damage, transform.position, knockbackAmount);
                 Destroy(gameObject);

@@ -354,8 +354,8 @@ public class PlayerMovement : MonoBehaviour
                 child.gameObject.SetActive(false);
             }
         }
-
-        playerHp.isInvincible = true;
+        
+        playerHp.CurrentInvincibilityTimer = RollDuration;
 
         RollingPFX.enableEmission = true; // Enable particle effects
         createtrailsprite = true;
@@ -401,10 +401,6 @@ public class PlayerMovement : MonoBehaviour
                 child.gameObject.SetActive(true);
             }
         }
-
-        playerHp.isInvincible = false;
-        //if (GameManager.instance.playerObstructor != null)
-        //GameManager.instance.playerObstructor.CreateData(); //refeshes obstructor
 
         yield return new WaitForSeconds(RollCooldown - emitParticleAfterInitialRoll);
         IsRolling = false;

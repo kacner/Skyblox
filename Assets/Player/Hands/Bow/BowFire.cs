@@ -180,5 +180,7 @@ public class BowFire : MonoBehaviour
             playermovement.maxSpeed *= 2; // Slow down the player
             IsSlowed = false;
         }
+
+        playermovement.canRoll = true;
     }
 }

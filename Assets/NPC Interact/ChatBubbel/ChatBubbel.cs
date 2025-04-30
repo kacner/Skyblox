@@ -12,7 +12,7 @@ public class ChatBubbel : MonoBehaviour
         chatBubbleTransform.localPosition = localPosition;
 
         ChatBubbel chatBubble = chatBubbleTransform.GetComponent<ChatBubbel>();
-        chatBubble.Setup("-: " + text + " :-", talkspeed, chatBubbleTransform, interactButton, npcInteract, Idle);
+        chatBubble.Setup(text, talkspeed, chatBubbleTransform, interactButton, npcInteract, Idle);
 
         return chatBubble;
     }
