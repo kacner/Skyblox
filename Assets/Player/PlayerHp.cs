@@ -175,7 +175,7 @@ public class PlayerHp : MonoBehaviour
 
     IEnumerator RemoveRbNdie()
     {
-        GameManager.instance.RemovePlayerObstructor();
+        GameManager.instance?.RemovePlayerObstructor();
 
         yield return new WaitForSeconds(0.5f);
         Destroy(rb);

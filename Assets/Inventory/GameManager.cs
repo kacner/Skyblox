@@ -67,8 +67,10 @@ public class GameManager : MonoBehaviour
 
     public void RemovePlayerObstructor()
     {
-        ObstructorManager.instance.RemoveObstructor(transform);
-        if (playerObstructor.data != null && playerObstructor.data.child != null) Destroy(playerObstructor.data.child.gameObject);
+        ObstructorManager.instance?.RemoveObstructor(transform);
+        if (playerObstructor.data != null && playerObstructor.data.child != null) 
+            Destroy(playerObstructor.data.child.gameObject);
+
         Destroy(playerObstructor);
     }
 }

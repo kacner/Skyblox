@@ -26,15 +26,20 @@ MonoBehaviour:
             Responses:
             - responseText: Tell me more.
               nextNode:
-                DialougueText: He used to be one of us until we ended up on this
-                  island and he found that thing, he told us it was for the greater
-                  good, he told us it had to be done.. Regardless, were stuck here
-                  now and its his fault. Defeat Ishamon, save us.
+                DialougueText: He used to be one of us until ve ended up on this
+                  island and he found that thing, he told us it vas for the greater
+                  good, he told us it had to be done.
                 Responses:
-                - responseText: Thanks!
+                - responseText: ...
                   nextNode:
-                    DialougueText: 
-                    Responses: []
+                    DialougueText: Regardless, vere stuck here nov and its his fault.
+                      Defeat Ishamon, save us.
+                    Responses:
+                    - responseText: Thanks!
+                      nextNode:
+                        DialougueText: No Vorries!
+                        Emotion: 0
+                        ApplyQuestTrigger: 0
                     Emotion: 0
                     ApplyQuestTrigger: 0
                 Emotion: 0
